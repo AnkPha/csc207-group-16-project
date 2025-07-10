@@ -1,9 +1,11 @@
-# Homework 5 Phase 2 [for credit]
-## Preamble
+# TasteMap - Restaurant Finder 
+CSC207 Final Project
+Matthew Chen, Golbarg Ghazinour, Ankur Phadke, Daniel Tan
+
 In the individual part, you are asked to add code to the login use case to save the currently-logged-in
 user by saving the user in the Data Access Layer. You are also asked to add a unit test for this.
 
-In this lab, you will complete a logout use case as a team. You will also begin to discuss your project
+In this lab, you will complete a logout use case as a telam. You will also begin to discuss your project
 and the use cases that need to be implemented (in your blueprint).
 
 We have created all the Clean Architecture classes necessary for the logout use case.
