@@ -1,5 +1,6 @@
 # TasteMap - Restaurant Finder 
 CSC207 Final Project
+
 Matthew Chen, Golbarg Ghazinour, Ankur Phadke, Daniel Tan
 
 In the individual part, you are asked to add code to the login use case to save the currently-logged-in
