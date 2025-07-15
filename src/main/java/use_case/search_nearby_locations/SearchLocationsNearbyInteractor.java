@@ -1,6 +1,10 @@
-class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInputBoundary{
+package use_case.search_nearby_locations;
+import entity.Restaurant;
+import java.util.List;
+
+public class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInputBoundary{
     private final SearchLocationsNearbyDataAccessInterface locationsDataAccessObject;
-    private final SearchLocationsNearbyBoundary locationsPresenter;
+    private final SearchLocationsNearbyOutputBoundary locationsPresenter;
 
     public SearchLocationsNearbyInteractor(SearchLocationsNearbyDataAccessInterface locationsDataAccessInterface,
                                            SearchLocationsNearbyOutputBoundary locationsOutputBoundary) {
@@ -8,15 +12,17 @@ class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInputBound
         this.locationsPresenter = locationsOutputBoundary;
     }
 
-    execute(SearchLocationsNearbyInputData locationInputData){
+    public void execute(SearchLocationsNearbyInputData locationInputData){
         //Getting the address from the parameter input
         String address = locationInputData.getAddress();
 
         //Call the resturant api throuh the locationsDataAccessObject
         List<Restaurant> nearbyRestaurants = locationsDataAccessObject.getNearbyRestaurants(address);
+        // SearchLocationsNearbyDataAccessInterface calls NontimAPI -> NominatimAPI gets address and translates to cooridnates for yelpfusion -> Yelpfusion returns a bunch of resturants with menus/reviews etc
 
         //Return the locations towards the output class
         SearchLocationsNearbyOutputData output = new SearchLocationsNearbyOutputData(nearbyRestaurants);
+        locationsPresenter.prepareSuccessView(output);
     }
 
 

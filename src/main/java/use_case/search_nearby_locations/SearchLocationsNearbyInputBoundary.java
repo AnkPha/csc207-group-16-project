@@ -1,5 +1,5 @@
-class SearchLocationsNearbyInputBoundary{
-    public interface SearchLocationsNearbyInputBoundary
+package use_case.search_nearby_locations;
+public interface SearchLocationsNearbyInputBoundary{
 
-    execute(SearchLocationsNearbySearchData searchData)
+    void execute(SearchLocationsNearbyInputData searchData);
 }
