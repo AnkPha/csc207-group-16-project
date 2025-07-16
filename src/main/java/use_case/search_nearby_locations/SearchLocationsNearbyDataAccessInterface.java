@@ -8,5 +8,5 @@ public interface SearchLocationsNearbyDataAccessInterface {
     /**
      *
      */
-    List<Restaurant> getNearbyRestaurants(String address);
+    List<Restaurant> getNearbyRestaurants(String address, int radius);
 }
