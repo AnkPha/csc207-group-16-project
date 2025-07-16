@@ -18,9 +18,8 @@ public class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInp
         // Getting the address from the parameter input
         final String address = locationInputData.getAddress();
 
-        // Call the resturant api throuh the locationsDataAccessObject
-        final List<Restaurant> nearbyRestaurants = locationsDataAccessObject.getNearbyRestaurants(address);
-        // SearchLocationsNearbyDataAccessInterface calls NontimAPI -> NominatimAPI gets address and translates to cooridnates for yelpfusion -> Yelpfusion returns a bunch of resturants with menus/reviews etc
+        //Call the resturant api throuh the locationsDataAccessObject
+        List<Restaurant> nearbyRestaurants = locationsDataAccessObject.getNearbyRestaurants(locationInputData.getAddress(), locationInputData.getRadius());
 
         // Return the locations towards the output class
         final SearchLocationsNearbyOutputData output = new SearchLocationsNearbyOutputData(nearbyRestaurants);

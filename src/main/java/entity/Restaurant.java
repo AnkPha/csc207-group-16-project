@@ -1,37 +1,46 @@
 package entity;
 
+import java.util.ArrayList;
+
 public class Restaurant {
     private final String name;
-    private final double latitude;
-    private final double longitude;
     private final String address;
-    private final String price;
-    private final double rating;
-    private final String yelpUrl;
+    private final String cuisine;
+    private final String vegetarian;
+    private final String openingHours;
+    private final String website;
+    private String rating;
+    private ArrayList<Double> allReviewScores;
 
-    public Restaurant(String name, double latitude, double longitude,
-                          String address, String price, double rating, String yelpUrl) {
+    public Restaurant(String name,String address,String cuisine, String vegetarian, String openingHours, String website) {
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.address = address;
-        this.price = price;
-        this.rating = rating;
-        this.yelpUrl = yelpUrl;
+        this.cuisine = cuisine;
+        this.vegetarian = vegetarian;
+        this.openingHours = openingHours;
+        this.website = website;
+        this.rating = "No Ratings";
     }
-
+    public void addRating(double score){
+        allReviewScores.add(score);
+        double numerator = 0;
+        for(int i = 0; i < allReviewScores.size(); i++){
+            numerator+= allReviewScores.get(i);
+        }
+        this.rating = Double.toString(numerator/allReviewScores.size());
+    }
     public String getName() { return name; }
-    public double getLatitude() { return latitude; }
-    public double getLongitude() { return longitude; }
     public String getAddress() { return address; }
-    public String getPrice() { return price; }
-    public double getRating() { return rating; }
-    public String getYelpUrl() { return yelpUrl; }
+    public String getRating() { return rating; }
+    public String getCuisine() { return cuisine; }
+    public String getVegetarian() { return vegetarian; }
+    public String getOpeningHours() { return openingHours; }
+    public String getWebsite() { return website; }
 
     @Override
     public String toString() {
         return String.format("%s (%s): %s ⭐️ %.1f\nLocation: (%f, %f)\nLink: %s",
-                name, price, address, rating, latitude, longitude, yelpUrl);
+                name, address, rating);
     }
 
 }
