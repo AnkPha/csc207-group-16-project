@@ -9,6 +9,7 @@ public class NominatimAPI {
         private final String baseUrl = "https://nominatim.openstreetmap.org/search";
 
         public double[] geocode(String address) throws Exception {
+            System.out.println("RAN");
             // Format address string for URL
             String encodedAddress = address.replace(" ", "+");
 
@@ -16,12 +17,12 @@ public class NominatimAPI {
 
             Request request = new Request.Builder()
                     .url(url)
-                    .header("User-Agent", "MySwingApp/1.0 (your@email.com)")
+                    .header("User-Agent", "MySwingApp/1.0 dtan89609@gmail.com")
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful() || response.body() == null) {
-                    throw new RuntimeException("Nominatim request failed.");
+                    return new double[]{};
                 }
 
                 String json = response.body().string();
@@ -30,7 +31,8 @@ public class NominatimAPI {
                 JsonArray resultArray = JsonParser.parseString(json).getAsJsonArray();
 
                 if (resultArray.size() == 0) {
-                    throw new RuntimeException("No results found for: " + address);
+                    System.out.println("resultArray.size() in NominatimAPI == 0");
+                    return new double[0];
                 }
 
                 JsonObject location = resultArray.get(0).getAsJsonObject();
