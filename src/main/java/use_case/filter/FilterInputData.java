@@ -5,6 +5,7 @@ package use_case.filter;
  */
 public class FilterInputData {
 
+    private List<Restaurants> restaurantsList;
     private final String cuisine;
     private final Map <String> allergens;
     private final String hours;

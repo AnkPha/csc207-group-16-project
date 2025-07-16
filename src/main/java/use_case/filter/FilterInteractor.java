@@ -8,8 +8,9 @@ import entity.UserFactory;
  */
 public class FilterInteractor implements FilterInputBoundary {
     private final FilterUserDataAccessInterface filterConceptsDataAccessObject;
-    private final ChangePasswordOutputBoundary userPresenter;
+    private final FilterOutputBoundary userPresenter;
 //  private final UserFactory userFactory;
+    /// not done
 
     public ChangePasswordInteractor(ChangePasswordUserDataAccessInterface changePasswordDataAccessInterface,
                                     ChangePasswordOutputBoundary changePasswordOutputBoundary,
@@ -18,7 +19,6 @@ public class FilterInteractor implements FilterInputBoundary {
         this.userPresenter = changePasswordOutputBoundary;
         this.userFactory = userFactory;
     }
-/// notdone
     @Override
     public void execute(ChangePasswordInputData changePasswordInputData) {
         final User user = userFactory.create(changePasswordInputData.getUsername(),
