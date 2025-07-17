@@ -6,17 +6,17 @@ public class Restaurant {
     private final String name;
     private final String address;
     private final String cuisine;
-    private final String vegetarian;
+    private final String vegStat;
     private final String openingHours;
     private final String website;
     private String rating;
     private ArrayList<Double> allReviewScores;
 
-    public Restaurant(String name,String address,String cuisine, String vegetarian, String openingHours, String website) {
+    public Restaurant(String name,String address,String cuisine, String vegStat, String openingHours, String website) {
         this.name = name;
         this.address = address;
         this.cuisine = cuisine;
-        this.vegetarian = vegetarian;
+        this.vegStat = vegStat;
         this.openingHours = openingHours;
         this.website = website;
         this.rating = "No Ratings";
@@ -33,7 +33,7 @@ public class Restaurant {
     public String getAddress() { return address; }
     public String getRating() { return rating; }
     public String getCuisine() { return cuisine; }
-    public String getVegetarian() { return vegetarian; }
+    public String getVegStat() { return vegStat; }
     public String getOpeningHours() { return openingHours; }
     public String getWebsite() { return website; }
 

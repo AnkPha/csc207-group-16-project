@@ -51,11 +51,11 @@ public class OverPassAPI {
                 }
 
                 String cuisine = tags.has("cuisine") ? tags.get("cuisine").getAsString() : "Not given";
-                String vegetarian = tags.has("diet:vegetarian") ? tags.get("diet:vegetarian").getAsString() : "Not given";
+                String vegStat = tags.has("diet:vegetarian") ? tags.get("diet:vegetarian").getAsString() : "Not given";
                 String openingHours = tags.has("opening_hours") ? tags.get("opening_hours").getAsString() : "Not given";
                 String website = tags.has("website") ? tags.get("website").getAsString() : "Not given";
 
-                Restaurant restaurant = new Restaurant(name, address, cuisine, vegetarian, openingHours, website);
+                Restaurant restaurant = new Restaurant(name, address, cuisine, vegStat, openingHours, website);
                 restaurantList.add(restaurant);
             }
 
