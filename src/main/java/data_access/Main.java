@@ -13,7 +13,7 @@
 //            System.out.println("Name " + results.get(i).getName() +
 //                    " Address " + results.get(i).getAddress() +
 //                    " Cuisine "  + results.get(i).getCuisine() +
-//                    " Vegetarian? " + results.get(i).getVegetarian() +
+//                    " VegStat? " + results.get(i).getVegStat() +
 //                    " Hours Of Operation " + results.get(i).getOpeningHours() +
 //                    " URL " + results.get(i).getWebsite()
 //            );
