@@ -1,24 +1,20 @@
 package use_case.filter;
 
+import entity.Restaurant;
+
+import java.util.ArrayList;
+
 /**
- * Output Data for the Change Password Use Case.
+ * Output Data for the Filter Use Case.
  */
-public class ChangePasswordOutputData {
+public class FilterOutputData {
+    private ArrayList<Restaurant> filteredRestaurants;
 
-    private final String username;
-
-    private final boolean useCaseFailed;
-
-    public ChangePasswordOutputData(String username, boolean useCaseFailed) {
-        this.username = username;
-        this.useCaseFailed = useCaseFailed;
+    public FilterOutputData(ArrayList<Restaurant> filteredRestaurants) {
+        this.filteredRestaurants = filteredRestaurants;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public boolean isUseCaseFailed() {
-        return useCaseFailed;
+    public ArrayList<Restaurant> getFilteredRestaurants() {
+        return filteredRestaurants;
     }
 }

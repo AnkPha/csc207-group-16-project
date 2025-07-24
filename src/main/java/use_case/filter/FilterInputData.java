@@ -1,34 +1,43 @@
 package use_case.filter;
 
+import entity.Restaurant;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * The input data for the Filter Use Case.
  */
 public class FilterInputData {
 
-    private final String cuisine;
-    private final Map <String> allergens;
-    private final String hours;
-    private final Map <String> ratings;
-    private final HashMap <String, Integer> nutrition;
+    private List<Restaurant> restaurantsList;
+    private String cuisine;
+    private String vegStat;
+    private String openingHours;
+    private String rating;
 
-    public FilterInputData(String cuis, Map <String> alle,
-                           String hours, Map <String> rate, Hashmap <String, Integer> nutr) {
-        this.cuisine = cuis;
-        this.allergens = alle;
-        this.hours_of_ops = hours;
-        this.ratings = rate;
-        this.nutrition = nutr;
+    public FilterInputData(String cuisine, String vegStat, String openingHours,
+                           String rating) {
+        this.cuisine = cuisine;
+        this.vegStat = vegStat;
+        this.openingHours = openingHours;
+        this.rating = rating;
     }
 
     String getCuisine() {
         return cuisine;
     }
 
-    Map <String> getAllergens() {return allergens;}
+    String getVegStat() {
+        return vegStat;
+    }
 
-    String getHoursOfOps() {return hours_of_ops;}
+    String getOpeningHours() {
+        return openingHours;
+    }
 
-    Map <String> getRatings() {return ratings;}
+    String getRating() {
+        return rating; }
 
-    HashMap <String, Integer> getNutrition() {return nutrition;}
 }
