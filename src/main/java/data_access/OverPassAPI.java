@@ -2,6 +2,9 @@ package data_access;
 import com.google.gson.*;
 import entity.Restaurant;
 import okhttp3.*;
+
+import javax.swing.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.IOException;
 //private static final String API_KEY = "PU2YFOKXUAZOVC5IM2MMSXZQJCCIC0LCQFFYK32VFJD2QAAK"; // 🔐 replace with your key
@@ -70,7 +73,6 @@ public class OverPassAPI {
 
         return restaurantList;
     }
-
 
     // Send the request and print results
 

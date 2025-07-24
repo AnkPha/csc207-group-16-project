@@ -8,7 +8,8 @@ public class Main {
     public static void main(String[] args){
         SearchLocationNearbyDataAccessObject search = new SearchLocationNearbyDataAccessObject();
         //Put Address here
-        ArrayList<Restaurant> results = search.getNearbyRestaurants("1 Dundas St E, Toronto, Canada", 500);
+        ArrayList<Restaurant> results = search.getNearbyRestaurants("1 Dundas St E, Toronto, Canada", 10, 500);
+
         for (int i = 0; i < results.size(); i++) {
             System.out.println("Name " + results.get(i).getName() +
                     " Address " + results.get(i).getAddress() +
