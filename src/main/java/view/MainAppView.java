@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main_menu.MainAppViewModel;
+import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchViewModel;
 
 /**
@@ -18,11 +19,12 @@ public class MainAppView extends JPanel {
     private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
     private final MainAppViewModel viewModel;
-
+    private SearchLocationsNearbyController searchController;
     private final JTabbedPane tabbedPane;
     private final ProfilePanel profilePanel;
 
     public MainAppView(MainAppViewModel viewModel) {
+        searchController = new SearchLocationsNearbyController();
         this.viewModel = viewModel;
         this.setLayout(new BorderLayout());
 
@@ -51,4 +53,9 @@ public class MainAppView extends JPanel {
         this.logoutController = controller;
         this.profilePanel.setLogoutController(controller);
     }
-}
+
+    public void setSearchController(SearchLocationsNearbyController controller) {
+        this.searchController = controller;
+        this.se.setSearchController(controller);
+    }
+ }

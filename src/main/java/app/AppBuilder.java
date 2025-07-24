@@ -34,7 +34,7 @@ import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import view.LoginView;
-//import view.MainAppView;
+import view.MainAppView;
 import view.SignupView;
 import view.ViewManager;
 
@@ -66,7 +66,7 @@ public class AppBuilder {
     private LoginViewModel loginViewModel;
     private LoginView loginView;
     private MainAppViewModel mainAppViewModel;
-//    private MainAppView mainAppView;
+    private MainAppView mainAppView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -99,9 +99,9 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addMainAppView() {
-//        mainAppViewModel = new MainAppViewModel();
-//        mainAppView = new MainAppView(mainAppViewModel);
-//        cardPanel.add(mainAppView, mainAppView.getViewName());
+        mainAppViewModel = new MainAppViewModel();
+        mainAppView = new MainAppView(mainAppViewModel);
+        cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
 
@@ -164,7 +164,7 @@ public class AppBuilder {
                 new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
-//        mainAppView.setLogoutController(logoutController);
+        mainAppView.setLogoutController(logoutController);
         return this;
     }
 
