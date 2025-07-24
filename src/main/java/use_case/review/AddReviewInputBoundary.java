@@ -10,7 +10,5 @@ public interface AddReviewInputBoundary {
      * Execute the add review use case.
      * @param addReviewInputData the input data for this use case.
      */
-    void execute(AddReviewInputData addReviewInputData) {
-
-    }
+    void execute(AddReviewInputData addReviewInputData);
 }

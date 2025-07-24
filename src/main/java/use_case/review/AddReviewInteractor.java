@@ -1,18 +1,21 @@
 package use_case.review;
 
+import entity.Review;
+import entity.UserFactory;
 
 public class AddReviewInteractor implements AddReviewInputBoundary {
-    private final AddReviewAccessInterface userDataAccessObject;
-    private final AddReviewOutputData userPresenter;
+    private final AddReviewAccessInterface reviewDataAccessObject;
+    private final AddReviewOutputBoundary reviewPresenter;
 
-    public AddReviewInteractor(AddReviewAccessInterface userDataAccessObject, AddReviewOutputData dataPresenter) {
-        this.userDataAccessObject = userDataAccessObject;
-        this.userPresenter = dataPresenter;
 
+    public AddReviewInteractor(AddReviewAccessInterface reviewDataAccessObject,
+                               AddReviewOutputBoundary reviewPresenter) {
+        this.reviewDataAccessObject = reviewDataAccessObject;
+        this.reviewPresenter = reviewPresenter;
     }
 
     @Override
     public void execute(AddReviewInputData inputData) {
-        new Review review
+        final Review review
     }
 }
