@@ -11,7 +11,9 @@ import java.io.IOException;
 
 public class OverPassAPI {
     private final OkHttpClient client = new OkHttpClient();
-    private final String baseUrl = "https://overpass-api.de/api/interpreter";
+    //https://overpass.kumi.systems/api/interpreter
+    //https://overpass-api.de/api/interpreter
+    private final String baseUrl = "https://overpass.kumi.systems/api/interpreter";
 
     public ArrayList<Restaurant> getNearbyRestaurants(double latitude, double longitude, int radiusMeters) {
         ArrayList<Restaurant> restaurantList = new ArrayList<>();
@@ -58,7 +60,9 @@ public class OverPassAPI {
                 String openingHours = tags.has("opening_hours") ? tags.get("opening_hours").getAsString() : "Not given";
                 String website = tags.has("website") ? tags.get("website").getAsString() : "Not given";
 
-                Restaurant restaurant = new Restaurant(name, address, cuisine, vegStat, openingHours, website);
+                double lat = obj.has("lat") ? obj.get("lat").getAsDouble() : 0.0;
+                double lon = obj.has("lon") ? obj.get("lon").getAsDouble() : 0.0;
+                Restaurant restaurant = new Restaurant(name, address, cuisine, vegStat, openingHours, website, lat, lon);
                 restaurantList.add(restaurant);
             }
 

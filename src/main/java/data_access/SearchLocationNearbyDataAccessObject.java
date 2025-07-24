@@ -37,8 +37,8 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
         if (coords.length == 2) {
             //Assuming the coordinates in coords is in the right order of lat and long
             System.out.println("Before Call");
-            return overpassAPI.getNearbyRestaurants(coords[0], coords[1], radius);
-
+            resturantList = overpassAPI.getNearbyRestaurants(coords[0], coords[1], radius);
+            System.out.println("SIZE IS " + resturantList.size() + " AND RADIUS IS " + radius + " ADDRESS IS " + address);
         }
 
         return resturantList;
