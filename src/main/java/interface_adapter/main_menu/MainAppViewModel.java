@@ -1,4 +1,11 @@
 package interface_adapter.main_menu;
 
-public class MainAppViewModel {
+import interface_adapter.ViewModel;
+
+public class MainAppViewModel extends ViewModel<MainAppState> {
+
+    public MainAppViewModel() {
+        super("main app");
+        this.setState(new MainAppState());
+    }
 }
