@@ -1,4 +1,16 @@
 package use_case.review;
 
-public class AddReviewInputBoundary {
+/**
+ * The add review use case.
+ */
+
+public interface AddReviewInputBoundary {
+
+    /**
+     * Execute the add review use case.
+     * @param addReviewInputData the input data for this use case.
+     */
+    void execute(AddReviewInputData addReviewInputData) {
+
+    }
 }
