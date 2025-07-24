@@ -27,13 +27,13 @@ public class LoginPresenter implements LoginOutputBoundary {
     public void prepareSuccessView(LoginOutputData response) {
         // On success, switch to the main app view.
 
-        final MainAppState mainAppState = mainAppViewModel.getState();
-        mainAppState.setUsername(response.getUsername());
-        this.mainAppViewModel.setState(mainAppState);
-        this.mainAppViewModel.firePropertyChanged();
-
-        this.viewManagerModel.setState(mainAppViewModel.getViewName());
-        this.viewManagerModel.firePropertyChanged();
+//        final MainAppState mainAppState = mainAppViewModel.getState();
+//        mainAppState.setUsername(response.getUsername());
+//        this.mainAppViewModel.setState(mainAppState);
+//        this.mainAppViewModel.firePropertyChanged();
+//
+//        this.viewManagerModel.setState(mainAppViewModel.getViewName());
+//        this.viewManagerModel.firePropertyChanged();
     }
 
     @Override

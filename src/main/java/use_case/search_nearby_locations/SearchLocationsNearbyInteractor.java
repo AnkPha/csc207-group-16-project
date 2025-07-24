@@ -1,6 +1,8 @@
 package use_case.search_nearby_locations;
 
 import java.util.List;
+import java.util.ArrayList;
+
 
 import entity.Restaurant;
 
@@ -19,7 +21,7 @@ public class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInp
         final String address = locationInputData.getAddress();
 
         //Call the resturant api throuh the locationsDataAccessObject
-        List<Restaurant> nearbyRestaurants = locationsDataAccessObject.getNearbyRestaurants(locationInputData.getAddress(), locationInputData.getRadius());
+        ArrayList<Restaurant> nearbyRestaurants = locationsDataAccessObject.getNearbyRestaurants(locationInputData.getAddress(), locationInputData.getRadius());
 
         // Return the locations towards the output class
         final SearchLocationsNearbyOutputData output = new SearchLocationsNearbyOutputData(nearbyRestaurants);
