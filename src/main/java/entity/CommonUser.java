@@ -23,4 +23,31 @@ public class CommonUser implements User {
         return password;
     }
 
+    /**
+     * Returns username.
+     * @return username
+     */
+    @Override
+    public String getUsername() {
+        return "";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || !(o instanceof CommonUser)) {
+            return false;
+        }
+
+        final CommonUser commonUser = (CommonUser) o;
+        return name.equals(commonUser.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
