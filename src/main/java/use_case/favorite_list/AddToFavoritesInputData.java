@@ -10,6 +10,7 @@ public class AddToFavoritesInputData {
     }
 
     public String getUsername() {
+
         return username;
     }
 
