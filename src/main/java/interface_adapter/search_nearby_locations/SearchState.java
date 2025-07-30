@@ -12,12 +12,15 @@ public class SearchState {
     private String searchError;
     private String radius;
     private ArrayList<Restaurant> restaurants;
+    private double[] addressCoords;
+    private boolean foundAddress;
 
     public SearchState(interface_adapter.search_nearby_locations.SearchState copy) {
         address = copy.address;
         searchError = copy.searchError;
         radius = copy.radius;
-
+        addressCoords = copy.getAddressCoords();
+        foundAddress = copy.getFoundAddress();
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
@@ -46,5 +49,12 @@ public class SearchState {
     public ArrayList<Restaurant> getResturants(){
         return restaurants;
     }
+
+    public void setAddressCoords(double[] addressCoords) { this.addressCoords = addressCoords; }
+
+    public double[] getAddressCoords() { return addressCoords; }
+
+    public void setFoundAddress(boolean foundAddress) { this.foundAddress = foundAddress; }
+    public boolean getFoundAddress(){ return foundAddress; }
 }
 

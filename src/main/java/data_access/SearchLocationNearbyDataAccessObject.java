@@ -9,7 +9,8 @@ import java.util.ArrayList;
 public class SearchLocationNearbyDataAccessObject implements SearchLocationsNearbyDataAccessInterface{
     private NominatimAPI nominatimAPI;
     private OverPassAPI overpassAPI;
-
+    private double[] addressCoords = {0.0,0.0};
+    private boolean found;
     public SearchLocationNearbyDataAccessObject(){
         this.nominatimAPI = new NominatimAPI();
         this.overpassAPI = new OverPassAPI();
@@ -37,10 +38,17 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
         if (coords.length == 2) {
             //Assuming the coordinates in coords is in the right order of lat and long
             System.out.println("Before Call");
+            this.addressCoords = coords;
             resturantList = overpassAPI.getNearbyRestaurants(coords[0], coords[1], radius);
             System.out.println("SIZE IS " + resturantList.size() + " AND RADIUS IS " + radius + " ADDRESS IS " + address);
         }
 
         return resturantList;
     }
+
+    public double[] getAddressCoords(){
+        return addressCoords;
+    }
+
+//    public boolean setCoordFound(boolean found) { this.found = found; }
 }

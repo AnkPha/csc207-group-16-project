@@ -15,7 +15,9 @@ public class Main {
         final JFrame application = appBuilder
                                             .addLoginView()
                                             .addSignupView()
+                                            .addSearchViewModel()
                                             .addMainAppView()
+                                            .addSearchUseCase()
                                             .addSignupUseCase()
                                             .addLoginUseCase()
                                             .addChangePasswordUseCase()
@@ -24,6 +26,9 @@ public class Main {
 
         application.pack();
         application.setVisible(true);
+        //            "1 Dundas St E, Toronto, Canada",
+//         100 Queen St W, Toronto, ON, Canada
+        // 100, 500
 
     }
 }
