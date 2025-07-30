@@ -9,4 +9,6 @@ public interface SearchLocationsNearbyDataAccessInterface {
      *
      */
     ArrayList<Restaurant> getNearbyRestaurants(String address, int radius);
+
+    double[] getAddressCoords();
 }

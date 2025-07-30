@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
+import data_access.SearchLocationNearbyDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -18,6 +19,9 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main_menu.MainAppViewModel;
+import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
+import interface_adapter.search_nearby_locations.SearchLocationsNearbyPresenter;
+import interface_adapter.search_nearby_locations.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -30,6 +34,10 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface;
+import use_case.search_nearby_locations.SearchLocationsNearbyInputBoundary;
+import use_case.search_nearby_locations.SearchLocationsNearbyInteractor;
+import use_case.search_nearby_locations.SearchLocationsNearbyOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -37,6 +45,7 @@ import view.LoginView;
 import view.MainAppView;
 import view.SignupView;
 import view.ViewManager;
+import view.SearchPanel;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -60,6 +69,7 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -67,6 +77,9 @@ public class AppBuilder {
     private LoginView loginView;
     private MainAppViewModel mainAppViewModel;
     private MainAppView mainAppView;
+
+    private SearchViewModel searchViewModel;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -100,7 +113,7 @@ public class AppBuilder {
      */
     public AppBuilder addMainAppView() {
         mainAppViewModel = new MainAppViewModel();
-        mainAppView = new MainAppView(mainAppViewModel);
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
@@ -148,7 +161,7 @@ public class AppBuilder {
 
         final ChangePasswordController changePasswordController =
                 new ChangePasswordController(changePasswordInteractor);
-//        mainAppView.setChangePasswordController(changePasswordController);
+        mainAppView.setChangePasswordController(changePasswordController);
         return this;
     }
 
@@ -183,4 +196,24 @@ public class AppBuilder {
 
         return application;
     }
+
+    public AppBuilder addSearchUseCase() {
+        final SearchLocationsNearbyOutputBoundary searchOutputBoundary =
+                new SearchLocationsNearbyPresenter(searchViewModel);
+
+        final SearchLocationsNearbyInputBoundary searchInteractor =
+                new SearchLocationsNearbyInteractor(searchDataAccessObject, searchOutputBoundary);
+
+        final SearchLocationsNearbyController searchController =
+                new SearchLocationsNearbyController(searchInteractor);
+
+        mainAppView.setSearchController(searchController);
+        return this;
+    }
+
+    public AppBuilder addSearchViewModel(){
+        this.searchViewModel = new SearchViewModel();
+        return this;
+    }
+
 }
