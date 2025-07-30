@@ -42,5 +42,4 @@ public class Restaurant {
         return String.format("%s (%s): %s ⭐️ %.1f\nLocation: (%f, %f)\nLink: %s",
                 name, address, rating);
     }
-
 }

@@ -1,7 +1,8 @@
 package use_case.filter;
 
-import entity.Restaurant;
 import java.util.ArrayList;
+
+import entity.Restaurant;
 
 /**
  * The Filter Interactor.
@@ -18,8 +19,9 @@ public class FilterInteractor implements FilterInputBoundary {
 
     @Override
     public void execute(FilterInputData filterInputData) {
-        ArrayList<Restaurant> filteredRestaurants = filterDataAccessObject.getFilteredRestaurants(filterInputData);
-        FilterOutputData outputData = new FilterOutputData(filteredRestaurants);
+        final ArrayList<Restaurant> filteredRestaurants =
+                filterDataAccessObject.getFilteredRestaurants(filterInputData);
+        final FilterOutputData outputData = new FilterOutputData(filteredRestaurants);
         filterPresenter.prepareSuccessView(outputData);
     }
 }
