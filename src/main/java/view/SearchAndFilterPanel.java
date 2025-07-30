@@ -103,8 +103,8 @@ class SearchAndFilterPanel extends JPanel {
             catch (NumberFormatException error) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid radius");
             }
-            searchInputData = new SearchLocationsNearbyInputData(address, radiusQuery);
-            searchingRestaurants = searching.execute(address, radiusQuery);
+//            searchInputData = new SearchLocationsNearbyInputData(address, radiusQuery);
+//            searchingRestaurants = searching.execute(address, radiusQuery);
             updateCuisineOptions();
             updateOtherFilterOptions();
         });

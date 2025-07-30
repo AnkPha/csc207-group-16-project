@@ -1,19 +1,23 @@
 package entity;
 
+import java.util.ArrayList;
+
 public class Restaurant {
     private final String name;
     private final String address;
-    private final String price;
-    private final double rating;
+    private final String cuisine;
+    private final String vegStat;
+    private final String openingHours;
+    private final String website;
+    private String rating;
+    private ArrayList<Double> allReviewScores;
+
     private double lon;
     private double lat;
 
     public Restaurant(String name,String address,String cuisine, String vegStat, String openingHours, String website, double lat, double lon) {
-
         this.name = name;
         this.address = address;
-        this.price = price;
-        this.rating = rating;
         this.cuisine = cuisine;
         this.vegStat = vegStat;
         this.openingHours = openingHours;
@@ -29,12 +33,9 @@ public class Restaurant {
             numerator+= allReviewScores.get(i);
         }
         this.rating = Double.toString(numerator/allReviewScores.size());
-
     }
-
     public String getName() { return name; }
     public String getAddress() { return address; }
-    public double getRating() { return rating; }
     public String getRating() { return rating; }
     public String getCuisine() { return cuisine; }
     public String getVegStat() { return vegStat; }
@@ -43,10 +44,9 @@ public class Restaurant {
     public double getLon() { return lon; }
     public double getLat() { return lat; }
 
-
     @Override
     public String toString() {
         return String.format("%s (%s): %s ⭐️ %.1f\nLocation: (%f, %f)\nLink: %s",
-                name, price, address, rating, latitude, longitude, yelpUrl);
+                name, address, rating);
     }
 }
