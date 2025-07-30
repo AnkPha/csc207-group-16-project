@@ -1,6 +1,6 @@
 package use_case.search_nearby_locations;
 import entity.Restaurant;
-import java.util.List;
+import java.util.ArrayList;
 /**
  *
  */
@@ -8,5 +8,5 @@ public interface SearchLocationsNearbyDataAccessInterface {
     /**
      *
      */
-    List<Restaurant> getNearbyRestaurants(String address, int radius);
+    ArrayList<Restaurant> getNearbyRestaurants(String address, int radius);
 }

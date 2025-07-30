@@ -4,7 +4,7 @@ public class SearchLocationsNearbyInputData {
     private final String address;
     private final int radius;
 
-    public SearchLocationsNearbyInputData(String address, int radius) {
+    public SearchLocationsNearbyInputData(String address, int radius){
         this.address = address;
         this.radius = radius;
     }
@@ -12,8 +12,5 @@ public class SearchLocationsNearbyInputData {
     public String getAddress() {
         return this.address;
     }
-
-    public int getRadius() {
-        return this.radius;
-    }
+    public int getRadius(){ return this.radius; }
 }

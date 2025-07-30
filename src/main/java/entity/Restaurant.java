@@ -12,7 +12,10 @@ public class Restaurant {
     private String rating;
     private ArrayList<Double> allReviewScores;
 
-    public Restaurant(String name,String address,String cuisine, String vegStat, String openingHours, String website) {
+    private double lon;
+    private double lat;
+
+    public Restaurant(String name,String address,String cuisine, String vegStat, String openingHours, String website, double lat, double lon) {
         this.name = name;
         this.address = address;
         this.cuisine = cuisine;
@@ -20,6 +23,8 @@ public class Restaurant {
         this.openingHours = openingHours;
         this.website = website;
         this.rating = "No Ratings";
+        this.lon = lon;
+        this.lat = lat;
     }
     public void addRating(double score){
         allReviewScores.add(score);
@@ -36,6 +41,8 @@ public class Restaurant {
     public String getVegStat() { return vegStat; }
     public String getOpeningHours() { return openingHours; }
     public String getWebsite() { return website; }
+    public double getLon() { return lon; }
+    public double getLat() { return lat; }
 
     @Override
     public String toString() {
