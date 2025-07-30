@@ -2,31 +2,47 @@ package entity;
 
 public class Restaurant {
     private final String name;
-    private final double latitude;
-    private final double longitude;
     private final String address;
     private final String price;
     private final double rating;
-    private final String yelpUrl;
+    private double lon;
+    private double lat;
 
-    public Restaurant(String name, double latitude, double longitude,
-                          String address, String price, double rating, String yelpUrl) {
+    public Restaurant(String name,String address,String cuisine, String vegStat, String openingHours, String website, double lat, double lon) {
+
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.address = address;
         this.price = price;
         this.rating = rating;
-        this.yelpUrl = yelpUrl;
+        this.cuisine = cuisine;
+        this.vegStat = vegStat;
+        this.openingHours = openingHours;
+        this.website = website;
+        this.rating = "No Ratings";
+        this.lon = lon;
+        this.lat = lat;
+    }
+    public void addRating(double score){
+        allReviewScores.add(score);
+        double numerator = 0;
+        for(int i = 0; i < allReviewScores.size(); i++){
+            numerator+= allReviewScores.get(i);
+        }
+        this.rating = Double.toString(numerator/allReviewScores.size());
+
     }
 
     public String getName() { return name; }
-    public double getLatitude() { return latitude; }
-    public double getLongitude() { return longitude; }
     public String getAddress() { return address; }
-    public String getPrice() { return price; }
     public double getRating() { return rating; }
-    public String getYelpUrl() { return yelpUrl; }
+    public String getRating() { return rating; }
+    public String getCuisine() { return cuisine; }
+    public String getVegStat() { return vegStat; }
+    public String getOpeningHours() { return openingHours; }
+    public String getWebsite() { return website; }
+    public double getLon() { return lon; }
+    public double getLat() { return lat; }
+
 
     @Override
     public String toString() {

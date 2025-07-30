@@ -9,8 +9,8 @@ public class SearchLocationsNearbyController {
             this.interactor = interactor;
         }
 
-        void execute(String address){
-            final SearchLocationsNearbyInputData input = new SearchLocationsNearbyInputData(address);
+        public void execute(String address, int radius){
+            final SearchLocationsNearbyInputData input = new SearchLocationsNearbyInputData(address, radius);
             interactor.execute(input);
         }
     }

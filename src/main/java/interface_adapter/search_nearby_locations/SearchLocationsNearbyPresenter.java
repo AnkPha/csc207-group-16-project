@@ -6,24 +6,26 @@ import use_case.search_nearby_locations.SearchLocationsNearbyOutputData;
  */
 public class SearchLocationsNearbyPresenter implements SearchLocationsNearbyOutputBoundary {
 
-    private final SearchResultsViewModel resultsViewModel;
+    private final SearchViewModel resultsViewModel;
 
-    public SearchLocationsNearbyPresenter(SearchResultsViewModel resultsViewModel) {
+    public SearchLocationsNearbyPresenter(SearchViewModel resultsViewModel) {
         this.resultsViewModel = resultsViewModel;
     }
 
     @Override
     public void prepareSuccessView(SearchLocationsNearbyOutputData outputData) {
-        // currently there isn't anything to change based on the output data,
-        // since the output data only contains the username, which remains the same.
-        // We still fire the property changed event, but just to let the view know that
-        // it can alert the user that their password was changed successfully..
-        // resultsViewModel.firePropertyChanged("password");
-
+        SearchState newState = new SearchState();
+        newState.setRestaurants(outputData.getNearbyRestaurants()); // Assuming this method exists
+//        newState.setAddress(outputData.getAddress());          // Optional
+//        newState.setRadius(outputData.getRadius());            // Optional
+        System.out.println("ABOUT TO CALL SET STATE");
+        resultsViewModel.setState(newState); // This fires the "state" property change
     }
 
     @Override
     public void prepareFailView(String error) {
         // note: this use case currently can't fail
     }
+
+
 }
