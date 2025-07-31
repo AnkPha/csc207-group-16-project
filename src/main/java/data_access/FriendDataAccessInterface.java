@@ -1,8 +1,10 @@
 package data_access;
 
-import entity.User;
-
 import java.util.List;
+import java.util.Map;
+
+import entity.Review;
+import entity.User;
 
 /**
  * An interface for managing friend-related data operations in the application.
@@ -69,5 +71,12 @@ public interface FriendDataAccessInterface {
      */
     List<String> searchUsers(String query);
 
+    /**
+     * Retrieves a mapping of usernames to their list of reviews.
+     *
+     * @param usernames a list of usernames to fetch reviews for
+     * @return a map where each key is a username and each value is the list of their reviews;
+     *         users without reviews may have an empty list or be excluded from the map
+     */
+    Map<String, List<Review>> getReviewsForUsers(List<String> usernames);
 }
-
