@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.FilterDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
 import entity.CommonUserFactory;
@@ -13,6 +14,7 @@ import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
+import interface_adapter.filter.FilterViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -25,9 +27,19 @@ import interface_adapter.search_nearby_locations.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterPresenter;
+import interface_adapter.filter.FilterViewModel;
+
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+
+import use_case.filter.FilterDataAccessInterface;
+import use_case.filter.FilterInputBoundary;
+import use_case.filter.FilterInteractor;
+import use_case.filter.FilterOutputBoundary;
+
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -70,6 +82,7 @@ public class AppBuilder {
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
+    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -79,7 +92,7 @@ public class AppBuilder {
     private MainAppView mainAppView;
 
     private SearchViewModel searchViewModel;
-
+    private FilterViewModel filterViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -113,7 +126,7 @@ public class AppBuilder {
      */
     public AppBuilder addMainAppView() {
         mainAppViewModel = new MainAppViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel);
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, filterViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
@@ -213,6 +226,25 @@ public class AppBuilder {
 
     public AppBuilder addSearchViewModel(){
         this.searchViewModel = new SearchViewModel();
+        return this;
+    }
+
+    public AppBuilder addFilterUseCase(){
+        final FilterOutputBoundary filterOutputBoundary =
+                new FilterPresenter(filterViewModel);
+
+        final FilterInputBoundary filterInteractor =
+                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
+
+        final FilterController filterController =
+                new FilterController(filterInteractor);
+
+        mainAppView.setFilterController(filterController);
+        return this;
+    }
+
+    public AppBuilder addFilterViewModel(){
+        this.filterViewModel = new FilterViewModel();
         return this;
     }
 

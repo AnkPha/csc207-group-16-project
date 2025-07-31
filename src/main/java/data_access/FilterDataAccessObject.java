@@ -105,9 +105,8 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     }
 
     private ArrayList<Restaurant> getNearbyRestaurants(FilterInputData filterInputData) {
-        final SearchLocationsNearbyInputData locationData = filterInputData.getLocations();
-        final int userRadius = locationData.getRadius();
-        final String userAddress = locationData.getAddress();
+        final int userRadius = filterInputData.getRadius();
+        final String userAddress = filterInputData.getAddress();
         return searchLocationNearbyDataAccessObject.getNearbyRestaurants(
                 userAddress, userRadius);
     }
@@ -115,15 +114,22 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     @Override
     public ArrayList<Restaurant> getFilteredRestaurants(FilterInputData filterInputData) {
         final ArrayList<Restaurant> nearbyRestaurants = getNearbyRestaurants(filterInputData);
+        System.out.println("BEFORE FILTER SIZE " + nearbyRestaurants.size());
         final ArrayList<Restaurant> filteredRestaurants = new ArrayList<>();
         for (Restaurant r : nearbyRestaurants) {
+            System.out.println("CUISINE MATH? " + matchesCuisineFilter(filterInputData.getCuisine(), r.getCuisine())
+                                + "IGNORE/AVAILABLE? " + matchesAvailabilityFilter(filterInputData.getAvailability(), r.getOpeningHours())
+                                + "RAITING? " + matchesRatingFilter(filterInputData.getRating(), r.getRating())
+                                + "VEGSTAT? " + matchesVegStatFilter(filterInputData.getVegStat(), r.getVegStat())
+            );
             if (matchesCuisineFilter(filterInputData.getCuisine(), r.getCuisine())
-                    && matchesVegStatFilter(filterInputData.getVegStat(), r.getVegStat())
-                    && matchesAvailabilityFilter(filterInputData.getAvailability(), r.getOpeningHours())
                     && matchesRatingFilter(filterInputData.getRating(), r.getRating())) {
                 filteredRestaurants.add(r);
+//                    && matchesAvailabilityFilter(filterInputData.getAvailability(), r.getOpeningHours())
+                //                    && matchesVegStatFilter(filterInputData.getVegStat(), r.getVegStat())
             }
         }
+        System.out.println("AFTER FILTER SIZE " + filteredRestaurants.size());
         return filteredRestaurants;
     }
 
