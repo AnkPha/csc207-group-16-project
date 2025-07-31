@@ -1,0 +1,80 @@
+package view;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JTabbedPane;
+import javax.swing.JPanel;
+
+import interface_adapter.change_password.ChangePasswordController;
+import interface_adapter.favorites_list.FavoritesController;
+import interface_adapter.favorites_list.FavoritesViewModel;
+import interface_adapter.logout.LogoutController;
+import interface_adapter.main_menu.MainAppViewModel;
+import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
+import interface_adapter.search_nearby_locations.SearchViewModel;
+
+/**
+ * The View for when the user is logged into the program.
+ */
+public class MainAppView extends JPanel {
+
+    private ChangePasswordController changePasswordController;
+    private LogoutController logoutController;
+    private FavoritesController favoritesController;
+    private final MainAppViewModel viewModel;
+    private SearchLocationsNearbyController searchController;
+    private final JTabbedPane tabbedPane;
+    private final ProfilePanel profilePanel;
+    private final FavoritesPanel favoritesPanel;
+    private final SearchPanel searchPanel;
+    private final SearchViewModel searchViewModel;
+    private final FavoritesViewModel favoritesViewModel;
+
+    public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
+                       FavoritesViewModel favoritesViewModel) {
+//        searchController = new SearchLocationsNearbyController();
+        this.viewModel = viewModel;
+        this.searchViewModel = searchViewModel;
+        this.setLayout(new BorderLayout());
+        this.favoritesViewModel = favoritesViewModel;
+
+        tabbedPane = new JTabbedPane();
+        //CHECK OUT
+        searchPanel = new SearchPanel(searchViewModel);
+        tabbedPane.addTab("Search", searchPanel);
+
+        favoritesPanel = new FavoritesPanel(favoritesViewModel);
+        tabbedPane.addTab("Favorites", favoritesPanel);
+
+        profilePanel = new ProfilePanel(viewModel);
+        tabbedPane.addTab("Profile", profilePanel);
+
+        tabbedPane.addTab("Friends", new FriendsPanel());
+
+        this.add(tabbedPane, BorderLayout.CENTER);
+    }
+
+    public String getViewName() {
+        return "main app";
+    }
+
+    public void setChangePasswordController(ChangePasswordController controller) {
+        this.changePasswordController = controller;
+        this.profilePanel.setChangePasswordController(controller);
+    }
+
+    public void setLogoutController(LogoutController controller) {
+        this.logoutController = controller;
+        this.profilePanel.setLogoutController(controller);
+    }
+
+    public void setSearchController(SearchLocationsNearbyController controller) {
+        this.searchController = controller;
+        this.searchPanel.setSearchLocationsController(controller);
+    }
+
+    public void setFavoritesController(FavoritesController controller) {
+        this.favoritesController = controller;
+        this.favoritesPanel.setFavoritesController(controller);
+    }
+ }

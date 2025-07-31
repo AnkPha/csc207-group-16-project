@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The state for the Login View Model.
+ * The state for the Filter View Model.
  */
 public class FilterState {
-    /// MAYBE?
-    private List<String> cuisine = new ArrayList<>();
+    private final List<String> cuisine = new ArrayList<>();
     private String vegStat = "";
     private String openingHours = "";
     private String rating = "";
@@ -27,10 +26,6 @@ public class FilterState {
 
     public String getRating() {
         return rating;
-    }
-
-    public void setCuisine(String cuisine) {
-        this.cuisine.add(cuisine);
     }
 
     public void setVegStat(String vegStat) {
