@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main_menu.MainAppViewModel;
+import interface_adapter.search_user.SearchUserController;
+import interface_adapter.search_user.SearchUserViewModel;
 
 /**
  * The View for when the user is logged into the program.
@@ -21,7 +23,7 @@ public class MainAppView extends JPanel {
     private final JTabbedPane tabbedPane;
     private final ProfilePanel profilePanel;
 
-    public MainAppView(MainAppViewModel viewModel) {
+    public MainAppView(MainAppViewModel viewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel) {
         this.viewModel = viewModel;
         this.setLayout(new BorderLayout());
 
@@ -31,7 +33,9 @@ public class MainAppView extends JPanel {
         profilePanel = new ProfilePanel(viewModel);
         tabbedPane.addTab("Profile", profilePanel);
 
-        tabbedPane.addTab("Friends", new FriendsPanel());
+        final FriendsPanel friendsPanel = new FriendsPanel();
+        friendsPanel.setSearchUserController(searchUserController);
+        tabbedPane.addTab("Friends", friendsPanel);
 
         this.add(tabbedPane, BorderLayout.CENTER);
     }
