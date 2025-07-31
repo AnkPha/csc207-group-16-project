@@ -2,13 +2,18 @@ package data_access;
 import com.google.gson.*;
 import entity.Restaurant;
 import okhttp3.*;
+
+import javax.swing.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.IOException;
 //private static final String API_KEY = "PU2YFOKXUAZOVC5IM2MMSXZQJCCIC0LCQFFYK32VFJD2QAAK"; // 🔐 replace with your key
 
 public class OverPassAPI {
     private final OkHttpClient client = new OkHttpClient();
-    private final String baseUrl = "https://overpass-api.de/api/interpreter";
+    //https://overpass.kumi.systems/api/interpreter
+    //https://overpass-api.de/api/interpreter
+    private final String baseUrl = "https://overpass.kumi.systems/api/interpreter";
 
     public ArrayList<Restaurant> getNearbyRestaurants(double latitude, double longitude, int radiusMeters) {
         ArrayList<Restaurant> restaurantList = new ArrayList<>();
@@ -55,7 +60,9 @@ public class OverPassAPI {
                 String openingHours = tags.has("opening_hours") ? tags.get("opening_hours").getAsString() : "Not given";
                 String website = tags.has("website") ? tags.get("website").getAsString() : "Not given";
 
-                Restaurant restaurant = new Restaurant(name, address, cuisine, vegStat, openingHours, website);
+                double lat = obj.has("lat") ? obj.get("lat").getAsDouble() : 0.0;
+                double lon = obj.has("lon") ? obj.get("lon").getAsDouble() : 0.0;
+                Restaurant restaurant = new Restaurant(name, address, cuisine, vegStat, openingHours, website, lat, lon);
                 restaurantList.add(restaurant);
             }
 
@@ -66,7 +73,6 @@ public class OverPassAPI {
 
         return restaurantList;
     }
-
 
     // Send the request and print results
 

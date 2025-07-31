@@ -51,7 +51,10 @@ public class ViewModel<T> {
      * @param propertyName the label for the property that was changed
      */
     public void firePropertyChanged(String propertyName) {
+        System.out.println("BEFORE FIRE PROPERTY CHANGE");
         this.support.firePropertyChange(propertyName, null, this.state);
+        System.out.println("AFTER FIRE PROPERTY CHANGE");
+
     }
 
     /**
@@ -59,6 +62,7 @@ public class ViewModel<T> {
      * @param listener The PropertyChangeListener to be added
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        System.out.println("Listener added: " + listener); // debug
         this.support.addPropertyChangeListener(listener);
     }
 }

@@ -1,7 +1,6 @@
 package use_case.filter;
 
 import entity.Restaurant;
-import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
 import java.util.ArrayList;
 
 /**
@@ -18,15 +17,8 @@ public class FilterInteractor implements FilterInputBoundary {
     }
 
     @Override
-    public void execute(SearchLocationsNearbyInputData searchLocationsNearbyInputData, FilterInputData filterInputData) {
-        // How do we include the address and radius from SearchLocationsNearbyInputData?;
-        String cuisine = filterInputData.getCuisine();
-        String vegStat = filterInputData.getVegStat();
-        String openingHours = filterInputData.getOpeningHours();
-        String rating = filterInputData.getRating();
-
-        ArrayList<Restaurant> filteredRestaurants = filterDataAccessObject.getFilteredRestaurants(searchLocationsNearbyInputData,
-                cuisine, vegStat, openingHours, rating);
+    public void execute(FilterInputData filterInputData) {
+        ArrayList<Restaurant> filteredRestaurants = filterDataAccessObject.getFilteredRestaurants(filterInputData);
         FilterOutputData outputData = new FilterOutputData(filteredRestaurants);
         filterPresenter.prepareSuccessView(outputData);
     }
