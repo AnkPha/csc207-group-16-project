@@ -13,6 +13,8 @@ import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
+import interface_adapter.favorites_list.FavoritesController;
+import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -28,6 +30,9 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.favorite_list.AddToFavoritesInputBoundary;
+import use_case.favorite_list.AddToFavoritesInteractor;
+import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -77,8 +82,10 @@ public class AppBuilder {
     private LoginView loginView;
     private MainAppViewModel mainAppViewModel;
     private MainAppView mainAppView;
-
+    private AddToFavoritesInteractor addToFavoritesInteractor;
+    private RemoveFromFavoritesInteractor removeFromFavoritesInteractor;
     private SearchViewModel searchViewModel;
+    private FavoritesViewModel favoritesViewModel;
 
 
     public AppBuilder() {
@@ -113,7 +120,8 @@ public class AppBuilder {
      */
     public AppBuilder addMainAppView() {
         mainAppViewModel = new MainAppViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel);
+        FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
@@ -211,9 +219,24 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addSearchViewModel(){
+    public AppBuilder addSearchViewModel() {
         this.searchViewModel = new SearchViewModel();
         return this;
     }
 
+    public AppBuilder addFavoritesViewModel() {
+        this.favoritesViewModel = new FavoritesViewModel();
+        return this;
+    }
+
+    public AppBuilder addFavoritesUseCase() {
+
+        final FavoritesController favoritesController =
+                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
+
+        // This line is crucial - make sure it's there:
+        mainAppView.setFavoritesController(favoritesController);
+
+        return this;
+    }
 }
