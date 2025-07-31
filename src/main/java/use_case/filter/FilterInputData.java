@@ -1,26 +1,26 @@
 package use_case.filter;
 
-import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
-
 import java.util.List;
 
+import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
 /**
  * The input data for the Filter Use Case.
  */
+
 public class FilterInputData {
 
     private SearchLocationsNearbyInputData locations;
     private List<String> cuisine;
     private String vegStat;
-    private String openingHours;
+    private String availability;
     private String rating;
 
     public FilterInputData(SearchLocationsNearbyInputData locations, List<String> cuisine, String vegStat,
-                           String openingHours, String rating) {
+                           String availability, String rating) {
         this.locations = locations;
         this.cuisine = cuisine;
         this.vegStat = vegStat;
-        this.openingHours = openingHours;
+        this.availability = availability;
         this.rating = rating;
     }
 
@@ -38,9 +38,9 @@ public class FilterInputData {
         return vegStat;
     }
 
-    public String getOpeningHours() {
+    public String getAvailability() {
 
-        return openingHours;
+        return availability;
     }
 
     public String getRating() {

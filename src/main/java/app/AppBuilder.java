@@ -7,36 +7,50 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
+import data_access.SearchLocationNearbyDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
+import interface_adapter.favorites_list.FavoritesController;
+import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main_menu.MainAppViewModel;
+import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
+import interface_adapter.search_nearby_locations.SearchLocationsNearbyPresenter;
+import interface_adapter.search_nearby_locations.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.favorite_list.AddToFavoritesInputBoundary;
+import use_case.favorite_list.AddToFavoritesInteractor;
+import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface;
+import use_case.search_nearby_locations.SearchLocationsNearbyInputBoundary;
+import use_case.search_nearby_locations.SearchLocationsNearbyInteractor;
+import use_case.search_nearby_locations.SearchLocationsNearbyOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import view.LoginView;
-//import view.MainAppView;
+import view.MainAppView;
 import view.SignupView;
 import view.ViewManager;
+import view.SearchPanel;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -60,13 +74,19 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
     private LoginView loginView;
     private MainAppViewModel mainAppViewModel;
-//    private MainAppView mainAppView;
+    private MainAppView mainAppView;
+    private AddToFavoritesInteractor addToFavoritesInteractor;
+    private RemoveFromFavoritesInteractor removeFromFavoritesInteractor;
+    private SearchViewModel searchViewModel;
+    private FavoritesViewModel favoritesViewModel;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -99,9 +119,10 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addMainAppView() {
-//        mainAppViewModel = new MainAppViewModel();
-//        mainAppView = new MainAppView(mainAppViewModel);
-//        cardPanel.add(mainAppView, mainAppView.getViewName());
+        mainAppViewModel = new MainAppViewModel();
+        FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel);
+        cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
 
@@ -148,7 +169,7 @@ public class AppBuilder {
 
         final ChangePasswordController changePasswordController =
                 new ChangePasswordController(changePasswordInteractor);
-//        mainAppView.setChangePasswordController(changePasswordController);
+        mainAppView.setChangePasswordController(changePasswordController);
         return this;
     }
 
@@ -164,7 +185,7 @@ public class AppBuilder {
                 new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
-//        mainAppView.setLogoutController(logoutController);
+        mainAppView.setLogoutController(logoutController);
         return this;
     }
 
@@ -182,5 +203,40 @@ public class AppBuilder {
         viewManagerModel.firePropertyChanged();
 
         return application;
+    }
+
+    public AppBuilder addSearchUseCase() {
+        final SearchLocationsNearbyOutputBoundary searchOutputBoundary =
+                new SearchLocationsNearbyPresenter(searchViewModel);
+
+        final SearchLocationsNearbyInputBoundary searchInteractor =
+                new SearchLocationsNearbyInteractor(searchDataAccessObject, searchOutputBoundary);
+
+        final SearchLocationsNearbyController searchController =
+                new SearchLocationsNearbyController(searchInteractor);
+
+        mainAppView.setSearchController(searchController);
+        return this;
+    }
+
+    public AppBuilder addSearchViewModel() {
+        this.searchViewModel = new SearchViewModel();
+        return this;
+    }
+
+    public AppBuilder addFavoritesViewModel() {
+        this.favoritesViewModel = new FavoritesViewModel();
+        return this;
+    }
+
+    public AppBuilder addFavoritesUseCase() {
+
+        final FavoritesController favoritesController =
+                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
+
+        // This line is crucial - make sure it's there:
+        mainAppView.setFavoritesController(favoritesController);
+
+        return this;
     }
 }

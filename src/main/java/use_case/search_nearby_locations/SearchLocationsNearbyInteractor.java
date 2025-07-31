@@ -22,9 +22,9 @@ public class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInp
 
         //Call the resturant api throuh the locationsDataAccessObject
         ArrayList<Restaurant> nearbyRestaurants = locationsDataAccessObject.getNearbyRestaurants(locationInputData.getAddress(), locationInputData.getRadius());
-
+        double[] addressCoords = locationsDataAccessObject.getAddressCoords();
         // Return the locations towards the output class
-        final SearchLocationsNearbyOutputData output = new SearchLocationsNearbyOutputData(nearbyRestaurants);
+        final SearchLocationsNearbyOutputData output = new SearchLocationsNearbyOutputData(nearbyRestaurants, addressCoords);
         locationsPresenter.prepareSuccessView(output);
     }
 

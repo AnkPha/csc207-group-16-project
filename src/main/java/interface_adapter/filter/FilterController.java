@@ -6,8 +6,6 @@ import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInputData;
 import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
 
-
-
 /**
  * Controller for the Filter Use Case.
  */
@@ -20,16 +18,17 @@ public class FilterController {
 
     /**
      * Executes the Filter Use Case.
-     * @param locations for the address and radius of user input.
-     * @param cuisine the cuisine option to filter.
-     * @param vegStat the vegetarian status option to filter.
-     * @param hours the hours of operation option to filter.
-     * @param rating the rate option to filter.
+     * @param filterInputData  the input data for filtering.
      */
-    public void execute(SearchLocationsNearbyInputData locations, List<String> cuisine, String vegStat, String hours,
-                        String rating) {
-        final FilterInputData userFilterInputData = new FilterInputData(locations, cuisine, hours, vegStat, rating);
+    public void execute(FilterInputData filterInputData) {
+        final SearchLocationsNearbyInputData locations = filterInputData.getLocations();
+        final List<String> cuisine = filterInputData.getCuisine();
+        final String vegStat = filterInputData.getVegStat();
+        final String availability = filterInputData.getAvailability();
+        final String rating = filterInputData.getRating();
 
+        final FilterInputData userFilterInputData = new FilterInputData(locations, cuisine, vegStat,
+                availability, rating);
         userFilterUseCaseInteractor.execute(userFilterInputData);
     }
 }

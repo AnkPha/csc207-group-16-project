@@ -16,7 +16,7 @@ public class SearchLocationsNearbyPresenter implements SearchLocationsNearbyOutp
     public void prepareSuccessView(SearchLocationsNearbyOutputData outputData) {
         SearchState newState = new SearchState();
         newState.setRestaurants(outputData.getNearbyRestaurants()); // Assuming this method exists
-//        newState.setAddress(outputData.getAddress());          // Optional
+        newState.setAddressCoords(outputData.getAddressCoords());          // Optional
 //        newState.setRadius(outputData.getRadius());            // Optional
         System.out.println("ABOUT TO CALL SET STATE");
         resultsViewModel.setState(newState); // This fires the "state" property change
