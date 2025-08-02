@@ -20,15 +20,15 @@ public class FilterController {
      * Executes the Filter Use Case.
      * @param filterInputData  the input data for filtering.
      */
-    public void execute(String address, int radius, List<String> selectedCuisines, String selectedVegStat, String selectedHour, String selectedRating) {
-//        final SearchLocationsNearbyInputData locations = filterInputData.getLocations();
-//        final List<String> cuisine = filterInputData.getCuisine();
-//        final String vegStat = filterInputData.getVegStat();
-//        final String availability = filterInputData.getAvailability();
-//        final String rating = filterInputData.getRating();
-//        System.out.println("FILTER ADDRESS " + address + " RADIUS "+ radius);
-        final FilterInputData userFilterInputData = new FilterInputData(address, radius, selectedCuisines, selectedVegStat,
-                selectedHour, selectedRating);
+    public void execute(FilterInputData filterInputData) {
+        final SearchLocationsNearbyInputData locations = filterInputData.getLocations();
+        final List<String> cuisine = filterInputData.getCuisine();
+        final String vegStat = filterInputData.getVegStat();
+        final String availability = filterInputData.getAvailability();
+        final String rating = filterInputData.getRating();
+
+        final FilterInputData userFilterInputData = new FilterInputData(locations, cuisine, vegStat,
+                availability, rating);
         userFilterUseCaseInteractor.execute(userFilterInputData);
     }
 }
