@@ -6,6 +6,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 
 import interface_adapter.change_password.ChangePasswordController;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterViewModel;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.logout.LogoutController;
@@ -33,17 +35,23 @@ public class MainAppView extends JPanel {
     private final SearchViewModel searchViewModel;
     private final FavoritesViewModel favoritesViewModel;
 
-    public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
-                       FavoritesViewModel favoritesViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel) {
+    private final FilterViewModel filterViewModel;
+    private FilterController filterController;
+
+    public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel, FilterViewModel filterViewModel) {
+
+//     public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
+//                        FavoritesViewModel favoritesViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel) {
 //        searchController = new SearchLocationsNearbyController();
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
+        this.filterViewModel = filterViewModel;
         this.setLayout(new BorderLayout());
         this.favoritesViewModel = favoritesViewModel;
 
         tabbedPane = new JTabbedPane();
         //CHECK OUT
-        searchPanel = new SearchPanel(searchViewModel);
+        searchPanel = new SearchPanel(searchViewModel, filterViewModel);
         tabbedPane.addTab("Search", searchPanel);
 
         favoritesPanel = new FavoritesPanel(favoritesViewModel);
@@ -78,8 +86,13 @@ public class MainAppView extends JPanel {
         this.searchPanel.setSearchLocationsController(controller);
     }
 
-    public void setFavoritesController(FavoritesController controller) {
-        this.favoritesController = controller;
-        this.favoritesPanel.setFavoritesController(controller);
+    public void setFilterController(FilterController controller) {
+        this.filterController = controller;
+        this.searchPanel.setFilteringController(controller);
     }
- }
+}
+//     public void setFavoritesController(FavoritesController controller) {
+//         this.favoritesController = controller;
+//         this.favoritesPanel.setFavoritesController(controller);
+//     }
+//  }

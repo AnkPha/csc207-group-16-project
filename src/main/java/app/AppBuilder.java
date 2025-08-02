@@ -6,13 +6,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.FilterDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
+
 import entity.CommonUserFactory;
 import entity.UserFactory;
+
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
+import interface_adapter.filter.FilterViewModel;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.login.LoginController;
@@ -27,9 +31,17 @@ import interface_adapter.search_nearby_locations.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterPresenter;
+import interface_adapter.filter.FilterViewModel;
+
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.filter.FilterDataAccessInterface;
+import use_case.filter.FilterInputBoundary;
+import use_case.filter.FilterInteractor;
+import use_case.filter.FilterOutputBoundary;
 import use_case.favorite_list.AddToFavoritesInputBoundary;
 import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
@@ -46,6 +58,7 @@ import use_case.search_nearby_locations.SearchLocationsNearbyOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+
 import view.LoginView;
 import view.MainAppView;
 import view.SignupView;
@@ -75,6 +88,7 @@ public class AppBuilder {
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
+    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -85,8 +99,8 @@ public class AppBuilder {
     private AddToFavoritesInteractor addToFavoritesInteractor;
     private RemoveFromFavoritesInteractor removeFromFavoritesInteractor;
     private SearchViewModel searchViewModel;
+    private FilterViewModel filterViewModel;
     private FavoritesViewModel favoritesViewModel;
-
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -120,8 +134,9 @@ public class AppBuilder {
      */
     public AppBuilder addMainAppView() {
         mainAppViewModel = new MainAppViewModel();
-        FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel);
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, filterViewModel);
+//         FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
+//         mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
@@ -224,19 +239,38 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addFavoritesViewModel() {
-        this.favoritesViewModel = new FavoritesViewModel();
+    public AppBuilder addFilterUseCase(){
+        final FilterOutputBoundary filterOutputBoundary =
+                new FilterPresenter(filterViewModel);
+
+        final FilterInputBoundary filterInteractor =
+                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
+
+        final FilterController filterController =
+                new FilterController(filterInteractor);
+
+        mainAppView.setFilterController(filterController);
         return this;
     }
 
-    public AppBuilder addFavoritesUseCase() {
-
-        final FavoritesController favoritesController =
-                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
-
-        // This line is crucial - make sure it's there:
-        mainAppView.setFavoritesController(favoritesController);
-
+    public AppBuilder addFilterViewModel(){
+        this.filterViewModel = new FilterViewModel();
         return this;
     }
+
+//     public AppBuilder addFavoritesViewModel() {
+//         this.favoritesViewModel = new FavoritesViewModel();
+//         return this;
+//     }
+
+//     public AppBuilder addFavoritesUseCase() {
+
+//         final FavoritesController favoritesController =
+//                 new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
+
+//         // This line is crucial - make sure it's there:
+//         mainAppView.setFavoritesController(favoritesController);
+
+//         return this;
+//     }
 }
