@@ -18,7 +18,7 @@ public class Main {
                                             .addSearchViewModel()
 
                                             .addFilterViewModel()
-//                                             .addFavoritesViewModel()
+                                            .addFavoritesViewModel()
                                             .addMainAppView()
                                             .addSearchUseCase()
                                             .addFilterUseCase()

@@ -134,7 +134,7 @@ public class AppBuilder {
      */
     public AppBuilder addMainAppView() {
         mainAppViewModel = new MainAppViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, filterViewModel);
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, filterViewModel, favoritesViewModel);
 //         FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
 //         mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
@@ -258,19 +258,19 @@ public class AppBuilder {
         return this;
     }
 
-//     public AppBuilder addFavoritesViewModel() {
-//         this.favoritesViewModel = new FavoritesViewModel();
-//         return this;
-//     }
+     public AppBuilder addFavoritesViewModel() {
+         this.favoritesViewModel = new FavoritesViewModel();
+         return this;
+     }
 
-//     public AppBuilder addFavoritesUseCase() {
+     public AppBuilder addFavoritesUseCase() {
 
-//         final FavoritesController favoritesController =
-//                 new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
+         final FavoritesController favoritesController =
+                 new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
 
-//         // This line is crucial - make sure it's there:
-//         mainAppView.setFavoritesController(favoritesController);
+         // This line is crucial - make sure it's there:
+         mainAppView.setFavoritesController(favoritesController);
 
-//         return this;
-//     }
+         return this;
+     }
 }

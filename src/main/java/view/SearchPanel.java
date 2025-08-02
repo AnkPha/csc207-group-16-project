@@ -5,16 +5,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import interface_adapter.CurrentViewState;
 import interface_adapter.filter.FilterState;
 import interface_adapter.filter.FilterViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchState;
-import interface_adapter.change_password.LoggedInViewModel;
-import interface_adapter.logout.LogoutController;
 import interface_adapter.search_nearby_locations.SearchViewModel;
 import entity.Restaurant;
 import interface_adapter.filter.FilterController;
@@ -23,21 +19,15 @@ import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.OSMTileFactoryInfo;
-import org.jxmapviewer.viewer.TileFactoryInfo;
-import org.jxmapviewer.painter.CompoundPainter;
-import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.WaypointPainter;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.DefaultWaypoint;
-import use_case.filter.FilterInputData;
 
 
 import java.awt.*;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
-
-
 
 /**
  * The View for when the user is logged into the program.
