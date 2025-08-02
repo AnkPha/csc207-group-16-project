@@ -1,7 +1,5 @@
 package interface_adapter.filter;
 
-import entity.Restaurant;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +11,6 @@ public class FilterState {
     private String vegStat = "";
     private String openingHours = "";
     private String rating = "";
-    private ArrayList<Restaurant> restaurants;
 
     public List<String> getCuisine() {
         return cuisine;
@@ -42,14 +39,4 @@ public class FilterState {
     public void setRating(String rating) {
         this.rating = rating;
     }
-
-    public ArrayList<Restaurant> getRestaurants(){
-        return this.restaurants;
-    }
-
-    public void setResturants(ArrayList<Restaurant> restaurants){
-        this.restaurants = restaurants;
-    }
-
-
 }

@@ -32,5 +32,4 @@ public class SearchViewModel extends ViewModel<SearchState> {
         System.out.println("SET STATE RIGHT NOW");
         this.firePropertyChanged("state");
     }
-
 }
