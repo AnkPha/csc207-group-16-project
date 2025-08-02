@@ -15,12 +15,14 @@ import entity.UserFactory;
  */
 public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface {
 
+    private final InMemoryUserDataAccessObject userDao;
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Set<String>> friendRequests = new HashMap<>();
     private final Map<String, Set<String>> friends = new HashMap<>();
     private final UserFactory userFactory;
 
-    public InMemoryFriendDataAccessObject(UserFactory userFactory) {
+    public InMemoryFriendDataAccessObject(InMemoryUserDataAccessObject userDao, UserFactory userFactory) {
+        this.userDao = userDao;
         this.userFactory = userFactory;
     }
 
@@ -106,5 +108,26 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
             }
         }
         return results;
+    }
+
+    /**
+     * Retrieves all restaurant reviews for the specified list of usernames.
+     *
+     * @param usernames A list of usernames to retrieve reviews for.
+     * @return A map where each key is a username, and the value is a list of RestaurantReview objects
+     *         that the user has submitted. If a user has no reviews, the list will be empty.
+     */
+    @Override
+    public Map<String, List<entity.Review>> getReviewsForUsers(List<String> usernames) {
+        final Map<String, List<entity.Review>> result = new HashMap<>();
+        for (String username : usernames) {
+            if (userDao.existsByName(username)) {
+                result.put(username, new ArrayList<>(userDao.getUserReviews(username).values()));
+            }
+            else {
+                result.put(username, new ArrayList<>());
+            }
+        }
+        return result;
     }
 }

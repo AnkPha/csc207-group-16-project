@@ -1,8 +1,10 @@
 package use_case.friends;
 
 import java.util.List;
+import java.util.Map;
 
 import data_access.FriendDataAccessInterface;
+import entity.Review;
 
 public class SearchUserInteractor implements SearchUserInputBoundary {
     private final FriendDataAccessInterface dataAccess;
@@ -16,6 +18,7 @@ public class SearchUserInteractor implements SearchUserInputBoundary {
     @Override
     public void execute(SearchUserInputData inputData) {
         final List<String> results = dataAccess.searchUsers(inputData.query);
-        presenter.present(new SearchUserOutputData(results));
+        final Map<String, List<Review>> reviews = dataAccess.getReviewsForUsers(results);
+        presenter.present(new SearchUserOutputData(results, reviews));
     }
 }

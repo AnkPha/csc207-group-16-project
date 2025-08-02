@@ -9,12 +9,16 @@ import javax.swing.WindowConstants;
 import data_access.FilterDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
+
 import entity.CommonUserFactory;
 import entity.UserFactory;
+
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.filter.FilterViewModel;
+import interface_adapter.favorites_list.FavoritesController;
+import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -34,12 +38,13 @@ import interface_adapter.filter.FilterViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInteractor;
 import use_case.filter.FilterOutputBoundary;
-
+import use_case.favorite_list.AddToFavoritesInputBoundary;
+import use_case.favorite_list.AddToFavoritesInteractor;
+import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -53,6 +58,7 @@ import use_case.search_nearby_locations.SearchLocationsNearbyOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+
 import view.LoginView;
 import view.MainAppView;
 import view.SignupView;
@@ -90,9 +96,11 @@ public class AppBuilder {
     private LoginView loginView;
     private MainAppViewModel mainAppViewModel;
     private MainAppView mainAppView;
-
+    private AddToFavoritesInteractor addToFavoritesInteractor;
+    private RemoveFromFavoritesInteractor removeFromFavoritesInteractor;
     private SearchViewModel searchViewModel;
     private FilterViewModel filterViewModel;
+    private FavoritesViewModel favoritesViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -127,6 +135,8 @@ public class AppBuilder {
     public AppBuilder addMainAppView() {
         mainAppViewModel = new MainAppViewModel();
         mainAppView = new MainAppView(mainAppViewModel, searchViewModel, filterViewModel);
+//         FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
+//         mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
@@ -224,7 +234,7 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addSearchViewModel(){
+    public AppBuilder addSearchViewModel() {
         this.searchViewModel = new SearchViewModel();
         return this;
     }
@@ -248,4 +258,19 @@ public class AppBuilder {
         return this;
     }
 
+//     public AppBuilder addFavoritesViewModel() {
+//         this.favoritesViewModel = new FavoritesViewModel();
+//         return this;
+//     }
+
+//     public AppBuilder addFavoritesUseCase() {
+
+//         final FavoritesController favoritesController =
+//                 new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
+
+//         // This line is crucial - make sure it's there:
+//         mainAppView.setFavoritesController(favoritesController);
+
+//         return this;
+//     }
 }
