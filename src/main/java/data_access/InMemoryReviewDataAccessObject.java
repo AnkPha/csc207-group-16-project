@@ -20,6 +20,7 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
      */
     @Override
     public void addReview(Review review) {
+
         reviews.put(review.getReviewId(), review);
     }
 
@@ -40,13 +41,13 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
     }
 
     @Override
-    public List<Review> getReviewsForRestaurant(Restaurant restaurant) {
-        return new ArrayList<>(restaurant.getReviews());
+    public List<Review> getRatingsForRestaurant(Restaurant restaurant) {
+        return new ArrayList<>(Integer.parseInt(restaurant.getRating()));
     }
 
     @Override
     public double getAverageRatingForRestaurant(Restaurant restaurant) {
-        final List<Review> allReviewsrestaurant = restaurant.getReviews();
+        final List<Review> allReviewsrestaurant = getRatingsForRestaurant(restaurant);
         double sumRating = 0.0;
         for (Review review : allReviewsrestaurant) {
             sumRating += review.getRating();

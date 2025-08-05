@@ -31,7 +31,7 @@ public interface AddReviewAccessInterface {
      * @param restaurant restaurant displaying reviews.
      * @return list of reviews.
      */
-    List<Review> getReviewsForRestaurant(Restaurant restaurant);
+    List<Review> getRatingsForRestaurant(Restaurant restaurant);
 
     /**
      * Returns Average Rating of Restaurant.

@@ -10,6 +10,8 @@ import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main_menu.MainAppViewModel;
+import interface_adapter.review.ReviewController;
+import interface_adapter.review.ReviewViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchViewModel;
 
@@ -21,20 +23,23 @@ public class MainAppView extends JPanel {
     private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
     private FavoritesController favoritesController;
+    private ReviewController reviewController;
     private final MainAppViewModel viewModel;
     private SearchLocationsNearbyController searchController;
     private final JTabbedPane tabbedPane;
     private final ProfilePanel profilePanel;
     private final FavoritesPanel favoritesPanel;
     private final SearchPanel searchPanel;
+    private final ReviewPanel reviewPanel;
     private final SearchViewModel searchViewModel;
     private final FavoritesViewModel favoritesViewModel;
+    private final ReviewViewModel reviewViewModel;
 
     public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
-                       FavoritesViewModel favoritesViewModel) {
-//        searchController = new SearchLocationsNearbyController();
+                       FavoritesViewModel favoritesViewModel, ReviewViewModel reviewViewModel) {
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
+        this.reviewViewModel = reviewViewModel;
         this.setLayout(new BorderLayout());
         this.favoritesViewModel = favoritesViewModel;
 
@@ -48,6 +53,9 @@ public class MainAppView extends JPanel {
 
         profilePanel = new ProfilePanel(viewModel);
         tabbedPane.addTab("Profile", profilePanel);
+
+        reviewPanel = new ReviewPanel(reviewViewModel);
+        tabbedPane.addTab("Review", reviewPanel);
 
         tabbedPane.addTab("Friends", new FriendsPanel());
 
@@ -76,5 +84,10 @@ public class MainAppView extends JPanel {
     public void setFavoritesController(FavoritesController controller) {
         this.favoritesController = controller;
         this.favoritesPanel.setFavoritesController(controller);
+    }
+
+    public void setReviewController(ReviewController controller) {
+        this.reviewController = controller;
+        this.reviewPanel.setAddReviewController(controller);
     }
  }

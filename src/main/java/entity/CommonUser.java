@@ -23,15 +23,6 @@ public class CommonUser implements User {
         return password;
     }
 
-    /**
-     * Returns username.
-     * @return username
-     */
-    @Override
-    public String getUsername() {
-        return "";
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
