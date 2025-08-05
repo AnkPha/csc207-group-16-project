@@ -4,7 +4,6 @@ import java.util.List;
 
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInputData;
-import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
 
 /**
  * Controller for the Filter Use Case.
@@ -18,17 +17,17 @@ public class FilterController {
 
     /**
      * Executes the Filter Use Case.
-     * @param filterInputData  the input data for filtering.
+     * @param address  the address for filtering
+     * @param radius the radius for filtering
+     * @param selectedAvailability the selected availability for filtering
+     * @param selectedCuisines the selected cuisines for filtering
+     * @param selectedRating the selected rating for filtering
+     * @param selectedVegStat the selected vegetarian status for filtering
      */
-    public void execute(String address, int radius, List<String> selectedCuisines, String selectedVegStat, String selectedHour, String selectedRating) {
-//        final SearchLocationsNearbyInputData locations = filterInputData.getLocations();
-//        final List<String> cuisine = filterInputData.getCuisine();
-//        final String vegStat = filterInputData.getVegStat();
-//        final String availability = filterInputData.getAvailability();
-//        final String rating = filterInputData.getRating();
-//        System.out.println("FILTER ADDRESS " + address + " RADIUS "+ radius);
-        final FilterInputData userFilterInputData = new FilterInputData(address, radius, selectedCuisines, selectedVegStat,
-                selectedHour, selectedRating);
+    public void execute(String address, int radius, List<String> selectedCuisines, String selectedVegStat,
+                        String selectedAvailability, String selectedRating) {
+        final FilterInputData userFilterInputData = new FilterInputData(address, radius,
+                selectedCuisines, selectedVegStat, selectedAvailability, selectedRating);
         userFilterUseCaseInteractor.execute(userFilterInputData);
     }
 }

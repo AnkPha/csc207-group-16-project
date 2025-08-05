@@ -8,32 +8,32 @@ import javax.swing.JFrame;
 public class Main {
     /**
      * Builds and runs the CA architecture of the application.
+     *
      * @param args unused arguments
      */
     public static void main(String[] args) {
         final AppBuilder appBuilder = new AppBuilder();
-        final JFrame application = appBuilder
-                                            .addLoginView()
-                                            .addSignupView()
-                                            .addSearchViewModel()
 
-                                            .addFilterViewModel()
-                                            .addFavoritesViewModel()
-                                            .addMainAppView()
-                                            .addSearchUseCase()
-                                            .addFilterUseCase()
-                                            .addSignupUseCase()
-                                            .addFavoritesUseCase()
-                                            .addLoginUseCase()
-                                            .addChangePasswordUseCase()
-                                            .addLogoutUseCase()
-                                            .build();
+        final JFrame application = appBuilder
+                .addLoginView()
+                .addSignupView()
+                .addSearchViewModel()
+                .addFilterViewModel()
+                .addFavoritesViewModel()
+                .addMainAppView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addChangePasswordUseCase()
+                .addLogoutUseCase()
+                .addSearchUseCase()
+                .addFilterUseCase()
+                .addFavoritesUseCase()
+                .build();
 
         application.pack();
         application.setVisible(true);
         //            "1 Dundas St E, Toronto, Canada",
-//         100 Queen St W, Toronto, ON, Canada
+        //            100 Queen St W, Toronto, ON, Canada
         // 100, 500
-
     }
 }
