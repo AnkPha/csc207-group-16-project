@@ -12,8 +12,6 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchViewModel;
-import interface_adapter.search_user.SearchUserController;
-import interface_adapter.search_user.SearchUserViewModel;
 
 /**
  * The View for when the user is logged into the program.
@@ -35,6 +33,7 @@ public class MainAppView extends JPanel {
 
     public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
                        FavoritesViewModel favoritesViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel) {
+
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
         this.setLayout(new BorderLayout());
@@ -50,6 +49,7 @@ public class MainAppView extends JPanel {
 
         profilePanel = new ProfilePanel(viewModel);
         tabbedPane.addTab("Profile", profilePanel);
+
 
         friendsPanel = new FriendsPanel();
         friendsPanel.setSearchUserController(searchUserController);

@@ -17,11 +17,12 @@ public class FilterInteractor implements FilterInputBoundary {
         this.filterPresenter = filterOutputBoundary;
     }
 
-    @Override
     public void execute(FilterInputData filterInputData) {
         final ArrayList<Restaurant> filteredRestaurants =
                 filterDataAccessObject.getFilteredRestaurants(filterInputData);
+        System.out.println("INTERACOR SIZE " + filteredRestaurants.size());
         final FilterOutputData outputData = new FilterOutputData(filteredRestaurants);
+        System.out.println("ATTEMPTING TO RUN FILTER INTERACTOR");
         filterPresenter.prepareSuccessView(outputData);
     }
 }

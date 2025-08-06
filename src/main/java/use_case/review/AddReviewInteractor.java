@@ -17,14 +17,19 @@ public class AddReviewInteractor implements AddReviewInputBoundary {
 
     @Override
     public void execute(AddReviewInputData inputData) {
-        final Review review = reviewFactory.createReview(
-                inputData.getUser(),
-                inputData.getRestaurant(),
-                inputData.getRating()
-        );
-        reviewDataAccessObject.addReview(review);
+        try {
+            final Review review = reviewFactory.createReview(
+                    inputData.getUser(),
+                    inputData.getRestaurant(),
+                    inputData.getRating()
+            );
+            reviewDataAccessObject.addReview(review);
 
-        final AddReviewOutputData outputData = new AddReviewOutputData(true, review, null);
-        reviewPresenter.prepareSuccessView(outputData);
+            final AddReviewOutputData outputData = new AddReviewOutputData(true, review, null);
+            reviewPresenter.prepareSuccessView(outputData);
+        }
+        catch (IllegalArgumentException illegalArgumentException) {
+            reviewPresenter.prepareFailView("Invalid review data: " + illegalArgumentException.getMessage());
+        }
     }
 }
