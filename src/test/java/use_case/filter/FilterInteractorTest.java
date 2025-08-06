@@ -41,7 +41,6 @@ class FilterInteractorTest {
                         .anyMatch(restaurant ->
                                 outputData.getFilteredRestaurants().get(0).getCuisine().equals("japanese")));
             }
-
             @Override
             public void prepareFailView(String errorMessage) {
                 Assertions.fail("Failure to Filter Restaurants" + errorMessage);
@@ -66,7 +65,6 @@ class FilterInteractorTest {
                         .anyMatch(restaurant ->
                                 outputData.getFilteredRestaurants().get(0).getRating().equals("Not given")));
             }
-
             @Override
             public void prepareFailView(String errorMessage) {
                 Assertions.fail("Failure to Filter Restaurants" + errorMessage);
@@ -91,7 +89,6 @@ class FilterInteractorTest {
                         .anyMatch(restaurant -> outputData.getFilteredRestaurants().get(0).getVegStat()
                                 .equals("yes")));
             }
-
             @Override
             public void prepareFailView(String errorMessage) {
                 Assertions.fail("Failure to Filter Restaurants" + errorMessage);
@@ -117,7 +114,6 @@ class FilterInteractorTest {
                                 outputData.getFilteredRestaurants().get(0).getOpeningHours()
                                         .equals("Mo-Su 11:00-23:00")));
             }
-
             @Override
             public void prepareFailView(String errorMessage) {
                 Assertions.fail("Failure to Filter Restaurants" + errorMessage);
@@ -142,7 +138,6 @@ class FilterInteractorTest {
                         .anyMatch(restaurant -> outputData.getFilteredRestaurants().get(0).getOpeningHours().
                                 equals("Mo-Fr 11:30-21:30; Sa 12:00-21:00")));
             }
-
             @Override
             public void prepareFailView(String errorMessage) {
                 Assertions.fail("Failure to Filter Restaurants" + errorMessage);
@@ -164,7 +159,6 @@ class FilterInteractorTest {
             public void prepareSuccessView(FilterOutputData outputData) {
                 assertTrue(outputData.getFilteredRestaurants().isEmpty());
             }
-
             @Override
             public void prepareFailView(String errorMessage) {
                 Assertions.fail("Failure to Filter Restaurants: " + errorMessage);
