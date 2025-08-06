@@ -43,7 +43,7 @@ public class CurrentViewState {
         }
         else {
             result = searchState.getStatus();
-          
+
   /**
     public List<Restaurant> getActiveRestaurants() {
         List<Restaurant> result = Collections.emptyList();
