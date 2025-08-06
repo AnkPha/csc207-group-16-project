@@ -107,8 +107,8 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     private ArrayList<Restaurant> getNearbyRestaurants(FilterInputData filterInputData) {
         final int userRadius = filterInputData.getRadius();
         final String userAddress = filterInputData.getAddress();
-        return searchLocationNearbyDataAccessObject.getNearbyRestaurants(
-                userAddress, userRadius);
+        return searchLocationNearbyDataAccessObject.getNearbyRestaurantsResult(
+                userAddress, userRadius).getRestaurant();
     }
 
     @Override

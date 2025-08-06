@@ -1,11 +1,10 @@
 package use_case.search_nearby_locations;
 
-import java.util.List;
-import java.util.ArrayList;
+import entity.RestaurantListResult;
 
-
-import entity.Restaurant;
-
+/**
+ * A class that represents as the search use case Interactor.
+ */
 public class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInputBoundary {
     private final SearchLocationsNearbyDataAccessInterface locationsDataAccessObject;
     private final SearchLocationsNearbyOutputBoundary locationsPresenter;
@@ -16,15 +15,23 @@ public class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInp
         this.locationsPresenter = locationsOutputBoundary;
     }
 
+    /**
+     * A method that executes the input data.
+     * @param locationInputData the input data
+     */
     public void execute(SearchLocationsNearbyInputData locationInputData) {
         // Getting the address from the parameter input
-        final String address = locationInputData.getAddress();
 
-        //Call the resturant api throuh the locationsDataAccessObject
-        ArrayList<Restaurant> nearbyRestaurants = locationsDataAccessObject.getNearbyRestaurants(locationInputData.getAddress(), locationInputData.getRadius());
-        double[] addressCoords = locationsDataAccessObject.getAddressCoords();
+        // Call the restaurant api through the locationsDataAccessObject
+        final RestaurantListResult result = locationsDataAccessObject.getNearbyRestaurantsResult(
+                locationInputData.getAddress(),
+                locationInputData.getRadius());
+        final double[] addressCoords = locationsDataAccessObject.getAddressCoords();
         // Return the locations towards the output class
-        final SearchLocationsNearbyOutputData output = new SearchLocationsNearbyOutputData(nearbyRestaurants, addressCoords);
+        final SearchLocationsNearbyOutputData output = new SearchLocationsNearbyOutputData(
+                result.getRestaurant(),
+                addressCoords, result.getStatus());
+        System.out.println("INTERACTOR " + result.getStatus());
         locationsPresenter.prepareSuccessView(output);
     }
 

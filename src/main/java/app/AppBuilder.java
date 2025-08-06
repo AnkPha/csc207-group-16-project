@@ -224,12 +224,12 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addSearchViewModel(){
+    public AppBuilder addSearchViewModel() {
         this.searchViewModel = new SearchViewModel();
         return this;
     }
 
-    public AppBuilder addFilterUseCase(){
+    public AppBuilder addFilterUseCase() {
         final FilterOutputBoundary filterOutputBoundary =
                 new FilterPresenter(filterViewModel);
 
@@ -243,7 +243,7 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addFilterViewModel(){
+    public AppBuilder addFilterViewModel() {
         this.filterViewModel = new FilterViewModel();
         return this;
     }

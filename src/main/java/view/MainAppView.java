@@ -2,8 +2,8 @@ package view;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.filter.FilterController;
@@ -31,14 +31,12 @@ public class MainAppView extends JPanel {
     private FilterController filterController;
 
     public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel, FilterViewModel filterViewModel) {
-//        searchController = new SearchLocationsNearbyController();
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
         this.filterViewModel = filterViewModel;
         this.setLayout(new BorderLayout());
 
         tabbedPane = new JTabbedPane();
-        //CHECK OUT
         searchPanel = new SearchPanel(searchViewModel, filterViewModel);
         tabbedPane.addTab("Search", searchPanel);
 
@@ -54,26 +52,39 @@ public class MainAppView extends JPanel {
         return "main app";
     }
 
+    /**
+     * A method that sets the ChangePassWord Controller.
+     * @param controller the controller
+     */
     public void setChangePasswordController(ChangePasswordController controller) {
         this.changePasswordController = controller;
         this.profilePanel.setChangePasswordController(controller);
     }
 
+    /**
+     * A method that sets the Logout Controller.
+     * @param controller the controller
+     */
     public void setLogoutController(LogoutController controller) {
         this.logoutController = controller;
         this.profilePanel.setLogoutController(controller);
     }
 
+    /**
+     * A method that sets the Search Controller.
+     * @param controller the controller
+     */
     public void setSearchController(SearchLocationsNearbyController controller) {
         this.searchController = controller;
         this.searchPanel.setSearchLocationsController(controller);
     }
 
+    /**
+     * A method that sets the Filter Controller.
+     * @param controller the controller
+     */
     public void setFilterController(FilterController controller) {
         this.filterController = controller;
         this.searchPanel.setFilteringController(controller);
     }
-
-
-
 }

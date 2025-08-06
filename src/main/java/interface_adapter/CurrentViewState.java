@@ -1,23 +1,49 @@
 package interface_adapter;
-import interface_adapter.search_nearby_locations.SearchState;
-import interface_adapter.filter.FilterState;
-import entity.Restaurant;
-import use_case.filter.FilterInputData;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+
+import entity.Restaurant;
+import interface_adapter.filter.FilterState;
+import interface_adapter.search_nearby_locations.SearchState;
+
 public class CurrentViewState {
+    private static final int FOUND = 2;
     private SearchState searchState;
     private FilterState filterState;
 
+    /**
+     * A method that gets the active restaurants depending on whether it is a
+     * search or filter.
+     * @return result returns a list of the restaurants
+     */
     public ArrayList<Restaurant> getActiveRestaurants() {
-        if (searchState.getFiltered()){
-            return filterState.getRestaurants();
+        final ArrayList<Restaurant> result;
+        if (searchState.getFiltered()) {
+            result = filterState.getRestaurants();
         }
-        else{
-            return searchState.getResturants();
+        else {
+            result = searchState.getResturants();
         }
+        return result;
+    }
+
+    /**
+     * A method that gets the current status.
+     * @return the status of the program when viewing
+     */
+    public int getStatus() {
+        final int result;
+        if (searchState.getFiltered()) {
+            result = FOUND;
+        }
+        else {
+            result = searchState.getStatus();
+        }
+        return result;
     }
 
     public void setSearchState(SearchState searchState) {
@@ -32,10 +58,14 @@ public class CurrentViewState {
         return searchState.getFiltered();
     }
 
-    public SearchState getSearchState(){
+    public SearchState getSearchState() {
         return searchState;
     }
 
+    /**
+     * A method that gets the cuisine options.
+     * @return A list of unique cuisines
+     */
     public DefaultListModel getCuisineOptions() {
         final ArrayList<Restaurant> nearbyRestaurants = getActiveRestaurants();
         final List<String> options = new ArrayList<>();
@@ -50,22 +80,13 @@ public class CurrentViewState {
                 model.addElement(cuisine);
             }
         }
-//        return options;
-
-
-//        final List<String> cuisines = filterDataAccessObject.getCuisineOptions(f);
-
-//        ArrayList<Restaurant>
-//        model.addElement("");
-//        for (String c : cuisines) {
-//            if (c != null && !c.isEmpty()) {
-//                model.addElement(c);
-//            }
-//        }
         return model;
-//        cuisineList.setModel(model);
     }
 
+    /**
+     * A method that returns a list of rating options.
+     * @return a list of rating options
+     */
     public DefaultComboBoxModel<String> getRatingOptions() {
         final ArrayList<Restaurant> nearbyRestaurants = getActiveRestaurants();
         final List<String> options = new ArrayList<>();
@@ -83,6 +104,10 @@ public class CurrentViewState {
         return model;
     }
 
+    /**
+     * A method that returns the veg stat options.
+     * @return a list of veg stat options
+     */
     public DefaultComboBoxModel<String> getVegStatOptions() {
         final ArrayList<Restaurant> nearbyRestaurants = getActiveRestaurants();
         final List<String> options = new ArrayList<>();
@@ -99,6 +124,10 @@ public class CurrentViewState {
         return model;
     }
 
+    /**
+     * A method that gets the option of hours.
+     * @return a list of hourly options
+     */
     public DefaultComboBoxModel<String> getHourOptions() {
         final ArrayList<Restaurant> nearbyRestaurants = getActiveRestaurants();
         final List<String> options = new ArrayList<>();
@@ -114,36 +143,5 @@ public class CurrentViewState {
         }
         return model;
     }
-
-
-//    public void updateOtherFilterOptions() {
-//        final FilterInputData f = new FilterInputData(searchInputData, null, null, null, null);
-////        final List<String> ratingOptions = filterDataAccessObject.getRatingOptions(f);
-//        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-//
-//        ratingComboBox.removeAllItems();
-//        ratingComboBox.addItem("");
-//        for (String rating : ratingOptions) {
-//            if (rating != null && !rating.isEmpty()) {
-//                ratingComboBox.addItem(rating);
-//            }
-//        }
-////        final List<String> vegStatOptions = filterDataAccessObject.getVegStatOptions(f);
-//        vegStatComboBox.removeAllItems();
-//        vegStatComboBox.addItem("");
-//        for (String veg : vegStatOptions) {
-//            if (veg != null && !veg.isEmpty()) {
-//                vegStatComboBox.addItem(veg);
-//            }
-//        }
-////        final List<String> hourOptions = filterDataAccessObject.getOpeningHourOptions(f);
-//        hourComboBox.removeAllItems();
-//        hourComboBox.addItem("");
-//        for (String hour : hourOptions) {
-//            if (hour != null && !hour.isEmpty()) {
-//                hourComboBox.addItem(hour);
-//            }
-//        }
-//    }
 }
 
