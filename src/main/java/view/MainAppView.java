@@ -6,8 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import interface_adapter.change_password.ChangePasswordController;
-import interface_adapter.filter.FilterController;
-import interface_adapter.filter.FilterViewModel;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.filter.FilterController;
@@ -37,17 +35,17 @@ public class MainAppView extends JPanel {
     private final FriendsPanel friendsPanel;
     private final SearchViewModel searchViewModel;
     private final FavoritesViewModel favoritesViewModel;
-    private final FriendsPanel friendsPanel;
-    private FilterController filterController;
-
 
     private final FilterViewModel filterViewModel;
     private FilterController filterController;
 
-    public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
-                       FavoritesViewModel favoritesViewModel, FilterViewModel filterViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel, FilterController filterController1) {
-
-
+    public MainAppView(MainAppViewModel viewModel,
+                       SearchViewModel searchViewModel,
+                       FavoritesViewModel favoritesViewModel,
+                       FilterViewModel filterViewModel,
+                       SearchUserController searchUserController,
+                       SearchUserViewModel searchUserViewModel,
+                       FilterController filterController1) {
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
         this.filterController = filterController1;
@@ -69,7 +67,6 @@ public class MainAppView extends JPanel {
         friendsPanel.setSearchUserController(searchUserController);
         friendsPanel.setSearchUserViewModel(searchUserViewModel);
         tabbedPane.addTab("Friends", friendsPanel);
-
 
         this.add(tabbedPane, BorderLayout.CENTER);
     }
@@ -106,14 +103,9 @@ public class MainAppView extends JPanel {
     }
 
     /**
-     * A method that sets the Filter Controller.
+     * A method that sets the favorite controller.
      * @param controller the controller
      */
-    public void setFilterController(FilterController controller) {
-        this.filterController = controller;
-        this.searchPanel.setFilteringController(controller);
-    }
-
     public void setFavoritesController(FavoritesController controller) {
         this.favoritesController = controller;
         this.favoritesPanel.setFavoritesController(controller);
@@ -127,4 +119,4 @@ public class MainAppView extends JPanel {
         this.filterController = controller;
         this.searchPanel.setFilteringController(controller);
     }
- }
+}

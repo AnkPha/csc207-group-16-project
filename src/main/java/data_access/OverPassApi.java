@@ -93,7 +93,8 @@ public class OverPassApi {
         else {
             lon = 0.0;
         }
-        return new Restaurant(name, address, cuisine, vegStat, openingHours, website, lat, lon);
+        final double[] coords = {lat, lon};
+        return new Restaurant(name, address, cuisine, vegStat, openingHours, website, coords);
     }
 
     private String getTagValue(JsonObject tags, String key, String defaultValue) {

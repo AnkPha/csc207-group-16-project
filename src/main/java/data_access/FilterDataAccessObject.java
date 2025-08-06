@@ -7,10 +7,11 @@ import domain.OpeningHours;
 import entity.Restaurant;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputData;
-import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface;
 
 public class FilterDataAccessObject implements FilterDataAccessInterface {
-    private final SearchLocationsNearbyDataAccessInterface searchInterface;
+    private static final String NOT_GIVEN = "not given";
+    private static final String NONE = "None";
+    private final SearchLocationNearbyDataAccessObject searchInterface;
 
     public FilterDataAccessObject() {
         this.searchInterface = new SearchLocationNearbyDataAccessObject();
@@ -33,7 +34,7 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     }
 
     private ArrayList<Restaurant> getNearbyRestaurants(FilterInputData data) {
-        return searchInterface.getNearbyRestaurants(data.getAddress(), data.getRadius());
+        return searchInterface.getNearbyRestaurantsResult(data.getAddress(), data.getRadius()).getRestaurant();
     }
 
     private boolean matchesAllFilters(Restaurant restaurant, List<String> cuisines, String rating,
@@ -67,15 +68,8 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
         return result;
     }
 
-    private ArrayList<Restaurant> getNearbyRestaurants(FilterInputData filterInputData) {
-        final int userRadius = filterInputData.getRadius();
-        final String userAddress = filterInputData.getAddress();
-        return searchLocationNearbyDataAccessObject.getNearbyRestaurantsResult(
-                userAddress, userRadius).getRestaurant();
-    }
-
     private boolean isCuisineValid(String cuisine) {
-        return cuisine != null && !cuisine.isBlank() && !"not given".equalsIgnoreCase(cuisine);
+        return cuisine != null && !cuisine.isBlank() && !NOT_GIVEN.equalsIgnoreCase(cuisine);
     }
 
     private boolean anyCuisineMatches(String userCuisine, String[] parts) {
@@ -92,15 +86,15 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     }
 
     private boolean isValidCuisinePart(String part) {
-        return part != null && !part.trim().isEmpty() && !part.trim().equalsIgnoreCase("not given");
+        return part != null && !part.trim().isEmpty() && !part.trim().equalsIgnoreCase(NOT_GIVEN);
     }
 
     private boolean matchesRatingFilter(String userRating, String restRating) {
         boolean result = false;
-        if (userRating == null || userRating.isEmpty() || "None".equalsIgnoreCase(userRating)) {
+        if (userRating == null || userRating.isEmpty() || NONE.equalsIgnoreCase(userRating)) {
             result = true;
         }
-        else if (restRating != null && !restRating.isBlank() && !"not given".equalsIgnoreCase(restRating)) {
+        else if (restRating != null && !restRating.isBlank() && !NOT_GIVEN.equalsIgnoreCase(restRating)) {
             try {
                 final int userRate = Integer.parseInt(userRating);
                 final int restRate = Integer.parseInt(restRating);
@@ -115,10 +109,10 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
 
     private boolean matchesVegStatFilter(String userVeg, String restVeg) {
         boolean result = false;
-        if (userVeg == null || userVeg.isEmpty() || "None".equalsIgnoreCase(userVeg)) {
+        if (userVeg == null || userVeg.isEmpty() || NONE.equalsIgnoreCase(userVeg)) {
             result = true;
         }
-        else if (restVeg != null && !restVeg.isBlank() && !"not given".equalsIgnoreCase(restVeg)) {
+        else if (restVeg != null && !restVeg.isBlank() && !NOT_GIVEN.equalsIgnoreCase(restVeg)) {
             result = restVeg.equalsIgnoreCase(userVeg);
         }
 
@@ -128,12 +122,12 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     private boolean matchesAvailabilityFilter(String userAvailability, String restOpeningHours) {
         boolean result = false;
 
-        if (userAvailability == null || userAvailability.isEmpty() || "None".equalsIgnoreCase(userAvailability)) {
+        if (userAvailability == null || userAvailability.isEmpty() || NONE.equalsIgnoreCase(userAvailability)) {
             result = true;
         }
         else if (restOpeningHours == null || restOpeningHours.isBlank()
-                || "not given".equalsIgnoreCase(restOpeningHours)) {
-            result = "None".equalsIgnoreCase(userAvailability);
+                || NOT_GIVEN.equalsIgnoreCase(restOpeningHours)) {
+            result = NONE.equalsIgnoreCase(userAvailability);
         }
         else if ("24/7".equalsIgnoreCase(restOpeningHours)) {
             result = !"Closed Now".equalsIgnoreCase(userAvailability);
