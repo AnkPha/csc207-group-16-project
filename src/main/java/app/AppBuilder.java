@@ -15,6 +15,9 @@ import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterPresenter;
+import interface_adapter.filter.FilterViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -30,9 +33,15 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+
+import use_case.filter.FilterDataAccessInterface;
+import use_case.filter.FilterInputBoundary;
+import use_case.filter.FilterInteractor;
+import use_case.filter.FilterOutputBoundary;
 import use_case.favorite_list.AddToFavoritesInputBoundary;
 import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
+
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -50,7 +59,6 @@ import view.LoginView;
 import view.MainAppView;
 import view.SignupView;
 import view.ViewManager;
-import view.SearchPanel;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -66,6 +74,7 @@ import view.SearchPanel;
 public class AppBuilder {
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
+
     // thought question: is the hard dependency below a problem?
     private final UserFactory userFactory = new CommonUserFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
@@ -119,9 +128,16 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addMainAppView() {
+        if (searchViewModel == null) {
+            throw new IllegalStateException("searchViewModel must be initialized before creating MainAppView");
+        }
+        if (filterViewModel == null) {
+            throw new IllegalStateException("filterViewModel must be initialized before creating MainAppView");
+        }
         mainAppViewModel = new MainAppViewModel();
+
         FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel);
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, filterViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
