@@ -30,10 +30,8 @@ public class Main {
                 .addSearchUseCase()
                 .addFilterUseCase()
                 .addFavoritesUseCase()
-                .addReviewUseCase()
+                // .addReviewUseCase()
                 .build();
-
-
 
         application.pack();
         application.setVisible(true);

@@ -5,30 +5,30 @@ import use_case.review.AddReviewOutputData;
 
 public class ReviewPresenter implements AddReviewOutputBoundary {
 
-    private ReviewViewModel ReviewViewModel;
+    private ReviewViewModel reviewViewModel;
 
     public void addReviewPresenter(ReviewViewModel addReviewViewModel) {
-        this.ReviewViewModel = addReviewViewModel;
+        this.reviewViewModel = addReviewViewModel;
     }
 
     @Override
     public void prepareSuccessView(AddReviewOutputData outputData) {
-        final ReviewState state = ReviewViewModel.getState();
+        final ReviewState state = reviewViewModel.getState();
         state.setSuccess(true);
         state.setSuccessMessage("Review added successfully!");
         state.setErrorMessage(null);
-        ReviewViewModel.setState(state);
-        ReviewViewModel.firePropertyChanged();
+        reviewViewModel.setState(state);
+        reviewViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        final ReviewState state = ReviewViewModel.getState();
+        final ReviewState state = reviewViewModel.getState();
         state.setSuccess(false);
         state.setErrorMessage(errorMessage);
         state.setSuccessMessage(null);
-        ReviewViewModel.setState(state);
-        ReviewViewModel.firePropertyChanged();
+        reviewViewModel.setState(state);
+        reviewViewModel.firePropertyChanged();
     }
 }
 

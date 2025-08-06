@@ -8,10 +8,14 @@ import javax.swing.JPanel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchViewModel;
+import interface_adapter.search_user.SearchUserController;
+import interface_adapter.search_user.SearchUserViewModel;
 
 /**
  * The View for when the user is logged into the program.
@@ -30,18 +34,20 @@ public class MainAppView extends JPanel {
     private final SearchViewModel searchViewModel;
     private final FavoritesViewModel favoritesViewModel;
     private final FriendsPanel friendsPanel;
+    private FilterController filterController;
 
     public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
-                       FavoritesViewModel favoritesViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel) {
+                       FavoritesViewModel favoritesViewModel, FilterViewModel filterViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel, FilterController filterController1) {
 
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
+        this.filterController = filterController1;
         this.setLayout(new BorderLayout());
         this.favoritesViewModel = favoritesViewModel;
 
         tabbedPane = new JTabbedPane();
 
-        searchPanel = new SearchPanel(searchViewModel);
+        searchPanel = new SearchPanel(searchViewModel, filterViewModel);
         tabbedPane.addTab("Search", searchPanel);
 
         favoritesPanel = new FavoritesPanel(favoritesViewModel);
@@ -49,7 +55,6 @@ public class MainAppView extends JPanel {
 
         profilePanel = new ProfilePanel(viewModel);
         tabbedPane.addTab("Profile", profilePanel);
-
 
         friendsPanel = new FriendsPanel();
         friendsPanel.setSearchUserController(searchUserController);
@@ -81,5 +86,14 @@ public class MainAppView extends JPanel {
     public void setFavoritesController(FavoritesController controller) {
         this.favoritesController = controller;
         this.favoritesPanel.setFavoritesController(controller);
+    }
+
+    /**
+     * A method that sets the Filter Controller.
+     * @param controller the controller.
+     */
+    public void setFilterController(FilterController controller) {
+        this.filterController = controller;
+        this.searchPanel.setFilteringController(controller);
     }
  }
