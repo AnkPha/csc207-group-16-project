@@ -32,17 +32,19 @@ public class MainAppView extends JPanel {
     private final ProfilePanel profilePanel;
     private final FavoritesPanel favoritesPanel;
     private final SearchPanel searchPanel;
+    private final FriendsPanel friendsPanel;
     private final SearchViewModel searchViewModel;
     private final FavoritesViewModel favoritesViewModel;
+    private final FriendsPanel friendsPanel;
+
 
     private final FilterViewModel filterViewModel;
     private FilterController filterController;
 
-    public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel, FilterViewModel filterViewModel) {
+    public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
+                       FavoritesViewModel favoritesViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel) {
 
-//     public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
-//                        FavoritesViewModel favoritesViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel) {
-//        searchController = new SearchLocationsNearbyController();
+
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
         this.filterViewModel = filterViewModel;
@@ -50,6 +52,7 @@ public class MainAppView extends JPanel {
         this.favoritesViewModel = favoritesViewModel;
 
         tabbedPane = new JTabbedPane();
+
         searchPanel = new SearchPanel(searchViewModel, filterViewModel);
         tabbedPane.addTab("Search", searchPanel);
 
@@ -59,9 +62,13 @@ public class MainAppView extends JPanel {
         profilePanel = new ProfilePanel(viewModel);
         tabbedPane.addTab("Profile", profilePanel);
 
-        final FriendsPanel friendsPanel = new FriendsPanel();
+
+
+        friendsPanel = new FriendsPanel();
         friendsPanel.setSearchUserController(searchUserController);
+        friendsPanel.setSearchUserViewModel(searchUserViewModel);
         tabbedPane.addTab("Friends", friendsPanel);
+
 
         this.add(tabbedPane, BorderLayout.CENTER);
     }
@@ -106,12 +113,8 @@ public class MainAppView extends JPanel {
         this.searchPanel.setFilteringController(controller);
     }
 
-
-
-}
-//     public void setFavoritesController(FavoritesController controller) {
-//         this.favoritesController = controller;
-//         this.favoritesPanel.setFavoritesController(controller);
-//     }
-//  }
-
+    public void setFavoritesController(FavoritesController controller) {
+        this.favoritesController = controller;
+        this.favoritesPanel.setFavoritesController(controller);
+    }
+ }

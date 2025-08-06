@@ -1,5 +1,7 @@
 package use_case.review;
 
+import java.util.List;
+
 import entity.Restaurant;
 import entity.Review;
 import entity.User;
@@ -23,4 +25,18 @@ public interface AddReviewAccessInterface {
      * @return true or false.
      */
     boolean existsReviewByUserAndRestaurant(User user, Restaurant restaurant);
+
+    /**
+     * Returns all reviews for a restaurant.
+     * @param restaurant restaurant displaying reviews.
+     * @return list of reviews.
+     */
+    List<Review> getRatingsForRestaurant(Restaurant restaurant);
+
+    /**
+     * Returns Average Rating of Restaurant.
+     * @param restaurant restaurant.
+     * @return averageRating average rating of reviews.
+     */
+    double getAverageRatingForRestaurant(Restaurant restaurant);
 }

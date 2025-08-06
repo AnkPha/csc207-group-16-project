@@ -67,7 +67,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         final User user = users.get(username);
         if (user instanceof CommonUser) {
             final entity.Restaurant restaurant = new entity.Restaurant(
-                    "restaurantName",
+                    restaurantName,
                     "123 Sample St",
                     "Mixed Cuisine",
                     "Vegetarian Options",
@@ -107,6 +107,15 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     }
 
     /**
+     * Gets all usernames in the system.
+     *
+     * @return A list of all usernames in the system
+     */
+    public java.util.List<String> getAllUsernames() {
+        return new java.util.ArrayList<>(users.keySet());
+    }
+
+    /**
      * Populates the in-memory user database with sample users and restaurant reviews.
      * This is used for testing or demo purposes only.
      */
@@ -121,5 +130,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
         save(new CommonUser("carol", "pw"));
         addReview("carol", "Burger Spot", 4, "Tasty, affordable, great late-night place");
+
+        System.out.println("Sample users populated: " + getAllUsernames());
     }
 }

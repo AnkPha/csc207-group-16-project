@@ -1,6 +1,8 @@
 package use_case.friends;
 
 import data_access.InMemoryFriendDataAccessObject;
+import data_access.InMemoryUserDataAccessObject;
+import entity.CommonUser;
 import entity.CommonUserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,24 +13,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ViewRequestsInteractorTest {
 
+    private InMemoryUserDataAccessObject userDao;
     private InMemoryFriendDataAccessObject dao;
 
     @BeforeEach
     void setUp() {
-        dao = new InMemoryFriendDataAccessObject(new CommonUserFactory());
-        dao.createUser("alice");
-        dao.createUser("bob");
+        userDao = new InMemoryUserDataAccessObject();
+        dao = new InMemoryFriendDataAccessObject(userDao, new CommonUserFactory());
+        CommonUser alice = new CommonUser("Alice", "pw");
+        CommonUser bob = new CommonUser("Bob", "pw");
+
+        userDao.save(alice);
+        userDao.save(bob);
+
+        dao.addUser(alice);
+        dao.addUser(bob);
     }
 
     @Test
     void testViewRequestsReturnsSingleRequest() {
-        dao.sendFriendRequest("alice", "bob");
+        dao.sendFriendRequest("Alice", "Bob");
 
         ViewRequestsOutputBoundary presenter = outputData ->
-                assertEquals(List.of("alice"), outputData.getPendingUsernames());
+                assertEquals(List.of("Alice"), outputData.getPendingUsernames());
 
         ViewRequestsInteractor interactor = new ViewRequestsInteractor(dao, presenter);
-        interactor.execute(new ViewRequestsInputData("bob"));
+        interactor.execute(new ViewRequestsInputData("Bob"));
     }
 
     @Test
@@ -37,25 +47,25 @@ class ViewRequestsInteractorTest {
                 assertTrue(outputData.getPendingUsernames().isEmpty());
 
         ViewRequestsInteractor interactor = new ViewRequestsInteractor(dao, presenter);
-        interactor.execute(new ViewRequestsInputData("alice"));
+        interactor.execute(new ViewRequestsInputData("Alice"));
     }
 
     @Test
     void testViewRequestsMultipleRequests() {
-        dao.createUser("carol");
-        dao.createUser("dave");
+        dao.createUser("Carol");
+        dao.createUser("Dave");
 
-        dao.sendFriendRequest("carol", "bob");
-        dao.sendFriendRequest("dave", "bob");
+        dao.sendFriendRequest("Carol", "Bob");
+        dao.sendFriendRequest("Dave", "Bob");
 
         ViewRequestsOutputBoundary presenter = outputData -> {
             List<String> requests = outputData.getPendingUsernames();
-            assertTrue(requests.contains("carol"));
-            assertTrue(requests.contains("dave"));
+            assertTrue(requests.contains("Carol"));
+            assertTrue(requests.contains("Dave"));
             assertEquals(2, requests.size());
         };
 
         ViewRequestsInteractor interactor = new ViewRequestsInteractor(dao, presenter);
-        interactor.execute(new ViewRequestsInputData("bob"));
+        interactor.execute(new ViewRequestsInputData("Bob"));
     }
 }

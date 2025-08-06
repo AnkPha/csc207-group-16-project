@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.Waypoint;
@@ -74,7 +73,6 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
     private Set<Waypoint> waypoints;
 
     public SearchPanel(SearchViewModel searchViewModel, FilterViewModel filterViewModel) {
-        // Starting with the left Panel
 
         searchViewModel.addPropertyChangeListener(this);
         filterViewModel.addPropertyChangeListener(this);
@@ -98,7 +96,6 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
         leftPanel = new LeftPanel(this);
         rightPanel = new RightPanel(this);
         final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
-        // splitPane.setDividerLocation(0.5); // Forces 50% split initially
         splitPane.setOneTouchExpandable(true);
 
         this.setLayout(new BorderLayout());
@@ -271,6 +268,8 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
         catch (NumberFormatException exception) {
             JOptionPane.showMessageDialog(this, "Radius must be a valid number.");
         }
+        infoPanel.revalidate();
+        infoPanel.repaint();
     }
 
     public void setSearchLocationsController(SearchLocationsNearbyController searchLocationsController) {
