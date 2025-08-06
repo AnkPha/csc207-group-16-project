@@ -256,6 +256,9 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addFilterViewModel() {
+        this.filterViewModel = new FilterViewModel();
+
     public AppBuilder addFavoritesViewModel() {
         this.favoritesViewModel = new FavoritesViewModel();
         return this;
@@ -293,6 +296,21 @@ public class AppBuilder {
 
     public AppBuilder addReviewViewModel() {
         reviewViewModel = new ReviewViewModel();
+        return this;
+    }
+
+    public AppBuilder addReviewsUseCase() {
+        final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
+        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
+        final ReviewFactory reviewFactory = new ReviewFactory(); // Assuming you have this implemented
+
+        final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(
+                reviewDataAccessInterface,
+                addReviewOutputBoundary,
+                reviewFactory
+        );
+
+        reviewController = new ReviewController(addReviewInteractor);
         return this;
     }
 

@@ -1,9 +1,9 @@
 package interface_adapter.search_nearby_locations;
 
+import java.util.ArrayList;
+
 import entity.Restaurant;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 /**
  * The State information representing the current address.
  */
@@ -15,6 +15,7 @@ public class SearchState {
     private double[] addressCoords;
     private boolean foundAddress;
     private boolean filtered;
+    private int status;
 
     public SearchState(interface_adapter.search_nearby_locations.SearchState copy) {
         address = copy.address;
@@ -23,6 +24,8 @@ public class SearchState {
         addressCoords = copy.getAddressCoords();
         foundAddress = copy.getFoundAddress();
         filtered = false;
+        status = copy.status;
+        restaurants = copy.restaurants;
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
@@ -38,29 +41,56 @@ public class SearchState {
         this.address = address;
     }
 
-    public String getRadius() { return radius; }
-
-    public void setRadius(String radius) { this.radius = radius; }
-
-    public void setSearchError(String searchError) {
-        this.searchError = searchError;
+    public String getRadius() {
+        return radius;
     }
 
-    public void setRestaurants(ArrayList<Restaurant> restaurants) { this.restaurants = restaurants; }
+    /**
+     * Sets the radius.
+     * @param radius the radius
+     */
+    public void setRadius(String radius) {
+        this.radius = radius;
+    }
 
-    public ArrayList<Restaurant> getResturants(){
+    public void setRestaurants(ArrayList<Restaurant> restaurants) {
+        this.restaurants = restaurants;
+    }
+
+    public ArrayList<Restaurant> getResturants() {
         return restaurants;
     }
 
-    public void setAddressCoords(double[] addressCoords) { this.addressCoords = addressCoords; }
+    public void setAddressCoords(double[] addressCoords) {
+        this.addressCoords = addressCoords;
+    }
 
-    public double[] getAddressCoords() { return addressCoords; }
+    public double[] getAddressCoords() {
+        return addressCoords;
+    }
 
-    public void setFoundAddress(boolean foundAddress) { this.foundAddress = foundAddress; }
-    public boolean getFoundAddress(){ return foundAddress; }
+    public void setFoundAddress(boolean foundAddress) {
+        this.foundAddress = foundAddress;
+    }
 
-    public void setFiltered(boolean filtered) { this.filtered = filtered; }
+    public boolean getFoundAddress() {
+        return foundAddress;
+    }
 
-    public boolean getFiltered() { return filtered; }
+    public void setFiltered(boolean filtered) {
+        this.filtered = filtered;
+    }
+
+    public boolean getFiltered() {
+        return filtered;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
 }
 

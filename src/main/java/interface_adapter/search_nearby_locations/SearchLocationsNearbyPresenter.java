@@ -1,6 +1,8 @@
 package interface_adapter.search_nearby_locations;
+
 import use_case.search_nearby_locations.SearchLocationsNearbyOutputBoundary;
 import use_case.search_nearby_locations.SearchLocationsNearbyOutputData;
+
 /**
  * The Presenter for the Search nearby locations Use Case.
  */
@@ -14,18 +16,17 @@ public class SearchLocationsNearbyPresenter implements SearchLocationsNearbyOutp
 
     @Override
     public void prepareSuccessView(SearchLocationsNearbyOutputData outputData) {
-        SearchState newState = new SearchState();
+        final SearchState newState = new SearchState();
         newState.setRestaurants(outputData.getNearbyRestaurants());
         newState.setAddressCoords(outputData.getAddressCoords());
-//        newState.setRadius(outputData.getRadius());
+        System.out.println("PRESENTER " + outputData.getStatus());
+        newState.setStatus(outputData.getStatus());
         System.out.println("ABOUT TO CALL SET STATE");
-        resultsViewModel.setState(newState); // This fires the "state" property change
+        resultsViewModel.setState(newState);
     }
 
     @Override
     public void prepareFailView(String error) {
         // note: this use case currently can't fail
     }
-
-
 }

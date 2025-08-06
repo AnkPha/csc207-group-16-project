@@ -7,8 +7,8 @@ public class ReviewPresenter implements AddReviewOutputBoundary {
 
     private ReviewViewModel reviewViewModel;
 
-    public void addReviewPresenter(ReviewViewModel addReviewViewModel) {
-        this.reviewViewModel = addReviewViewModel;
+    public ReviewPresenter(ReviewViewModel reviewViewModel) {
+        this.reviewViewModel = reviewViewModel;
     }
 
     @Override

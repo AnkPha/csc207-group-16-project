@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="csc207-group-16-project" />
         <module name="G16 Project" />
+        <module name="g16-project" />
       </profile>
     </annotationProcessing>
   </component>
