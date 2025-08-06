@@ -258,6 +258,7 @@ public class AppBuilder {
 
     public AppBuilder addFilterViewModel() {
         this.filterViewModel = new FilterViewModel();
+    }
 
     public AppBuilder addFavoritesViewModel() {
         this.favoritesViewModel = new FavoritesViewModel();
@@ -272,11 +273,6 @@ public class AppBuilder {
         // This line is crucial - make sure it's there:
         mainAppView.setFavoritesController(favoritesController);
 
-        return this;
-    }
-
-    public AppBuilder addFilterViewModel() {
-        this.filterViewModel = new FilterViewModel();
         return this;
     }
 
@@ -299,7 +295,7 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addReviewsUseCase() {
+    public AppBuilder addReviewUseCase() {
         final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
         final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
         final ReviewFactory reviewFactory = new ReviewFactory(); // Assuming you have this implemented
