@@ -33,8 +33,6 @@ public class Main {
                 .addReviewUseCase()
                 .build();
 
-
-
         application.pack();
         application.setVisible(true);
         //            "1 Dundas St E, Toronto, Canada",

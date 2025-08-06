@@ -1,5 +1,6 @@
 package interface_adapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,9 +12,39 @@ import interface_adapter.filter.FilterState;
 import interface_adapter.search_nearby_locations.SearchState;
 
 public class CurrentViewState {
+    private static final int FOUND = 2;
     private SearchState searchState;
     private FilterState filterState;
 
+    /**
+     * A method that gets the active restaurants depending on whether it is a
+     * search or filter.
+     * @return result returns a list of the restaurants
+     */
+    public ArrayList<Restaurant> getActiveRestaurants() {
+        final ArrayList<Restaurant> result;
+        if (searchState.getFiltered()) {
+            result = filterState.getRestaurants();
+        }
+        else {
+            result = searchState.getResturants();
+        }
+        return result;
+    }
+
+    /**
+     * A method that gets the current status.
+     * @return the status of the program when viewing
+     */
+    public int getStatus() {
+        final int result;
+        if (searchState.getFiltered()) {
+            result = FOUND;
+        }
+        else {
+            result = searchState.getStatus();
+          
+  /**
     public List<Restaurant> getActiveRestaurants() {
         List<Restaurant> result = Collections.emptyList();
         System.out.println("[DEBUG] Getting active restaurants...");
@@ -30,6 +61,7 @@ public class CurrentViewState {
         }
         return result;
     }
+    */
 
     public void setSearchState(SearchState searchState) {
         this.searchState = searchState;
@@ -41,10 +73,24 @@ public class CurrentViewState {
         System.out.println("[DEBUG] FilterState set: " + (filterState != null));
     }
 
+    public boolean isFiltered() {
+        return searchState.getFiltered();
+    }
+
     public SearchState getSearchState() {
         return searchState;
     }
 
+
+  /**  
+  /**
+     * A method that gets the cuisine options.
+     * @return A list of unique cuisines
+     
+    public DefaultListModel getCuisineOptions() {
+        final ArrayList<Restaurant> nearbyRestaurants = getActiveRestaurants();
+        final List<String> options = new ArrayList<>();*/
+          
     public DefaultListModel<String> getCuisineOptions() {
         final List<Restaurant> nearbyRestaurants = getActiveRestaurants();
         final DefaultListModel<String> model = new DefaultListModel<>();
@@ -67,6 +113,10 @@ public class CurrentViewState {
         return model;
     }
 
+    /**
+     * A method that returns a list of rating options.
+     * @return a list of rating options
+     */
     public DefaultComboBoxModel<String> getRatingOptions() {
         final List<Restaurant> nearbyRestaurants = getActiveRestaurants();
         final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
@@ -82,6 +132,10 @@ public class CurrentViewState {
         return model;
     }
 
+    /**
+     * A method that returns the veg stat options.
+     * @return a list of veg stat options
+     */
     public DefaultComboBoxModel<String> getVegStatOptions() {
         final List<Restaurant> nearbyRestaurants = getActiveRestaurants();
         final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
@@ -97,6 +151,10 @@ public class CurrentViewState {
         return model;
     }
 
+    /**
+     * A method that gets the option of hours.
+     * @return a list of hourly options
+     */
     public DefaultComboBoxModel<String> getHourOptions() {
         final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("None");
