@@ -2,6 +2,8 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Map;
 
@@ -14,11 +16,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import entity.Review;
 import interface_adapter.search_user.SearchUserController;
+import interface_adapter.search_user.SearchUserState;
+import interface_adapter.search_user.SearchUserViewModel;
 
-public class FriendsPanel extends JPanel {
+public class FriendsPanel extends JPanel implements PropertyChangeListener {
     private final JTextField searchField = new JTextField(15);
     private final JButton searchButton = new JButton("Search");
 
@@ -31,6 +36,7 @@ public class FriendsPanel extends JPanel {
     private final JTextArea searchResultArea = new JTextArea(10, 40);
 
     private SearchUserController searchUserController;
+    private SearchUserViewModel searchUserViewModel;
 
     public FriendsPanel() {
         this.setLayout(new BorderLayout());
@@ -59,6 +65,25 @@ public class FriendsPanel extends JPanel {
                 searchUserController.execute(query);
             }
         });
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("state".equals(evt.getPropertyName()) && searchUserViewModel != null) {
+            final SearchUserState state = searchUserViewModel.getState();
+            displaySearchResults(state.getUsernames(), state.getUserReviews());
+        }
+    }
+
+    public void setSearchUserViewModel(SearchUserViewModel searchUserViewModel) {
+        if (this.searchUserViewModel != null) {
+            this.searchUserViewModel.removePropertyChangeListener(this);
+        }
+
+        this.searchUserViewModel = searchUserViewModel;
+        if (this.searchUserViewModel != null) {
+            this.searchUserViewModel.addPropertyChangeListener(this);
+        }
     }
 
     /**
@@ -93,22 +118,44 @@ public class FriendsPanel extends JPanel {
      *                    will either have an empty list or a null value
      */
     public void displaySearchResults(List<String> usernames, Map<String, List<Review>> userReviews) {
-        final StringBuilder sb = new StringBuilder();
-        for (String user : usernames) {
-            sb.append("User: ").append(user).append("\n");
-            final List<Review> reviews = userReviews.get(user);
-            if (reviews != null && !reviews.isEmpty()) {
-                for (Review review : reviews) {
-                    sb.append("  - ").append(review.getRestaurant().getName())
-                            .append(" | ").append(review.getRating()).append("/5\n");
+        // Ensure this runs on the Event Dispatch Thread
+        SwingUtilities.invokeLater(() -> {
+            final StringBuilder sb = new StringBuilder();
+            for (String user : usernames) {
+                sb.append("User: ").append(user).append("\n");
+                final List<Review> reviews = userReviews.get(user);
+                if (reviews != null && !reviews.isEmpty()) {
+                    for (Review review : reviews) {
+                        sb.append("  - ").append(review.getRestaurant().getName())
+                                .append(" | ").append(review.getRating()).append("/5\n");
+
+                        final String reviewText = review.getReviewText();
+                        if (reviewText != null && !reviewText.isEmpty()) {
+                            sb.append(" - ").append(reviewText).append("");
+                        }
+                        sb.append("\n");
+                    }
                 }
+                else {
+                    sb.append("  (No reviews)\n");
+                }
+                sb.append("\n");
             }
-            else {
-                sb.append("  (No reviews)\n");
-            }
-            sb.append("\n");
-        }
-        searchResultArea.setText(sb.toString());
+
+            final String resultText = sb.toString();
+            searchResultArea.setText("");
+
+            searchResultArea.setText(resultText);
+
+            // Force updates
+            searchResultArea.revalidate();
+            searchResultArea.repaint();
+
+            // Also update the parent container
+            this.revalidate();
+            this.repaint();
+
+        });
     }
 
     public void setSearchUserController(SearchUserController controller) {

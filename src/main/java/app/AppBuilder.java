@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
 import entity.CommonUserFactory;
@@ -27,13 +28,16 @@ import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyPresenter;
 import interface_adapter.search_nearby_locations.SearchViewModel;
+import interface_adapter.search_user.SearchUserController;
+import interface_adapter.search_user.SearchUserPresenter;
+import interface_adapter.search_user.SearchUserViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-
+import use_case.friends.SearchUserInteractor;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInteractor;
@@ -41,7 +45,6 @@ import use_case.filter.FilterOutputBoundary;
 import use_case.favorite_list.AddToFavoritesInputBoundary;
 import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
-
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -95,7 +98,9 @@ public class AppBuilder {
     private RemoveFromFavoritesInteractor removeFromFavoritesInteractor;
     private SearchViewModel searchViewModel;
     private FavoritesViewModel favoritesViewModel;
-
+    private InMemoryFriendDataAccessObject friendDataAccessObject;
+    private SearchUserController searchUserController;
+    private SearchUserViewModel searchUserViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -124,6 +129,7 @@ public class AppBuilder {
     }
 
     /**
+
      * Adds the MainApp View to the application.
      * @return this builder
      */
@@ -210,7 +216,7 @@ public class AppBuilder {
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Restaurant Rating App");
+        final JFrame application = new JFrame("TasteMap");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
@@ -240,6 +246,20 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addFriendsUseCase() {
+        userDataAccessObject.populateSampleUsers();
+
+        this.friendDataAccessObject = new InMemoryFriendDataAccessObject(userDataAccessObject, userFactory);
+
+        this.searchUserViewModel = new SearchUserViewModel();
+
+        final SearchUserPresenter searchUserPresenter = new SearchUserPresenter(searchUserViewModel);
+        final SearchUserInteractor searchUserInteractor = new SearchUserInteractor(friendDataAccessObject, searchUserPresenter);
+        this.searchUserController = new SearchUserController(searchUserInteractor);
+
+        return this;
+    }
+
     public AppBuilder addFavoritesViewModel() {
         this.favoritesViewModel = new FavoritesViewModel();
         return this;
@@ -253,6 +273,19 @@ public class AppBuilder {
         // This line is crucial - make sure it's there:
         mainAppView.setFavoritesController(favoritesController);
 
+        return this;
+    }
+
+    /**
+     * Adds the MainApp View to the application.
+     * @return this builder
+     */
+    public AppBuilder addMainAppView() {
+        mainAppViewModel = new MainAppViewModel();
+        favoritesViewModel = new FavoritesViewModel();
+
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, searchUserController, searchUserViewModel);
+        cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
 }

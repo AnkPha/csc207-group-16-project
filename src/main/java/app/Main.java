@@ -20,6 +20,7 @@ public class Main {
                 .addSearchViewModel()
                 .addFilterViewModel()
                 .addFavoritesViewModel()
+                .addFriendsUseCase()
                 .addReviewViewModel()
                 .addMainAppView()
                 .addSignupUseCase()
@@ -33,10 +34,11 @@ public class Main {
                 .build();
 
 
+
         application.pack();
         application.setVisible(true);
         //            "1 Dundas St E, Toronto, Canada",
-        //            100 Queen St W, Toronto, ON, Canada
+        // 100 Queen St W, Toronto, ON, Canada
         // 100, 500
     }
 }

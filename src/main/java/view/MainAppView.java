@@ -29,17 +29,18 @@ public class MainAppView extends JPanel {
     private final SearchPanel searchPanel;
     private final SearchViewModel searchViewModel;
     private final FavoritesViewModel favoritesViewModel;
+    private final FriendsPanel friendsPanel;
 
     public MainAppView(MainAppViewModel viewModel, SearchViewModel searchViewModel,
-                       FavoritesViewModel favoritesViewModel) {
-//        searchController = new SearchLocationsNearbyController();
+                       FavoritesViewModel favoritesViewModel, SearchUserController searchUserController, SearchUserViewModel searchUserViewModel) {
+
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
         this.setLayout(new BorderLayout());
         this.favoritesViewModel = favoritesViewModel;
 
         tabbedPane = new JTabbedPane();
-        //CHECK OUT
+
         searchPanel = new SearchPanel(searchViewModel);
         tabbedPane.addTab("Search", searchPanel);
 
@@ -49,7 +50,11 @@ public class MainAppView extends JPanel {
         profilePanel = new ProfilePanel(viewModel);
         tabbedPane.addTab("Profile", profilePanel);
 
-        tabbedPane.addTab("Friends", new FriendsPanel());
+
+        friendsPanel = new FriendsPanel();
+        friendsPanel.setSearchUserController(searchUserController);
+        friendsPanel.setSearchUserViewModel(searchUserViewModel);
+        tabbedPane.addTab("Friends", friendsPanel);
 
         this.add(tabbedPane, BorderLayout.CENTER);
     }
