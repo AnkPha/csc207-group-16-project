@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.FilterDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
 import entity.CommonUserFactory;
@@ -34,12 +33,15 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-import use_case.favorite_list.AddToFavoritesInteractor;
-import use_case.favorite_list.RemoveFromFavoritesInteractor;
+
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInteractor;
 import use_case.filter.FilterOutputBoundary;
+import use_case.favorite_list.AddToFavoritesInputBoundary;
+import use_case.favorite_list.AddToFavoritesInteractor;
+import use_case.favorite_list.RemoveFromFavoritesInteractor;
+
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -82,7 +84,6 @@ public class AppBuilder {
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
-    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -93,8 +94,8 @@ public class AppBuilder {
     private AddToFavoritesInteractor addToFavoritesInteractor;
     private RemoveFromFavoritesInteractor removeFromFavoritesInteractor;
     private SearchViewModel searchViewModel;
-    private FilterViewModel filterViewModel;
     private FavoritesViewModel favoritesViewModel;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -134,7 +135,9 @@ public class AppBuilder {
             throw new IllegalStateException("filterViewModel must be initialized before creating MainAppView");
         }
         mainAppViewModel = new MainAppViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, filterViewModel, favoritesViewModel);
+
+        FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, filterViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
@@ -237,38 +240,19 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addFilterUseCase(){
-        final FilterOutputBoundary filterOutputBoundary =
-                new FilterPresenter(filterViewModel);
-
-        final FilterInputBoundary filterInteractor =
-                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
-
-        final FilterController filterController =
-                new FilterController(filterInteractor);
-
-        mainAppView.setFilterController(filterController);
+    public AppBuilder addFavoritesViewModel() {
+        this.favoritesViewModel = new FavoritesViewModel();
         return this;
     }
 
-    public AppBuilder addFilterViewModel(){
-        this.filterViewModel = new FilterViewModel();
+    public AppBuilder addFavoritesUseCase() {
+
+        final FavoritesController favoritesController =
+                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
+
+        // This line is crucial - make sure it's there:
+        mainAppView.setFavoritesController(favoritesController);
+
         return this;
     }
-
-     public AppBuilder addFavoritesViewModel() {
-         this.favoritesViewModel = new FavoritesViewModel();
-         return this;
-     }
-
-     public AppBuilder addFavoritesUseCase() {
-
-         final FavoritesController favoritesController =
-                 new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
-
-         // This line is crucial - make sure it's there:
-         mainAppView.setFavoritesController(favoritesController);
-
-         return this;
-     }
 }
