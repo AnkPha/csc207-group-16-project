@@ -1,6 +1,8 @@
 package use_case.friends;
 
 import data_access.InMemoryFriendDataAccessObject;
+import data_access.InMemoryUserDataAccessObject;
+import entity.CommonUser;
 import entity.CommonUserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,14 +10,23 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RespondToRequestInteractorTest {
+    private InMemoryUserDataAccessObject userDao;
     private InMemoryFriendDataAccessObject dao;
 
     @BeforeEach
-    void setup() {
-        dao = new InMemoryFriendDataAccessObject(new CommonUserFactory());
-        dao.createUser("alice");
-        dao.createUser("bob");
-        dao.sendFriendRequest("bob", "alice");  // bob sends a request to alice
+    void setUp() {
+        userDao = new InMemoryUserDataAccessObject();
+        dao = new InMemoryFriendDataAccessObject(userDao, new CommonUserFactory());
+        CommonUser alice = new CommonUser("Alice", "pw");
+        CommonUser bob = new CommonUser("Bob", "pw");
+
+        userDao.save(alice);
+        userDao.save(bob);
+
+        dao.addUser(alice);
+        dao.addUser(bob);
+
+        dao.sendFriendRequest("Bob", "Alice");
     }
 
     @Test
@@ -23,13 +34,13 @@ class RespondToRequestInteractorTest {
         RespondToRequestOutputBoundary presenter = output ->
                 assertEquals("Friend request accepted.", output.getMessage());
 
-        RespondToRequestInputData input = new RespondToRequestInputData("alice", "bob", true);
+        RespondToRequestInputData input = new RespondToRequestInputData("Alice", "Bob", true);
         RespondToRequestInteractor interactor = new RespondToRequestInteractor(dao, presenter);
         interactor.execute(input);
 
-        assertTrue(dao.getFriendsList("alice").contains("bob"));
-        assertTrue(dao.getFriendsList("bob").contains("alice"));
-        assertFalse(dao.getPendingRequests("alice").contains("bob"));
+        assertTrue(dao.getFriendsList("Alice").contains("Bob"));
+        assertTrue(dao.getFriendsList("Bob").contains("Alice"));
+        assertFalse(dao.getPendingRequests("Alice").contains("Bob"));
     }
 
     @Test
@@ -37,12 +48,12 @@ class RespondToRequestInteractorTest {
         RespondToRequestOutputBoundary presenter = output ->
                 assertEquals("Friend request rejected.", output.getMessage());
 
-        RespondToRequestInputData input = new RespondToRequestInputData("alice", "bob", false);
+        RespondToRequestInputData input = new RespondToRequestInputData("Alice", "Bob", false);
         RespondToRequestInteractor interactor = new RespondToRequestInteractor(dao, presenter);
         interactor.execute(input);
 
-        assertFalse(dao.getFriendsList("alice").contains("bob"));
-        assertFalse(dao.getFriendsList("bob").contains("alice"));
-        assertFalse(dao.getPendingRequests("alice").contains("bob"));
+        assertFalse(dao.getFriendsList("Alice").contains("Bob"));
+        assertFalse(dao.getFriendsList("Bob").contains("Alice"));
+        assertFalse(dao.getPendingRequests("Alice").contains("Bob"));
     }
 }

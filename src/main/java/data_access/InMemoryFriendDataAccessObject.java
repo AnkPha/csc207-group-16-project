@@ -28,12 +28,12 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
 
     @Override
     public boolean userExists(String username) {
-        return users.containsKey(username);
+        return userDao.existsByName(username);
     }
 
     @Override
     public User getUser(String username) {
-        return users.get(username);
+        return userDao.get(username);
     }
 
     public void addUser(User user) {
@@ -83,7 +83,8 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
 
     @Override
     public void acceptRequest(String username, String fromUser) {
-        if (friendRequests.get(username).remove(fromUser)) {
+        final Set<String> pending = friendRequests.get(username);
+        if (pending != null && pending.remove(fromUser)) {
             friends.get(username).add(fromUser);
             friends.get(fromUser).add(username);
         }
@@ -91,7 +92,10 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
 
     @Override
     public void rejectRequest(String username, String fromUser) {
-        friendRequests.get(username).remove(fromUser);
+        final Set<String> pending = friendRequests.get(username);
+        if (pending != null) {
+            pending.remove(fromUser);
+        }
     }
 
     @Override
@@ -102,11 +106,16 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
     @Override
     public List<String> searchUsers(String query) {
         final List<String> results = new ArrayList<>();
-        for (String username : users.keySet()) {
+
+        // Use the new getAllUsernames method instead of hardcoded users
+        final List<String> allUsers = userDao.getAllUsernames();
+
+        for (String username : allUsers) {
             if (username.toLowerCase().contains(query.toLowerCase())) {
                 results.add(username);
             }
         }
+
         return results;
     }
 

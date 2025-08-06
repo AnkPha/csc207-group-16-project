@@ -2,19 +2,14 @@ package use_case.filter;
 
 import java.util.List;
 
-import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
-/**
- * The input data for the Filter Use Case.
- */
-
 public class FilterInputData {
 
-    private String address;
-    private int radius;
-    private List<String> cuisine;
-    private String vegStat;
-    private String availability;
-    private String rating;
+    private final String address;
+    private final int radius;
+    private final List<String> cuisine;
+    private final String vegStat;
+    private final String availability;
+    private final String rating;
 
     public FilterInputData(String address, int radius, List<String> cuisine, String vegStat,
                            String availability, String rating) {
@@ -27,17 +22,14 @@ public class FilterInputData {
     }
 
     public List<String> getCuisine() {
-
         return cuisine;
     }
 
     public String getVegStat() {
-
         return vegStat;
     }
 
     public String getAvailability() {
-
         return availability;
     }
 
@@ -45,7 +37,11 @@ public class FilterInputData {
         return rating;
     }
 
-    public int getRadius() { return radius; }
+    public int getRadius() {
+        return radius;
+    }
 
-    public String getAddress(){ return address; }
+    public String getAddress() {
+        return address;
+    }
 }
