@@ -1,11 +1,9 @@
 package interface_adapter.search_nearby_locations;
 
-
-import interface_adapter.ViewModel;
-import interface_adapter.search_nearby_locations.SearchState;
-import entity.Restaurant;
-
 import java.util.ArrayList;
+
+import entity.Restaurant;
+import interface_adapter.ViewModel;
 
 /**
  * The View Model for the Logged In View.
@@ -19,14 +17,10 @@ public class SearchViewModel extends ViewModel<SearchState> {
         setState(new SearchState());
     }
 
-    public void setRestaurants(ArrayList<Restaurant> restaurants) {
-        this.restaurants = restaurants;
-    }
-
-    public ArrayList<Restaurant> getRestaurants(){
-        return this.restaurants;
-    }
-
+    /**
+     * A method that sets the current state in the GUI.
+     * @param state the state given
+     */
     public void setState(SearchState state) {
         super.setState(state);
         System.out.println("SET STATE RIGHT NOW");

@@ -67,6 +67,13 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
         return result;
     }
 
+    private ArrayList<Restaurant> getNearbyRestaurants(FilterInputData filterInputData) {
+        final int userRadius = filterInputData.getRadius();
+        final String userAddress = filterInputData.getAddress();
+        return searchLocationNearbyDataAccessObject.getNearbyRestaurantsResult(
+                userAddress, userRadius).getRestaurant();
+    }
+
     private boolean isCuisineValid(String cuisine) {
         return cuisine != null && !cuisine.isBlank() && !"not given".equalsIgnoreCase(cuisine);
     }

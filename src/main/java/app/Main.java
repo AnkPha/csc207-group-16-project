@@ -13,21 +13,23 @@ public class Main {
     public static void main(String[] args) {
         final AppBuilder appBuilder = new AppBuilder();
         final JFrame application = appBuilder
-                                            .addLoginView()
-                                            .addSignupView()
-                                            .addSearchViewModel()
-                                            .addFilterViewModel()
-                                            .addFavoritesViewModel()
-                                            .addMainAppView()
-                                            .addSearchUseCase()
-                                            .addFilterUseCase()
-                                            .addSignupUseCase()
-                                            .addFavoritesUseCase()
-                                            .addLoginUseCase()
-                                            .addChangePasswordUseCase()
-                                            .addLogoutUseCase()
-                                            .addReviewUseCase()
-                                            .build();
+                .addLoginView()
+                .addSignupView()
+                .addSearchViewModel()
+                .addFilterViewModel()
+                .addFavoritesViewModel()
+                .addFriendsUseCase()
+                .addReviewViewModel()
+                .addMainAppView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addChangePasswordUseCase()
+                .addLogoutUseCase()
+                .addSearchUseCase()
+                .addFilterUseCase()
+                .addFavoritesUseCase()
+                .addReviewUseCase()
+                .build();
 
         application.pack();
         application.setVisible(true);

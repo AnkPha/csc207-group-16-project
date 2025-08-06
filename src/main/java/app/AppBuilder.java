@@ -257,6 +257,10 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addFilterUseCase() {
+        final FilterOutputBoundary filterOutputBoundary =
+                new FilterPresenter(filterViewModel);
+  
     public AppBuilder addFriendsUseCase() {
         userDataAccessObject.populateSampleUsers();
 
@@ -270,6 +274,9 @@ public class AppBuilder {
 
         return this;
     }
+
+    public AppBuilder addFilterViewModel() {
+        this.filterViewModel = new FilterViewModel();
 
     public AppBuilder addFavoritesViewModel() {
         this.favoritesViewModel = new FavoritesViewModel();
