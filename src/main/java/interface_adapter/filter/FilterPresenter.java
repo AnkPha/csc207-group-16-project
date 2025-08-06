@@ -1,5 +1,6 @@
 package interface_adapter.filter;
 
+import interface_adapter.search_nearby_locations.SearchState;
 import use_case.filter.FilterOutputBoundary;
 import use_case.filter.FilterOutputData;
 
@@ -16,7 +17,10 @@ public class FilterPresenter implements FilterOutputBoundary {
 
     @Override
     public void prepareSuccessView(FilterOutputData outputData) {
-        viewModel.setRestaurants(outputData.getFilteredRestaurants());
+        FilterState newState = new FilterState();
+        System.out.println("PRESENTER SIZE " + outputData.getFilteredRestaurants().size());
+        newState.setResturants(outputData.getFilteredRestaurants()); // Assuming this method exists
+        viewModel.setState(newState);
     }
 
     @Override

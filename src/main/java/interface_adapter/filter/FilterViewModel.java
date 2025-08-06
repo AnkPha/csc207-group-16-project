@@ -1,7 +1,9 @@
 package interface_adapter.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import entity.Restaurant;
 import interface_adapter.ViewModel;
 
 /**
@@ -9,7 +11,7 @@ import interface_adapter.ViewModel;
  */
 public class FilterViewModel extends ViewModel<FilterState> {
     private FilterState state;
-
+    private ArrayList<Restaurant> restaurants;
     public FilterViewModel() {
         super("filter");
         this.state = new FilterState();
@@ -30,24 +32,34 @@ public class FilterViewModel extends ViewModel<FilterState> {
 
     public void setVegStat(String vegStat) {
         state.setVegStat(vegStat);
-        firePropertyChanged();
+//        firePropertyChanged();
     }
 
     public void setOpeningHours(String openingHours) {
         state.setOpeningHours(openingHours);
-        firePropertyChanged();
+//        firePropertyChanged();
     }
 
     public void setRating(String rating) {
         state.setRating(rating);
-        firePropertyChanged();
+//        firePropertyChanged();
     }
 
-    public void setRestaurants(java.util.List<?> restaurants) {
-        firePropertyChanged();
+    public void setRestaurants(List<Restaurant> restaurants) {
+        this.restaurants = (ArrayList<Restaurant>) restaurants;
     }
 
+    public ArrayList<Restaurant> getRestaurants(){
+        return this.restaurants;
+    }
     public void showError(String errorMessage) {
         System.err.println("Filter Error: " + errorMessage);
+    }
+
+    @Override
+    public void setState(FilterState state) {
+
+        this.state = state;
+        firePropertyChanged("state");
     }
 }

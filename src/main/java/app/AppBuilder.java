@@ -21,8 +21,6 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main_menu.MainAppViewModel;
-import interface_adapter.review.ReviewController;
-import interface_adapter.review.ReviewViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyPresenter;
 import interface_adapter.search_nearby_locations.SearchViewModel;
@@ -83,7 +81,6 @@ public class AppBuilder {
     private LoginViewModel loginViewModel;
     private LoginView loginView;
     private MainAppViewModel mainAppViewModel;
-    private ReviewViewModel reviewViewModel;
     private MainAppView mainAppView;
     private AddToFavoritesInteractor addToFavoritesInteractor;
     private RemoveFromFavoritesInteractor removeFromFavoritesInteractor;
@@ -124,8 +121,7 @@ public class AppBuilder {
     public AppBuilder addMainAppView() {
         mainAppViewModel = new MainAppViewModel();
         FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
-        ReviewViewModel reviewViewModel = new ReviewViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, reviewViewModel);
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
@@ -238,15 +234,8 @@ public class AppBuilder {
         final FavoritesController favoritesController =
                 new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
 
+        // This line is crucial - make sure it's there:
         mainAppView.setFavoritesController(favoritesController);
-
-        return this;
-    }
-
-    public AppBuilder addReviewUseCase() {
-        final ReviewController reviewController =
-                new ReviewController();
-        mainAppView.setReviewController(reviewController);
 
         return this;
     }

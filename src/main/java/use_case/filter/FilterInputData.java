@@ -9,23 +9,21 @@ import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
 
 public class FilterInputData {
 
-    private SearchLocationsNearbyInputData locations;
+    private String address;
+    private int radius;
     private List<String> cuisine;
     private String vegStat;
     private String availability;
     private String rating;
 
-    public FilterInputData(SearchLocationsNearbyInputData locations, List<String> cuisine, String vegStat,
+    public FilterInputData(String address, int radius, List<String> cuisine, String vegStat,
                            String availability, String rating) {
-        this.locations = locations;
+        this.address = address;
+        this.radius = radius;
         this.cuisine = cuisine;
         this.vegStat = vegStat;
         this.availability = availability;
         this.rating = rating;
-    }
-
-    public SearchLocationsNearbyInputData getLocations() {
-        return locations;
     }
 
     public List<String> getCuisine() {
@@ -46,4 +44,8 @@ public class FilterInputData {
     public String getRating() {
         return rating;
     }
+
+    public int getRadius() { return radius; }
+
+    public String getAddress(){ return address; }
 }
