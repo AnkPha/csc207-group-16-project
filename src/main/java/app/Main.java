@@ -23,7 +23,7 @@ public class Main {
                                             .addSearchUseCase()
                                             .addFilterUseCase()
                                             .addSignupUseCase()
-                                            .addFavoritesUseCase()
+//                                            .addFavoritesUseCase()
                                             .addLoginUseCase()
                                             .addChangePasswordUseCase()
                                             .addLogoutUseCase()
