@@ -13,7 +13,7 @@ public class Review {
     private final LocalDateTime timestamp;
     private final String reviewText;
 
-    public Review(Restaurant restaurant, int reviewId, int rating, LocalDateTime timestamp, User user, String reviewText) {
+    public Review(Restaurant restaurant, int reviewId, int rating, LocalDateTime timestamp, User user) {
         if (MINRATING > rating || MAXRATING < rating) {
             throw new IllegalArgumentException("Rating must be between " + MINRATING + " and " + MAXRATING);
         }
@@ -22,7 +22,6 @@ public class Review {
         this.user = user;
         this.rating = rating;
         this.timestamp = timestamp;
-        this.reviewText = reviewText;
     }
 
     public Restaurant getRestaurant() {
