@@ -20,6 +20,7 @@ public class Main {
                 .addSearchViewModel()
                 .addFilterViewModel()
                 .addFavoritesViewModel()
+                .addReviewViewModel()
                 .addMainAppView()
                 .addSignupUseCase()
                 .addLoginUseCase()
@@ -28,7 +29,9 @@ public class Main {
                 .addSearchUseCase()
                 .addFilterUseCase()
                 .addFavoritesUseCase()
+                .addReviewUseCase()
                 .build();
+
 
         application.pack();
         application.setVisible(true);
