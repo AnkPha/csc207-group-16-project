@@ -16,6 +16,7 @@ public class Main {
                                             .addLoginView()
                                             .addSignupView()
                                             .addSearchViewModel()
+
                                             .addFilterViewModel()
                                             .addFavoritesViewModel()
                                             .addMainAppView()

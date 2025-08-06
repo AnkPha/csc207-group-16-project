@@ -62,7 +62,15 @@ public class ViewModel<T> {
      * @param listener The PropertyChangeListener to be added
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        System.out.println("Listener added: " + listener); // debug
+        System.out.println("Listener added: " + listener);
         this.support.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * Removes a PropertyChangeListener from this ViewModel.
+     * @param listener The PropertyChangeListener to be removed
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.support.removePropertyChangeListener(listener);
     }
 }
