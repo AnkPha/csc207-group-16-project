@@ -1,7 +1,7 @@
 package entity;
 
-import java.util.HashMap;
-import java.util.Map;
+    import java.util.HashMap;
+    import java.util.Map;
 
 /**
  * A simple implementation of the User interface.

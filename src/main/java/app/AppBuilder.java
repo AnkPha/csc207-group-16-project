@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.FilterDataAccessObject;
 import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryReviewDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
@@ -28,6 +29,7 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.review.ReviewController;
+import interface_adapter.review.ReviewViewModel;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
@@ -96,6 +98,7 @@ public class AppBuilder {
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
+    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -108,6 +111,8 @@ public class AppBuilder {
     private SearchViewModel searchViewModel;
     private FavoritesViewModel favoritesViewModel;
     private InMemoryFriendDataAccessObject friendDataAccessObject;
+    private FilterViewModel filterViewModel;
+    private FilterController filterController;
     private SearchUserController searchUserController;
     private SearchUserViewModel searchUserViewModel;
     private ReviewViewModel reviewViewModel;
@@ -136,26 +141,6 @@ public class AppBuilder {
         loginViewModel = new LoginViewModel();
         loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
-        return this;
-    }
-
-    /**
-
-     * Adds the MainApp View to the application.
-     * @return this builder
-     */
-    public AppBuilder addMainAppView() {
-        if (searchViewModel == null) {
-            throw new IllegalStateException("searchViewModel must be initialized before creating MainAppView");
-        }
-        if (filterViewModel == null) {
-            throw new IllegalStateException("filterViewModel must be initialized before creating MainAppView");
-        }
-        mainAppViewModel = new MainAppViewModel();
-
-        FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, filterViewModel);
-        cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
 
@@ -257,10 +242,6 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addFilterUseCase() {
-        final FilterOutputBoundary filterOutputBoundary =
-                new FilterPresenter(filterViewModel);
-  
     public AppBuilder addFriendsUseCase() {
         userDataAccessObject.populateSampleUsers();
 
@@ -294,7 +275,26 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addReviewsViewModel() {
+    public AppBuilder addFilterViewModel() {
+        this.filterViewModel = new FilterViewModel();
+        return this;
+    }
+
+    public AppBuilder addFilterUseCase() {
+        final FilterOutputBoundary filterOutputBoundary =
+                new FilterPresenter(filterViewModel);
+
+        final FilterInputBoundary filterInteractor =
+                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
+
+        final FilterController filterController =
+                new FilterController(filterInteractor);
+
+        mainAppView.setFilterController(filterController);
+        return this;
+    }
+
+    public AppBuilder addReviewViewModel() {
         reviewViewModel = new ReviewViewModel();
         return this;
     }
@@ -314,7 +314,6 @@ public class AppBuilder {
         return this;
     }
 
-
     /**
      * Adds the MainApp View to the application.
      * @return this builder
@@ -323,7 +322,7 @@ public class AppBuilder {
         mainAppViewModel = new MainAppViewModel();
         favoritesViewModel = new FavoritesViewModel();
 
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, searchUserController, searchUserViewModel);
+        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, filterViewModel, searchUserController, searchUserViewModel, filterController);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
