@@ -23,6 +23,11 @@ TasteMap was created to address a gap in existing restaurant discovery tools. Mo
 6. [Contributions](#contributions)
 
 ## Features
+How to sign up And log in.
+![Description](images/SignUpInstructions.png)
+
+How to search and filter.
+![Description](images/SearchAndFilterInstructions.png)
 
 ## Installation
 
