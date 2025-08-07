@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class OpeningHours {
+
     private static final Map<String, DayOfWeek> DAY_MAP = Map.of(
             "Mo", DayOfWeek.MONDAY,
             "Tu", DayOfWeek.TUESDAY,
@@ -18,6 +19,10 @@ public class OpeningHours {
             "Sa", DayOfWeek.SATURDAY,
             "Su", DayOfWeek.SUNDAY);
 
+    private static final int DAYS_IN_WEEK = 7;
+    private static final String DASH = "-";
+    private static final String SEMICOLON = ";";
+
     private final String raw;
 
     public OpeningHours(String raw) {
@@ -25,48 +30,51 @@ public class OpeningHours {
     }
 
     /**
-     * Returns "Open", "Closed", or "N/A" based on current time and raw opening hours string.
+     * Returns the current availability status based on the raw opening hours string.
+     * @return  "Open", "Closed", or "N/A" based on current time and raw opening hours string.
      */
     public String availabilityStatus() {
-        String status = "N/A";
-
+        String result = "N/A";
         if (raw != null && !raw.isBlank()) {
             final String trimmed = raw.trim();
             if ("24/7".equalsIgnoreCase(trimmed)) {
-                status = "Open"; // special case handled here but also in DAO
-            } else {
-                boolean openNow = false;
+                result = "Open";
+            }
+            else {
                 try {
-                    openNow = isOpenNow(trimmed);
-                } catch (Exception error) {
-                    openNow = false;
+                    final boolean openNow = isOpenNow(trimmed);
+                    if (openNow) {
+                        result = "Open";
+                    }
+                    else {
+                        result = "Closed";
+                    }
                 }
-                if (openNow) {
-                    status = "Open";
-                } else {
-                    status = "Closed";
+                catch (DateTimeParseException | IllegalArgumentException ignored) {
+                    result = "Closed";
                 }
             }
         }
-        return status;
+        return result;
     }
 
     private boolean isOpenNow(String openingHours) {
-        boolean appliesNow = false;
+        boolean isOpen = false;
         final LocalDateTime now = LocalDateTime.now();
         final DayOfWeek currentDay = now.getDayOfWeek();
         final LocalTime currentTime = now.toLocalTime();
 
-        final String[] entries = openingHours.split(";");
+        final String[] entries = openingHours.split(SEMICOLON);
         for (String entry : entries) {
-            if (!appliesNow) {
-                final String newEntry = entry.trim();
-                if (!newEntry.isEmpty()) {
-                    appliesNow = entryAppliesNow(newEntry, currentDay, currentTime);
+            if (!entry.isBlank()) {
+                final boolean entryApplies = entryAppliesNow(entry.trim(), currentDay, currentTime);
+                if (entryApplies) {
+                    isOpen = true;
+                    break;
                 }
             }
         }
-        return appliesNow;
+        return isOpen;
     }
 
     private boolean entryAppliesNow(String entry, DayOfWeek currentDay, LocalTime currentTime) {
@@ -75,14 +83,15 @@ public class OpeningHours {
         if (parts.length == 2) {
             final Set<DayOfWeek> days = parseDays(parts[0]);
             if (days.contains(currentDay)) {
-                final String[] times = parts[1].split("-", 2);
+                final String[] times = parts[1].split(DASH, 2);
                 if (times.length == 2) {
                     try {
                         final LocalTime start = LocalTime.parse(times[0]);
                         final LocalTime end = LocalTime.parse(times[1]);
                         applies = isTimeWithinRange(currentTime, start, end);
-                    } catch (DateTimeParseException ignored) {
-                        applies = false;
+                    }
+                    catch (DateTimeParseException ignored) {
+                        //
                     }
                 }
             }
@@ -91,43 +100,50 @@ public class OpeningHours {
     }
 
     private boolean isTimeWithinRange(LocalTime currentTime, LocalTime start, LocalTime end) {
-        boolean withinRange = false;
+        final boolean withinRange;
+        final boolean overnight = end.isBefore(start);
 
-        if (end.isBefore(start)) {
-            withinRange = !currentTime.isBefore(start) || !currentTime.isAfter(end);
-        } else {
-            withinRange = !currentTime.isBefore(start) && !currentTime.isAfter(end);
+        final boolean afterStart = !currentTime.isBefore(start);
+        final boolean beforeEnd = !currentTime.isAfter(end);
+        if (overnight) {
+            withinRange = afterStart || beforeEnd;
         }
-
+        else {
+            withinRange = afterStart && beforeEnd;
+        }
         return withinRange;
     }
 
     private Set<DayOfWeek> parseDays(String dayPart) {
         final Set<DayOfWeek> days = new HashSet<>();
-
         if (dayPart != null && !dayPart.isBlank()) {
             final String[] ranges = dayPart.split(",");
             for (String range : ranges) {
-                final String newRange = range.trim();
-                if (newRange.contains("-")) {
-                    final String[] bounds = newRange.split("-", 2);
-                    if (bounds.length == 2 && DAY_MAP.containsKey(bounds[0]) && DAY_MAP.containsKey(bounds[1])) {
-                        final int start = DAY_MAP.get(bounds[0]).getValue();
-                        final int end = DAY_MAP.get(bounds[1]).getValue();
-                        int i = start;
-                        while (true) {
-                            days.add(DayOfWeek.of(i));
-                            if (i == end) {
-                                break;
-                            }
-                            i = i % 7 + 1;
-                        }
-                    }
-                } else if (DAY_MAP.containsKey(newRange)) {
-                    days.add(DAY_MAP.get(newRange));
-                }
+                addDayRange(days, range.trim());
             }
         }
         return days;
+    }
+
+    private void addDayRange(Set<DayOfWeek> days, String range) {
+        if (range.contains(DASH)) {
+            final String[] bounds = range.split(DASH, 2);
+            if (bounds.length == 2 && DAY_MAP.containsKey(bounds[0]) && DAY_MAP.containsKey(bounds[1])) {
+                final int start = DAY_MAP.get(bounds[0]).getValue();
+                final int end = DAY_MAP.get(bounds[1]).getValue();
+                int i = start;
+                boolean done = false;
+                while (!done) {
+                    days.add(DayOfWeek.of(i));
+                    done = i == end;
+                    if (!done) {
+                        i = i % DAYS_IN_WEEK + 1;
+                    }
+                }
+            }
+        }
+        else if (DAY_MAP.containsKey(range)) {
+            days.add(DAY_MAP.get(range));
+        }
     }
 }

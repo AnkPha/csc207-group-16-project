@@ -65,7 +65,7 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
 
     private SearchState currentState;
 
-    private CurrentViewState currentViewState = new CurrentViewState();
+    private final CurrentViewState currentViewState = new CurrentViewState();
 
     private RightPanel rightPanel;
 
@@ -92,7 +92,6 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
      * Sets up the main Screen.
      */
     public void setUpScreen() {
-        // Split pane for left (map + search fields) and right (info + filter button)
 
         leftPanel = new LeftPanel(this);
         rightPanel = new RightPanel(this);
@@ -102,13 +101,10 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
         this.setLayout(new BorderLayout());
         this.add(splitPane, BorderLayout.CENTER);
 
-        // Equal growth
         splitPane.setResizeWeight(RESIZE_HALF);
-        // Initial 50/50
         splitPane.setDividerLocation(RESIZE_HALF);
         this.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent event) {
-                // always reset to 50%
                 splitPane.setDividerLocation(RESIZE_HALF);
                 rightPanel.setDividerLocation(RESIZE_HALF);
             }

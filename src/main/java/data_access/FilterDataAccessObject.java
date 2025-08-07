@@ -49,22 +49,20 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     private boolean matchesCuisineFilter(List<String> userSelected, String restaurantCuisine) {
         boolean result = false;
 
-        if (userSelected == null || userSelected.isEmpty()) {
+        // Treat null, empty, or ["None"] as no filter = match everything
+        if (userSelected == null || userSelected.isEmpty()
+                || userSelected.size() == 1 && NONE.equalsIgnoreCase(userSelected.get(0))) {
             result = true;
         }
         else if (isCuisineValid(restaurantCuisine)) {
             final String[] parts = restaurantCuisine.split(";");
             for (String userCuisine : userSelected) {
-                if (userCuisine == null) {
-                    continue;
-                }
-                if (anyCuisineMatches(userCuisine, parts)) {
+                if (userCuisine != null && anyCuisineMatches(userCuisine, parts)) {
                     result = true;
                     break;
                 }
             }
         }
-
         return result;
     }
 

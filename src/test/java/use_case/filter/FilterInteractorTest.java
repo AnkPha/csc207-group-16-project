@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FilterInteractorTest {
@@ -39,7 +40,7 @@ class FilterInteractorTest {
                 Assertions.assertEquals(10, outputData.getFilteredRestaurants().size());
                 assertTrue(outputData.getFilteredRestaurants().stream()
                         .anyMatch(restaurant ->
-                                outputData.getFilteredRestaurants().get(0).getCuisine().equals("japanese")));
+                                outputData.getFilteredRestaurants().get(0).getCuisine().equals("sushi;japanese")));
             }
             @Override
             public void prepareFailView(String errorMessage) {
@@ -63,7 +64,7 @@ class FilterInteractorTest {
                 Assertions.assertEquals(104, outputData.getFilteredRestaurants().size());
                 assertTrue(outputData.getFilteredRestaurants().stream()
                         .anyMatch(restaurant ->
-                                outputData.getFilteredRestaurants().get(0).getRating().equals("Not given")));
+                                outputData.getFilteredRestaurants().get(0).getRating().equals("No Ratings")));
             }
             @Override
             public void prepareFailView(String errorMessage) {
@@ -157,7 +158,7 @@ class FilterInteractorTest {
         FilterOutputBoundary outputNone = new FilterOutputBoundary() {
             @Override
             public void prepareSuccessView(FilterOutputData outputData) {
-                assertTrue(outputData.getFilteredRestaurants().isEmpty());
+                assertEquals(0, outputData.getFilteredRestaurants().size());
             }
             @Override
             public void prepareFailView(String errorMessage) {
