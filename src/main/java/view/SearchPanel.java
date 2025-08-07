@@ -164,8 +164,8 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
         }
 
         currentState.setFiltered(true);
-        filteringController.execute(currentState.getAddress(), Integer.parseInt(
-                        currentState.getRadius()),
+        filteringController.execute(currentState.getAddress(),
+                Integer.parseInt(currentState.getRadius()),
                 selectedCuisines,
                 selectedVegStat,
                 selectedHour,
@@ -181,9 +181,7 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
 
         rightPanel.updateUi(currentViewState);
 
-        System.out.println("RAN #1");
         if (evt.getPropertyName().equals("state")) {
-            System.out.println("RAN #2: SEARCH");
             if (currentViewState.getStatus() == FAILED_AT_CALL) {
                 JOptionPane.showMessageDialog(this, "Problem with API call try again later");
             }
@@ -191,7 +189,6 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(this, "Could Not Find Address");
             }
             else if (currentViewState.getActiveRestaurants().isEmpty()) {
-                System.out.println("NO WAYPOINYS CUZ NO RESTAURANTS " + "FILTERED? " + currentViewState.isFiltered());
                 JOptionPane.showMessageDialog(this, "No Restaurants found");
             }
             else {
@@ -208,9 +205,7 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
                         currentViewState.getSearchState().getAddressCoords()[1]);
                 leftPanel.getMapViewer().setAddressLocation(center);
                 leftPanel.getMapViewer().setZoom(zoom);
-                System.out.println("THERE EXISTS A WAYPOINT");
             }
-
             leftPanel.getMapViewer().repaint();
         }
     }
@@ -219,11 +214,7 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
      * A method that updates the infoPanel visual.
      */
     public void updateInfoPanelAndWaypoints() {
-        System.out.println("SIZE OF RESTURANTS "
-                + currentViewState.getActiveRestaurants().size()
-                + "FILTERED? " + currentViewState.isFiltered());
         for (Restaurant r : currentViewState.getActiveRestaurants()) {
-            System.out.println("Restaurant: " + r.getName() + " @ " + r.getLat() + ", " + r.getLon());
             if (r.getLat() != 0.0 && r.getLon() != 0.0) {
                 final GeoPosition pos = new GeoPosition(r.getLat(), r.getLon());
                 waypoints.add(new DefaultWaypoint(pos));

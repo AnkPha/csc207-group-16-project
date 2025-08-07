@@ -6,15 +6,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.*;
-import data_access.favorite_list.FavoritesDataAccessInterface;
-import data_access.favorite_list.FavoritesDataAccessObject;
 import data_access.FilterDataAccessObject;
 import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryReviewDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
-
+import data_access.favorite_list.FavoritesDataAccessInterface;
+import data_access.favorite_list.FavoritesDataAccessObject;
 import entity.CommonReviewFactory;
 import entity.CommonUserFactory;
 import entity.ReviewFactory;
@@ -53,8 +51,8 @@ import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputBoundary;
-import use_case.filter.FilterInteractor;
 import use_case.filter.FilterOutputBoundary;
+import use_case.filter.FilterInteractor;
 import use_case.friends.SearchUserInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
@@ -299,22 +297,9 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFavoritesUseCase() {
+        final FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
 
-        final FavoritesController favoritesController =
-                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
-        mainAppView.setFavoritesController(favoritesController);
-
-        return this;
-    }
-
-    /**
-     * Adds the filter use case to this application.
-     * @return this builder
-     */
-    public AppBuilder addFilterUseCase() {
-        FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
-
-        FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
+        final FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
 
         addToFavoritesInteractor = new AddToFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
         removeFromFavoritesInteractor = new RemoveFromFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
@@ -325,6 +310,24 @@ public class AppBuilder {
         mainAppView.setFavoritesController(favoritesController);
 
         return this;
+    }
+
+    /**
+     * Adds the filter use case to this application.
+     * @return this builder
+     */
+    public AppBuilder addFilterUseCase() {
+        final FilterOutputBoundary filterOutputBoundary =
+                new FilterPresenter(filterViewModel);
+
+        final FilterInputBoundary filterInteractor =
+                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
+
+        filterController = new FilterController(filterInteractor);
+
+        mainAppView.setFilterController(filterController);
+        return this;
+
     }
 
     /**

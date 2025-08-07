@@ -31,7 +31,6 @@ public class SearchLocationsNearbyInteractor implements SearchLocationsNearbyInp
         final SearchLocationsNearbyOutputData output = new SearchLocationsNearbyOutputData(
                 result.getRestaurant(),
                 addressCoords, result.getStatus());
-        System.out.println("INTERACTOR " + result.getStatus());
         locationsPresenter.prepareSuccessView(output);
     }
 

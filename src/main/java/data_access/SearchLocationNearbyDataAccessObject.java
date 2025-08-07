@@ -26,9 +26,7 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
         double[] coords;
         ArrayList<Restaurant> restaurantList = new ArrayList<>();
         try {
-            System.out.println("TRIED TO RUN");
             coords = nominatimApi.geocode(address);
-            System.out.println("TRIED TO RUN 2");
 
             if (coords == null || coords.length == FAILED_AT_CALL) {
                 System.out.println("Failed to make call to API");
@@ -49,15 +47,10 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
         if (coords.length == FOUND) {
             //  Assuming the coordinates in coords is in the right order of lat and long
             result.setStatus(FOUND);
-            System.out.println("Before Call " + result.getStatus());
             this.addressCoords = coords;
             restaurantList = overpassApi.getNearbyRestaurants(coords[0], coords[1], radius);
-            System.out.println("SIZE IS "
-                    + restaurantList.size()
-                    + " AND RADIUS IS " + radius + " ADDRESS IS " + address);
         }
         result.setRestaurants(restaurantList);
-        System.out.println("END OF DAO " + result.getStatus());
         return result;
     }
 

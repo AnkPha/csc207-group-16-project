@@ -132,7 +132,5 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
         save(new CommonUser("carol", "pw"));
         addReview("carol", "Burger Spot", 4, "Tasty, affordable, great late-night place");
-
-        System.out.println("Sample users populated: " + getAllUsernames());
     }
 }

@@ -66,6 +66,7 @@ public class RightPanel extends JSplitPane {
             final String selectedRating = ratingComboBox.getSelectedItem().toString();
             final String selectedVegStat = vegStatComboBox.getSelectedItem().toString();
             final String selectedHour = hourComboBox.getSelectedItem().toString();
+
             searchPanel.handleFilter(selectedCuisines, selectedRating, selectedVegStat, selectedHour);
         });
     }
