@@ -6,11 +6,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.*;
+import data_access.favorite_list.FavoritesDataAccessInterface;
+import data_access.favorite_list.FavoritesDataAccessObject;
 import data_access.FilterDataAccessObject;
 import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryReviewDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
+
 import entity.CommonReviewFactory;
 import entity.CommonUserFactory;
 import entity.ReviewFactory;
@@ -19,6 +23,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.favorites_list.FavoritesController;
+import interface_adapter.favorites_list.FavoritesPresenter;
 import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
@@ -307,15 +312,18 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFilterUseCase() {
-        final FilterOutputBoundary filterOutputBoundary =
-                new FilterPresenter(filterViewModel);
+        FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
 
-        final FilterInputBoundary filterInteractor =
-                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
+        FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
 
-        filterController = new FilterController(filterInteractor);
+        addToFavoritesInteractor = new AddToFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
+        removeFromFavoritesInteractor = new RemoveFromFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
 
-        mainAppView.setFilterController(filterController);
+        final FavoritesController favoritesController =
+                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
+
+        mainAppView.setFavoritesController(favoritesController);
+
         return this;
     }
 

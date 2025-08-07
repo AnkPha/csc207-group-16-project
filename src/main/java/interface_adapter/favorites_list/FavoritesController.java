@@ -6,22 +6,24 @@ import use_case.favorite_list.RemoveFromFavoritesInputBoundary;
 import use_case.favorite_list.RemoveFromFavoritesInputData;
 
 public class FavoritesController {
-    private final AddToFavoritesInputBoundary addToFavoritesUseCase;
-    private final RemoveFromFavoritesInputBoundary removeFromFavoritesUseCase;
+    private final AddToFavoritesInputBoundary addToFavoritesInteractor;
+    private final RemoveFromFavoritesInputBoundary removeFromFavoritesInteractor;
 
-    public FavoritesController(AddToFavoritesInputBoundary addToFavoritesUseCase,
-                               RemoveFromFavoritesInputBoundary removeFromFavoritesUseCase) {
-        this.addToFavoritesUseCase = addToFavoritesUseCase;
-        this.removeFromFavoritesUseCase = removeFromFavoritesUseCase;
+    public FavoritesController(AddToFavoritesInputBoundary addToFavoritesInteractor,
+                               RemoveFromFavoritesInputBoundary removeFromFavoritesInteractor) {
+        this.addToFavoritesInteractor = addToFavoritesInteractor;
+        this.removeFromFavoritesInteractor = removeFromFavoritesInteractor;
     }
 
-    public void addToFavorites(String userId, String restaurantName) {
-        final AddToFavoritesInputData inputData = new AddToFavoritesInputData(userId, restaurantName);
-        addToFavoritesUseCase.execute(inputData);
+    public void addToFavorites(String username, String restaurantId) {
+        AddToFavoritesInputData inputData = new AddToFavoritesInputData(username, restaurantId);
+        addToFavoritesInteractor.execute(inputData);
     }
 
-    public void removeFromFavorites(String userId, String restaurantName) {
-        final RemoveFromFavoritesInputData inputData = new RemoveFromFavoritesInputData(userId, restaurantName);
-        removeFromFavoritesUseCase.execute(inputData);
+    public void removeFromFavorites(String username, String restaurantId) {
+        RemoveFromFavoritesInputData inputData = new RemoveFromFavoritesInputData(username, restaurantId);
+        removeFromFavoritesInteractor.execute(inputData);
     }
 }
+
+
