@@ -1,276 +1,145 @@
 package data_access;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
+import domain.OpeningHours;
 import entity.Restaurant;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputData;
-import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
 
 public class FilterDataAccessObject implements FilterDataAccessInterface {
-    private static final Map<String, DayOfWeek> DAY_MAP = Map.of(
-            "Mo", DayOfWeek.MONDAY,
-            "Tu", DayOfWeek.TUESDAY,
-            "We", DayOfWeek.WEDNESDAY,
-            "Th", DayOfWeek.THURSDAY,
-            "Fr", DayOfWeek.FRIDAY,
-            "Sa", DayOfWeek.SATURDAY,
-            "Su", DayOfWeek.SUNDAY);
-    private final SearchLocationNearbyDataAccessObject searchLocationNearbyDataAccessObject;
+    private static final String NOT_GIVEN = "not given";
+    private static final String NONE = "None";
+    private final SearchLocationNearbyDataAccessObject searchInterface;
 
     public FilterDataAccessObject() {
-        this.searchLocationNearbyDataAccessObject = new SearchLocationNearbyDataAccessObject();
-    }
-
-    private boolean matchesCuisineFilter(List<String> userSelectedCuisines, String restCuisine) {
-        boolean match = false;
-        final boolean noFilterSelected = userSelectedCuisines == null || userSelectedCuisines.isEmpty()
-                || userSelectedCuisines.size() == 1 && (userSelectedCuisines.get(0) == null
-                || userSelectedCuisines.get(0).isEmpty());
-        if (noFilterSelected && "not given".equalsIgnoreCase(restCuisine)) {
-            match = true;
-        }
-        else if (userSelectedCuisines != null) {
-            for (String cuisine : userSelectedCuisines) {
-                if (cuisine != null && cuisine.equalsIgnoreCase(restCuisine)) {
-                    match = true;
-                    break;
-                }
-            }
-        }
-        return match;
-    }
-
-    private boolean matchesVegStatFilter(String userVegStat, String restVegStat) {
-        boolean match = false;
-        final boolean noFilterSelected = userVegStat == null || userVegStat.isEmpty();
-        if (noFilterSelected && "not given".equals(restVegStat)) {
-            match = true;
-        }
-        else if ("yes".equalsIgnoreCase(userVegStat) && "yes".equalsIgnoreCase(restVegStat)) {
-            match = true;
-        }
-        return match;
-    }
-
-    private boolean matchesRatingFilter(String userRating, String restRating) {
-        boolean match = false;
-        final boolean noFilterSelected = userRating == null || userRating.isEmpty();
-        if (noFilterSelected && "not given".equalsIgnoreCase(restRating)) {
-            match = true;
-        }
-        else {
-            try {
-                if (userRating != null) {
-                    final int userRate = Integer.parseInt(userRating);
-                    final int restRate = Integer.parseInt(restRating);
-                    if (restRate >= userRate) {
-                        match = true;
-                    }
-                }
-            }
-            catch (NumberFormatException error) {
-                if (userRating.equalsIgnoreCase(restRating)) {
-                    match = true;
-                }
-            }
-        }
-        return match;
-    }
-
-    private boolean matchesAvailabilityFilter(String userAvailability, String restHours) {
-        boolean match = false;
-        final boolean noFilter = userAvailability == null || userAvailability.isEmpty();
-        final boolean notGiven = restHours == null || restHours.equalsIgnoreCase("not given");
-        final boolean isOpen = !notGiven && isOpenNow(restHours);
-
-        if (noFilter) {
-            match = true;
-        }
-        else if ("Open".equalsIgnoreCase(userAvailability) && isOpen) {
-            match = true;
-        }
-        else if ("Closed".equalsIgnoreCase(userAvailability) && !isOpen) {
-            match = true;
-        }
-        return match;
-    }
-
-    private ArrayList<Restaurant> getNearbyRestaurants(FilterInputData filterInputData) {
-        final SearchLocationsNearbyInputData locationData = filterInputData.getLocations();
-        final int userRadius = locationData.getRadius();
-        final String userAddress = locationData.getAddress();
-        return searchLocationNearbyDataAccessObject.getNearbyRestaurants(
-                userAddress, userRadius);
+        this.searchInterface = new SearchLocationNearbyDataAccessObject();
     }
 
     @Override
     public ArrayList<Restaurant> getFilteredRestaurants(FilterInputData filterInputData) {
-        final ArrayList<Restaurant> nearbyRestaurants = getNearbyRestaurants(filterInputData);
-        final ArrayList<Restaurant> filteredRestaurants = new ArrayList<>();
-        for (Restaurant r : nearbyRestaurants) {
-            if (matchesCuisineFilter(filterInputData.getCuisine(), r.getCuisine())
-                    && matchesVegStatFilter(filterInputData.getVegStat(), r.getVegStat())
-                    && matchesAvailabilityFilter(filterInputData.getAvailability(), r.getOpeningHours())
-                    && matchesRatingFilter(filterInputData.getRating(), r.getRating())) {
-                filteredRestaurants.add(r);
+        final ArrayList<Restaurant> result = new ArrayList<>();
+        final ArrayList<Restaurant> nearby = getNearbyRestaurants(filterInputData);
+        final List<String> cuisines = filterInputData.getCuisine();
+        final String rating = filterInputData.getRating();
+        final String vegStat = filterInputData.getVegStat();
+        final String availability = filterInputData.getAvailability();
+        for (Restaurant r : nearby) {
+            if (matchesAllFilters(r, cuisines, rating, vegStat, availability)) {
+                result.add(r);
             }
         }
-        return filteredRestaurants;
+        return result;
     }
 
-    public List<String> getCuisineOptions(FilterInputData filterInputData) {
-        final ArrayList<Restaurant> nearbyRestaurants = getNearbyRestaurants(filterInputData);
-        final List<String> options = new ArrayList<>();
-        options.add("");
+    private ArrayList<Restaurant> getNearbyRestaurants(FilterInputData data) {
+        return searchInterface.getNearbyRestaurantsResult(data.getAddress(), data.getRadius()).getRestaurant();
+    }
 
-        for (Restaurant r : nearbyRestaurants) {
-            final String cuisine = r.getCuisine();
-            if (cuisine != null && !cuisine.isBlank() && !options.contains(cuisine)) {
-                options.add(cuisine);
-            }
+    private boolean matchesAllFilters(Restaurant restaurant, List<String> cuisines, String rating,
+                                      String vegStat, String availability) {
+        boolean match = matchesCuisineFilter(cuisines, restaurant.getCuisine());
+        match &= matchesRatingFilter(rating, restaurant.getRating());
+        match &= matchesVegStatFilter(vegStat, restaurant.getVegStat());
+        match &= matchesAvailabilityFilter(availability, restaurant.getOpeningHours());
+        return match;
+    }
+
+    private boolean matchesCuisineFilter(List<String> userSelected, String restaurantCuisine) {
+        boolean result = false;
+
+        // Treat null, empty, or ["None"] as no filter = match everything
+        if (userSelected == null || userSelected.isEmpty()
+                || userSelected.size() == 1 && NONE.equalsIgnoreCase(userSelected.get(0))) {
+            result = true;
         }
-        return options;
-    }
-
-    public List<String> getVegStatOptions(FilterInputData filterInputData) {
-        final ArrayList<Restaurant> nearbyRestaurants = getNearbyRestaurants(filterInputData);
-        final List<String> options = new ArrayList<>();
-        options.add("");
-
-        for (Restaurant r : nearbyRestaurants) {
-            final String vegStat = r.getVegStat();
-            if (vegStat != null && !vegStat.isBlank() && !options.contains(vegStat)) {
-                options.add(vegStat);
-            }
-        }
-        return options;
-    }
-
-    public List<String> getOpeningHourOptions(FilterInputData filterInputData) {
-        final ArrayList<Restaurant> nearbyRestaurants = getNearbyRestaurants(filterInputData);
-        final List<String> options = new ArrayList<>();
-        options.add("");
-
-        for (Restaurant r : nearbyRestaurants) {
-            final String hours = r.getOpeningHours();
-            if (hours != null && !hours.isBlank() && !options.contains(hours)) {
-                options.add(hours);
-            }
-        }
-        return options;
-    }
-
-    public List<String> getRatingOptions(FilterInputData filterInputData) {
-        final ArrayList<Restaurant> nearbyRestaurants = getNearbyRestaurants(filterInputData);
-        final List<String> options = new ArrayList<>();
-        options.add("");
-
-        for (Restaurant r : nearbyRestaurants) {
-            final String rating = r.getRating();
-            if (rating != null && !rating.isBlank() && !options.contains(rating)) {
-                options.add(rating);
-            }
-        }
-        return options;
-    }
-
-    // For matchAvailability
-    public boolean isOpenNow(String openingHours) {
-        boolean isOpen = false;
-
-        if (openingHours != null && !openingHours.isBlank()) {
-            final LocalDateTime now = LocalDateTime.now();
-            final DayOfWeek currentDay = now.getDayOfWeek();
-            final LocalTime currentTime = now.toLocalTime();
-
-            final String[] entries = openingHours.split(";");
-            for (String entry : entries) {
-                final String newEntry = entry.trim();
-                if (!newEntry.isEmpty()) {
-                    if (entryAppliesNow(newEntry, currentDay, currentTime)) {
-                        isOpen = true;
-                        break;
-                    }
+        else if (isCuisineValid(restaurantCuisine)) {
+            final String[] parts = restaurantCuisine.split(";");
+            for (String userCuisine : userSelected) {
+                if (userCuisine != null && anyCuisineMatches(userCuisine, parts)) {
+                    result = true;
+                    break;
                 }
             }
         }
-        return isOpen;
+        return result;
     }
 
-    private boolean entryAppliesNow(String entry, DayOfWeek currentDay, LocalTime currentTime) {
-        boolean applies = false;
+    private boolean isCuisineValid(String cuisine) {
+        return cuisine != null && !cuisine.isBlank() && !NOT_GIVEN.equalsIgnoreCase(cuisine);
+    }
 
-        final String[] parts = entry.split(" ", 2);
-        if (parts.length == 2) {
-            final Set<DayOfWeek> days = parseDays(parts[0]);
-            if (days.contains(currentDay)) {
-                final String[] times = parts[1].split("-", 2);
-                if (times.length == 2) {
-                    try {
-                        final LocalTime start = LocalTime.parse(times[0]);
-                        final LocalTime end = LocalTime.parse(times[1]);
-                        applies = isTimeWithinRange(currentTime, start, end);
-                    }
-                    catch (DateTimeParseException ignored) {
-                        // do nothing, applies stays false
-                    }
-                }
+    private boolean anyCuisineMatches(String userCuisine, String[] parts) {
+        boolean matchFound = false;
+        for (String part : parts) {
+            final boolean isValid = isValidCuisinePart(part);
+            final boolean isEqual = part.trim().equalsIgnoreCase(userCuisine.trim());
+            if (isValid && isEqual) {
+                matchFound = true;
+                break;
             }
         }
-
-        return applies;
+        return matchFound;
     }
 
-    private boolean isTimeWithinRange(LocalTime currentTime, LocalTime start, LocalTime end) {
-        final boolean withinRange;
+    private boolean isValidCuisinePart(String part) {
+        return part != null && !part.trim().isEmpty() && !part.trim().equalsIgnoreCase(NOT_GIVEN);
+    }
 
-        if (end.isBefore(start)) {
-            withinRange = !currentTime.isBefore(start) || !currentTime.isAfter(end);
+    private boolean matchesRatingFilter(String userRating, String restRating) {
+        boolean result = false;
+        if (userRating == null || userRating.isEmpty() || NONE.equalsIgnoreCase(userRating)) {
+            result = true;
+        }
+        else if (restRating != null && !restRating.isBlank() && !NOT_GIVEN.equalsIgnoreCase(restRating)) {
+            try {
+                final int userRate = Integer.parseInt(userRating);
+                final int restRate = Integer.parseInt(restRating);
+                result = restRate >= userRate;
+            }
+            catch (NumberFormatException error) {
+                result = userRating.equalsIgnoreCase(restRating);
+            }
+        }
+        return result;
+    }
+
+    private boolean matchesVegStatFilter(String userVeg, String restVeg) {
+        boolean result = false;
+        if (userVeg == null || userVeg.isEmpty() || NONE.equalsIgnoreCase(userVeg)) {
+            result = true;
+        }
+        else if (restVeg != null && !restVeg.isBlank() && !NOT_GIVEN.equalsIgnoreCase(restVeg)) {
+            result = restVeg.equalsIgnoreCase(userVeg);
+        }
+
+        return result;
+    }
+
+    private boolean matchesAvailabilityFilter(String userAvailability, String restOpeningHours) {
+        boolean result = false;
+
+        if (userAvailability == null || userAvailability.isEmpty() || NONE.equalsIgnoreCase(userAvailability)) {
+            result = true;
+        }
+        else if (restOpeningHours == null || restOpeningHours.isBlank()
+                || NOT_GIVEN.equalsIgnoreCase(restOpeningHours)) {
+            result = NONE.equalsIgnoreCase(userAvailability);
+        }
+        else if ("24/7".equalsIgnoreCase(restOpeningHours)) {
+            result = !"Closed Now".equalsIgnoreCase(userAvailability);
         }
         else {
-            withinRange = !currentTime.isBefore(start) && !currentTime.isAfter(end);
-        }
-
-        return withinRange;
-    }
-
-    private Set<DayOfWeek> parseDays(String dayPart) {
-        final Set<DayOfWeek> days = new HashSet<>();
-
-        if (dayPart != null && !dayPart.isBlank()) {
-            final String[] ranges = dayPart.split(",");
-            for (String range : ranges) {
-                final String newRange = range.trim();
-                if (newRange.contains("-")) {
-                    final String[] bounds = newRange.split("-", 2);
-                    if (bounds.length == 2 && DAY_MAP.containsKey(bounds[0]) && DAY_MAP.containsKey(bounds[1])) {
-                        final int start = DAY_MAP.get(bounds[0]).getValue();
-                        final int end = DAY_MAP.get(bounds[1]).getValue();
-                        int i = start;
-                        while (true) {
-                            days.add(DayOfWeek.of(i));
-                            if (i == end) {
-                                break;
-                            }
-                            i = i % 7 + 1;
-                        }
-                    }
-                }
-                else if (DAY_MAP.containsKey(newRange)) {
-                    days.add(DAY_MAP.get(range));
-                }
+            final OpeningHours oh = new OpeningHours(restOpeningHours);
+            final String status = oh.availabilityStatus();
+            if ("Open Now".equalsIgnoreCase(userAvailability)) {
+                result = "Open".equalsIgnoreCase(status);
+            }
+            else if ("Closed Now".equalsIgnoreCase(userAvailability)) {
+                result = "Closed".equalsIgnoreCase(status);
             }
         }
-
-        return days;
+        return result;
     }
 }

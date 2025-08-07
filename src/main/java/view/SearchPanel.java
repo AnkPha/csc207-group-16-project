@@ -1,230 +1,279 @@
 package view;
 
-import java.awt.Component;
+import java.awt.BorderLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
+import org.jxmapviewer.viewer.DefaultWaypoint;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.Waypoint;
+import org.jxmapviewer.viewer.WaypointPainter;
+
+import entity.Restaurant;
+import interface_adapter.CurrentViewState;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchState;
-import interface_adapter.change_password.LoggedInViewModel;
-import interface_adapter.logout.LogoutController;
 import interface_adapter.search_nearby_locations.SearchViewModel;
-import entity.Restaurant;
-
-import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.viewer.DefaultTileFactory;
-import org.jxmapviewer.viewer.GeoPosition;
-import org.jxmapviewer.OSMTileFactoryInfo;
-import org.jxmapviewer.viewer.TileFactoryInfo;
-import org.jxmapviewer.painter.CompoundPainter;
-import org.jxmapviewer.painter.Painter;
-import org.jxmapviewer.viewer.WaypointPainter;
-import org.jxmapviewer.viewer.Waypoint;
-import org.jxmapviewer.viewer.DefaultWaypoint;
-
-
-import java.awt.*;
-import java.util.Set;
-import java.util.HashSet;
-
-
 
 /**
- * The View for when the user is logged into the program.
+ * The View for when the user is searching and filtering places.
  */
 public class SearchPanel extends JPanel implements PropertyChangeListener {
+
+    public static final double RESIZE_HALF = 0.5;
+    public static final int RADIUS_100 = 100;
+    public static final int RADIUS_300 = 300;
+    public static final int RADIUS_1000 = 1000;
+    public static final int RADIUS_3000 = 3000;
+    public static final int RADIUS_10000 = 10000;
+    public static final int RADIUS_25000 = 25000;
+    public static final int RADIUS_100000 = 100000;
+    public static final int RADIUS_500000 = 500000;
+
+    public static final int ZOOM_0 = 0;
+    public static final int ZOOM_2 = 2;
+    public static final int ZOOM_3 = 3;
+    public static final int ZOOM_4 = 4;
+    public static final int ZOOM_5 = 5;
+    public static final int ZOOM_6 = 6;
+    public static final int ZOOM_7 = 7;
+    public static final int ZOOM_8 = 8;
+    public static final int ZOOM_9 = 9;
+
+    public static final int NO_RESULTS = 1;
+    public static final int FAILED_AT_CALL = 0;
+
     private final SearchViewModel searchViewModel;
-    private final JLabel searchErrorField = new JLabel();
+    private final FilterViewModel filterViewModel;
+
     private SearchLocationsNearbyController searchLocationsController;
-
-    private final JTextField searchInputField = new JTextField(15);
-
-    private final JTextField radiusInputField = new JTextField(15);
-
-    private final JButton searchButton;
-
-    private final JXMapViewer mapViewer = new JXMapViewer();
-
-    private final JLabel notificationLabel = new JLabel("");
+    private FilterController filteringController;
 
     private int zoom;
 
-    private JPanel infoPanel = new JPanel();
+    private SearchState currentState;
 
+    private final CurrentViewState currentViewState = new CurrentViewState();
 
-    public SearchPanel(SearchViewModel searchViewModel) {
-        //Starting with the left Panel
+    private RightPanel rightPanel;
+
+    private LeftPanel leftPanel;
+
+    private Set<Waypoint> waypoints;
+
+    public SearchPanel(SearchViewModel searchViewModel, FilterViewModel filterViewModel) {
+
         searchViewModel.addPropertyChangeListener(this);
-        mapViewer.setPreferredSize(new Dimension(800, 600));
-        mapViewer.setTileFactory(new DefaultTileFactory(new OSMTileFactoryInfo()));
-        mapViewer.setZoom(7);
-        mapViewer.setAddressLocation(new GeoPosition(43.6532, -79.3832)); // Default center: Toronto
+        filterViewModel.addPropertyChangeListener(this);
 
+        currentViewState.setFilterState(filterViewModel.getState());
+        currentViewState.setSearchState(searchViewModel.getState());
+
+        setUpScreen();
+        this.filterViewModel = filterViewModel;
+        this.filterViewModel.addPropertyChangeListener(this);
         this.searchViewModel = searchViewModel;
         this.searchViewModel.addPropertyChangeListener(this);
+    }
 
-        final JLabel title = new JLabel("Search Screen");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+    /**
+     * Sets up the main Screen.
+     */
+    public void setUpScreen() {
 
-        //Label and input field for searching
-        final LabelTextPanel searchInfo = new LabelTextPanel(
-                new JLabel("Enter Address"), searchInputField);
-        final LabelTextPanel radiusInfo = new LabelTextPanel(
-                new JLabel("Enter Radius(In integer meters)"), radiusInputField);
-        final JPanel buttons = new JPanel();
-
-        searchButton = new JButton("Click To Search");
-        buttons.add(searchButton);
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-
-        searchButton.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(searchButton)) {
-                        SearchState currentState = searchViewModel.getState();
-
-                        String address = searchInputField.getText();
-                        String radiusText = radiusInputField.getText();
-
-                        if (address.isEmpty() || radiusText.isEmpty()) {
-                            JOptionPane.showMessageDialog(this, "Address or Radius cannot be empty.");
-                            return;
-                        }
-
-                        try {
-                            int radius = Integer.parseInt(radiusText);
-
-                            currentState.setAddress(address);
-                            currentState.setRadius(radiusText);
-                            if (radius <= 100) {
-                                zoom = 0; // Very close - building level
-                            } else if (radius <= 300) {
-                                zoom = 2;
-                            } else if (radius <= 1000) {
-                                zoom = 3;
-                            } else if (radius <= 3000) {
-                                zoom = 4;
-                            } else if (radius <= 10000) {
-                                zoom = 5;
-                            } else if (radius <= 25000) {
-                                zoom = 6;
-                            } else if (radius <= 100000) {
-                                zoom = 7;
-                            } else if (radius <= 500000) {
-                                zoom = 8;
-                            } else {
-                                zoom = 9;
-                            }
-                            searchLocationsController.execute(address, radius);
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(this, "Radius must be a valid number.");
-                        }
-                    }
-                }
-        );
-
-
-        this.add(title);
-
-        // Left panel with search fields and the map
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BorderLayout());
-
-        // Search fields and labels
-        JPanel searchControls = new JPanel();
-        searchControls.setLayout(new BoxLayout(searchControls, BoxLayout.Y_AXIS));
-        searchControls.add(searchInfo);
-        searchControls.add(searchErrorField);
-        searchControls.add(radiusInfo);
-        searchControls.add(buttons);
-//        searchControls.add(notificationLabel);
-
-        leftPanel.add(mapViewer, BorderLayout.CENTER);
-        leftPanel.add(searchControls, BorderLayout.SOUTH);
-
-        // Right side: place info panel
-        JPanel rightPanel = new JPanel();
-        JButton filterButton = new JButton("Filter");
-        JLabel infoPanelTitle = new JLabel("Restaurant Info");
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(infoPanel);
-
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        rightPanel.add(filterButton);
-        rightPanel.add(infoPanelTitle);
-        rightPanel.add(scrollPane);
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-
-// Split pane for left (map + search fields) and right (info + filter button)
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
-        splitPane.setResizeWeight(0.5);
+        leftPanel = new LeftPanel(this);
+        rightPanel = new RightPanel(this);
+        final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
         splitPane.setOneTouchExpandable(true);
 
         this.setLayout(new BorderLayout());
         this.add(splitPane, BorderLayout.CENTER);
 
+        splitPane.setResizeWeight(RESIZE_HALF);
+        splitPane.setDividerLocation(RESIZE_HALF);
+        this.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent event) {
+                splitPane.setDividerLocation(RESIZE_HALF);
+                rightPanel.setDividerLocation(RESIZE_HALF);
+            }
+        });
+    }
+
+    /**
+     * A method that sets the zoom acoording to the radius.
+     *
+     * @param radius the radius in meters
+     */
+    public void getZoom(int radius) {
+        if (radius <= RADIUS_100) {
+            zoom = ZOOM_0;
+        }
+        else if (radius <= RADIUS_300) {
+            zoom = ZOOM_2;
+        }
+        else if (radius <= RADIUS_1000) {
+            zoom = ZOOM_3;
+        }
+        else if (radius <= RADIUS_3000) {
+            zoom = ZOOM_4;
+        }
+        else if (radius <= RADIUS_10000) {
+            zoom = ZOOM_5;
+        }
+        else if (radius <= RADIUS_25000) {
+            zoom = ZOOM_6;
+        }
+        else if (radius <= RADIUS_100000) {
+            zoom = ZOOM_7;
+        }
+        else if (radius <= RADIUS_500000) {
+            zoom = ZOOM_8;
+        }
+        else {
+            zoom = ZOOM_9;
+        }
+    }
+
+    /**
+     * A method that functions as the filter logic.
+     *
+     * @param selectedCuisines the selected cuisines;
+     * @param selectedRating   the selected rating
+     * @param selectedVegStat  the selected veg stat
+     * @param selectedHour     the selected hour
+     */
+    public void handleFilter(List<String> selectedCuisines,
+                             String selectedRating,
+                             String selectedVegStat,
+                             String selectedHour) {
+        currentState = searchViewModel.getState();
+        if (currentState.getAddress() == null && currentState.getRadius() == null) {
+            JOptionPane.showMessageDialog(this, "Please fill out address and radius first");
+        }
+
+        currentState.setFiltered(true);
+        filteringController.execute(currentState.getAddress(), Integer.parseInt(
+                        currentState.getRadius()),
+                selectedCuisines,
+                selectedVegStat,
+                selectedHour,
+                selectedRating);
+        currentViewState.setFilterState(filterViewModel.getState());
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        infoPanel.removeAll();
+        rightPanel.getInfoPanel().removeAll();
+        currentViewState.setFilterState(filterViewModel.getState());
+        currentViewState.setSearchState(searchViewModel.getState());
+
+        rightPanel.updateUi(currentViewState);
+
         System.out.println("RAN #1");
         if (evt.getPropertyName().equals("state")) {
-            System.out.println("RAN #2");
-            SearchState newState = (SearchState) evt.getNewValue();
-            if (newState.getResturants().isEmpty()) {
-                System.out.println("NO WAYPOINYS CUZ NO RESTAURANTS");
+            System.out.println("RAN #2: SEARCH");
+            if (currentViewState.getStatus() == FAILED_AT_CALL) {
+                JOptionPane.showMessageDialog(this, "Problem with API call try again later");
+            }
+            else if (currentViewState.getStatus() == NO_RESULTS) {
+                JOptionPane.showMessageDialog(this, "Could Not Find Address");
+            }
+            else if (currentViewState.getActiveRestaurants().isEmpty()) {
+                System.out.println("NO WAYPOINYS CUZ NO RESTAURANTS " + "FILTERED? " + currentViewState.isFiltered());
                 JOptionPane.showMessageDialog(this, "No Restaurants found");
-//                notificationLabel.setText("No restaurants found in the specified radius.");
-            } else {
-                notificationLabel.setText(""); // Clear message
-                mapViewer.setOverlayPainter(null);
-                Set<Waypoint> waypoints = new HashSet<>();
-                System.out.println("SIZE OF RESTURANTS " + newState.getResturants().size() );
-                for (Restaurant r : newState.getResturants()) {
-                    System.out.println("Restaurant: " + r.getName() + " @ " + r.getLat() + ", " + r.getLon());
-                    if (r.getLat() != 0.0 && r.getLon() != 0.0) {
-                        GeoPosition pos = new GeoPosition(r.getLat(), r.getLon());
-                        waypoints.add(new DefaultWaypoint(pos));
-                        JLabel nameLabel = new JLabel("Name: " + r.getName());
-                        JLabel cuisineLabel = new JLabel("Cuisine: " + r.getCuisine());
-                        JLabel websiteLabel = new JLabel("Website: " + r.getWebsite());
-                        JLabel hoursLabel = new JLabel("Opening Hours: " + r.getOpeningHours());
-
-                        infoPanel.add(nameLabel);
-                        infoPanel.add(cuisineLabel);
-                        infoPanel.add(websiteLabel);
-                        infoPanel.add(hoursLabel);
-                        infoPanel.add(new JLabel("------"));
-                        infoPanel.revalidate();
-                        infoPanel.repaint();
-                    }
-                }
-
-                WaypointPainter<Waypoint> painter = new WaypointPainter<>();
-                painter.setWaypoints(waypoints);
-                mapViewer.setOverlayPainter(painter);
-
-                if (!waypoints.isEmpty()) {
-                    GeoPosition center = new GeoPosition(newState.getAddressCoords()[0], newState.getAddressCoords()[1]);
-                    mapViewer.setAddressLocation(center);
-                    mapViewer.setZoom(zoom);
-                    System.out.println("THERE EXISTS A WAYPOINT");
-                }
-
-                mapViewer.repaint();
+            }
+            else {
+                leftPanel.getMapViewer().setOverlayPainter(null);
+                waypoints = new HashSet<>();
+                updateInfoPanelAndWaypoints();
+            }
+            final WaypointPainter<Waypoint> painter = new WaypointPainter<>();
+            painter.setWaypoints(waypoints);
+            leftPanel.getMapViewer().setOverlayPainter(painter);
+            if (!waypoints.isEmpty()) {
+                final GeoPosition center = new GeoPosition(
+                        currentViewState.getSearchState().getAddressCoords()[0],
+                        currentViewState.getSearchState().getAddressCoords()[1]);
+                leftPanel.getMapViewer().setAddressLocation(center);
+                leftPanel.getMapViewer().setZoom(zoom);
+                System.out.println("THERE EXISTS A WAYPOINT");
             }
 
-
+            leftPanel.getMapViewer().repaint();
         }
     }
+
+    /**
+     * A method that updates the infoPanel visual.
+     */
+    public void updateInfoPanelAndWaypoints() {
+        System.out.println("SIZE OF RESTURANTS "
+                + currentViewState.getActiveRestaurants().size()
+                + "FILTERED? " + currentViewState.isFiltered());
+        for (Restaurant r : currentViewState.getActiveRestaurants()) {
+            System.out.println("Restaurant: " + r.getName() + " @ " + r.getLat() + ", " + r.getLon());
+            if (r.getLat() != 0.0 && r.getLon() != 0.0) {
+                final GeoPosition pos = new GeoPosition(r.getLat(), r.getLon());
+                waypoints.add(new DefaultWaypoint(pos));
+                final JLabel nameLabel = new JLabel("Name: " + r.getName());
+                final JLabel cuisineLabel = new JLabel("Cuisine: " + r.getCuisine());
+                final JLabel websiteLabel = new JLabel("Website: " + r.getWebsite());
+                final JLabel hoursLabel = new JLabel("Opening Hours: " + r.getOpeningHours());
+
+                rightPanel.addToInfoPanel(nameLabel, cuisineLabel, websiteLabel, hoursLabel);
+            }
+        }
+    }
+
+    /**
+     * A method that handles the search once the search button is clicked.
+     *
+     * @param address    the address
+     * @param radiusText the radius in String format
+     */
+    public void handleSearch(String address, String radiusText) {
+        currentState = searchViewModel.getState();
+        currentState.setFiltered(false);
+        currentViewState.setSearchState(currentState);
+        if (address.isEmpty() || radiusText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Address or Radius cannot be empty.");
+        }
+
+        try {
+            final int radius = Integer.parseInt(radiusText);
+            currentState.setAddress(address);
+            currentState.setRadius(radiusText);
+            getZoom(radius);
+            searchLocationsController.execute(address, radius);
+            currentState = searchViewModel.getState();
+            currentState.setRadius(radiusText);
+            currentState.setAddress(address);
+            currentViewState.setSearchState(currentState);
+        }
+        catch (NumberFormatException exception) {
+            JOptionPane.showMessageDialog(this, "Radius must be a valid number.");
+        }
+        rightPanel.getInfoPanel().revalidate();
+        rightPanel.getInfoPanel().repaint();
+    }
+
     public void setSearchLocationsController(SearchLocationsNearbyController searchLocationsController) {
         this.searchLocationsController = searchLocationsController;
+    }
+
+    public void setFilteringController(FilterController filteringController) {
+        this.filteringController = filteringController;
     }
 }

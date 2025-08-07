@@ -15,23 +15,25 @@ import entity.UserFactory;
  */
 public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface {
 
+    private final InMemoryUserDataAccessObject userDao;
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Set<String>> friendRequests = new HashMap<>();
     private final Map<String, Set<String>> friends = new HashMap<>();
     private final UserFactory userFactory;
 
-    public InMemoryFriendDataAccessObject(UserFactory userFactory) {
+    public InMemoryFriendDataAccessObject(InMemoryUserDataAccessObject userDao, UserFactory userFactory) {
+        this.userDao = userDao;
         this.userFactory = userFactory;
     }
 
     @Override
     public boolean userExists(String username) {
-        return users.containsKey(username);
+        return userDao.existsByName(username);
     }
 
     @Override
     public User getUser(String username) {
-        return users.get(username);
+        return userDao.get(username);
     }
 
     public void addUser(User user) {
@@ -81,7 +83,8 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
 
     @Override
     public void acceptRequest(String username, String fromUser) {
-        if (friendRequests.get(username).remove(fromUser)) {
+        final Set<String> pending = friendRequests.get(username);
+        if (pending != null && pending.remove(fromUser)) {
             friends.get(username).add(fromUser);
             friends.get(fromUser).add(username);
         }
@@ -89,7 +92,10 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
 
     @Override
     public void rejectRequest(String username, String fromUser) {
-        friendRequests.get(username).remove(fromUser);
+        final Set<String> pending = friendRequests.get(username);
+        if (pending != null) {
+            pending.remove(fromUser);
+        }
     }
 
     @Override
@@ -100,11 +106,37 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
     @Override
     public List<String> searchUsers(String query) {
         final List<String> results = new ArrayList<>();
-        for (String username : users.keySet()) {
+
+        // Use the new getAllUsernames method instead of hardcoded users
+        final List<String> allUsers = userDao.getAllUsernames();
+
+        for (String username : allUsers) {
             if (username.toLowerCase().contains(query.toLowerCase())) {
                 results.add(username);
             }
         }
+
         return results;
+    }
+
+    /**
+     * Retrieves all restaurant reviews for the specified list of usernames.
+     *
+     * @param usernames A list of usernames to retrieve reviews for.
+     * @return A map where each key is a username, and the value is a list of RestaurantReview objects
+     *         that the user has submitted. If a user has no reviews, the list will be empty.
+     */
+    @Override
+    public Map<String, List<entity.Review>> getReviewsForUsers(List<String> usernames) {
+        final Map<String, List<entity.Review>> result = new HashMap<>();
+        for (String username : usernames) {
+            if (userDao.existsByName(username)) {
+                result.put(username, new ArrayList<>(userDao.getUserReviews(username).values()));
+            }
+            else {
+                result.put(username, new ArrayList<>());
+            }
+        }
+        return result;
     }
 }

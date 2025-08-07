@@ -1,18 +1,31 @@
 package use_case.search_nearby_locations;
-import entity.Restaurant;
 
 import java.util.ArrayList;
-import java.util.List;
-public class SearchLocationsNearbyOutputData{
+
+import entity.Restaurant;
+
+public class SearchLocationsNearbyOutputData {
     private final ArrayList<Restaurant> nearbyRestaurants;
     private final double[] addressCoords;
-    public SearchLocationsNearbyOutputData(ArrayList<Restaurant> nearbyRestaurants, double[] addressCoords){
+    private final int status;
+
+    public SearchLocationsNearbyOutputData(ArrayList<Restaurant> nearbyRestaurants,
+                                           double[] addressCoords,
+                                           int status) {
         this.nearbyRestaurants = nearbyRestaurants;
         this.addressCoords = addressCoords;
+        this.status = status;
     }
+
     public ArrayList<Restaurant> getNearbyRestaurants() {
         return nearbyRestaurants;
     }
 
-    public double[] getAddressCoords() { return addressCoords; }
+    public double[] getAddressCoords() {
+        return addressCoords;
+    }
+
+    public int getStatus() {
+        return status;
+    }
 }
