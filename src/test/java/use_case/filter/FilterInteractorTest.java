@@ -1,149 +1,171 @@
 package use_case.filter;
 
 import data_access.FilterDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
-import data_access.SearchLocationNearbyDataAccessObject;
-import entity.CommonUserFactory;
 import entity.Restaurant;
-import entity.User;
-import entity.UserFactory;
-import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import use_case.login.*;
-import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
-import use_case.search_nearby_locations.SearchLocationsNearbyInteractor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Filter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FilterInteractorTest {
+    private FilterDataAccessObject dao;
 
-    public static class MockSearchDAO extends SearchLocationNearbyDataAccessObject {
-        private final ArrayList<Restaurant> mockRestaurants;
+    @BeforeEach
+    void setUp() {
+        dao = new FilterDataAccessObject();
 
-        public MockSearchDAO(ArrayList<Restaurant> mockRestaurants) {
-            this.mockRestaurants = mockRestaurants;
-        }
-
-        @Override
-        public ArrayList<Restaurant> getNearbyRestaurants(String address, int radius) {
-            return mockRestaurants;
-        }
+        dao = new FilterDataAccessObject() {
+            @Override
+            public ArrayList<Restaurant> getFilteredRestaurants (FilterInputData filterInputData) {
+                return super.getFilteredRestaurants(filterInputData);
+            }
+        };
     }
 
     @Test
-    void successTest() {
-        SearchLocationsNearbyInputData s = new SearchLocationsNearbyInputData("100 University Avenue", 500);
-        List<String> c = List.of(new String[]{"Korean", "Italian"});
-        FilterInputData inputData = new FilterInputData(s , c,"", "Open", "3");
-        FilterDataAccessInterface daoFilter = new FilterDataAccessObject();
+    void filterByCuisineOnly() {
+        List<String> selectedCuisines = List.of("japanese");
 
-        // For the success test, we need to search the address and radius.
-        SearchLocationsNearbyController s = new CommonUserFactory();
-        User user = factory.create("Paul", "password");
-        userRepository.save(user);
+        FilterInputData inputOne = new FilterInputData("100 Queen St W, Toronto, ON, Canada",
+                500, selectedCuisines, "None", "None", "None");
 
-        // This creates a successPresenter that tests whether the test case is as we expect.
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+        FilterOutputBoundary outputOne = new FilterOutputBoundary() {
             @Override
-            public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", user.getUsername());
+            public void prepareSuccessView(FilterOutputData outputData) {
+                Assertions.assertEquals(10, outputData.getFilteredRestaurants().size());
+                assertTrue(outputData.getFilteredRestaurants().stream()
+                        .anyMatch(restaurant ->
+                                outputData.getFilteredRestaurants().get(0).getCuisine().equals("sushi;japanese")));
             }
-
             @Override
-            public void prepareFailView(String error) {
-                fail("Use case failure is unexpected.");
+            public void prepareFailView(String errorMessage) {
+                Assertions.fail("Failure to Filter Restaurants" + errorMessage);
             }
         };
-
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
-        interactor.execute(inputData);
+        FilterInputBoundary interactor = new FilterInteractor(dao, outputOne);
+        interactor.execute(inputOne);
     }
 
     @Test
-    void successUserLoggedInTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+    void filterByRatingOnly() {
+        List<String> selectedCuisine = List.of("None");
 
-        // For the success test, we need to add Paul to the data access repository before we log in.
-        UserFactory factory = new CommonUserFactory();
-        User user = factory.create("Paul", "password");
-        userRepository.save(user);
+        FilterInputData inputTwo = new FilterInputData("100 Queen St W, Toronto, ON, Canada",
+                500, selectedCuisine, "None", "None", "None");
 
-        // This creates a successPresenter that tests whether the test case is as we expect.
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+        FilterOutputBoundary outputTwo = new FilterOutputBoundary() {
             @Override
-            public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", userRepository.getCurrentUsername());
+            public void prepareSuccessView(FilterOutputData outputData) {
+                Assertions.assertEquals(104, outputData.getFilteredRestaurants().size());
+                assertTrue(outputData.getFilteredRestaurants().stream()
+                        .anyMatch(restaurant ->
+                                outputData.getFilteredRestaurants().get(0).getRating().equals("No Ratings")));
             }
-
             @Override
-            public void prepareFailView(String error) {
-                fail("Use case failure is unexpected.");
+            public void prepareFailView(String errorMessage) {
+                Assertions.fail("Failure to Filter Restaurants" + errorMessage);
             }
         };
-
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
-        assertEquals(null, userRepository.getCurrentUsername());
-
-        interactor.execute(inputData);
+        FilterInputBoundary interactor = new FilterInteractor(dao, outputTwo);
+        interactor.execute(inputTwo);
     }
 
     @Test
-    void failurePasswordMismatchTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "wrong");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+    void filterByVegStatOnly() {
+        List<String> selectedCuisine = List.of("None");
 
-        // For this failure test, we need to add Paul to the data access repository before we log in, and
-        // the passwords should not match.
-        UserFactory factory = new CommonUserFactory();
-        User user = factory.create("Paul", "password");
-        userRepository.save(user);
+        FilterInputData inputThree = new FilterInputData("100 Queen St W, Toronto, ON, Canada",
+                500, selectedCuisine, "yes", "None", "None");
 
-        // This creates a presenter that tests whether the test case is as we expect.
-        LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
+        FilterOutputBoundary outputThree = new FilterOutputBoundary() {
             @Override
-            public void prepareSuccessView(LoginOutputData user) {
-                // this should never be reached since the test case should fail
-                fail("Use case success is unexpected.");
+            public void prepareSuccessView(FilterOutputData outputData) {
+                Assertions.assertEquals(5, outputData.getFilteredRestaurants().size());
+                assertTrue(outputData.getFilteredRestaurants().stream()
+                        .anyMatch(restaurant -> outputData.getFilteredRestaurants().get(0).getVegStat()
+                                .equals("yes")));
             }
-
             @Override
-            public void prepareFailView(String error) {
-                assertEquals("Incorrect password for \"Paul\".", error);
+            public void prepareFailView(String errorMessage) {
+                Assertions.fail("Failure to Filter Restaurants" + errorMessage);
             }
         };
-
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
-        interactor.execute(inputData);
+        FilterInputBoundary interactor = new FilterInteractor(dao, outputThree);
+        interactor.execute(inputThree);
     }
 
     @Test
-    void failureUserDoesNotExistTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+    void filterByAvailabilityOnly() {
+        List<String> selectedCuisine = List.of("None");
 
-        // Add Paul to the repo so that when we check later they already exist
+        FilterInputData inputFour = new FilterInputData("100 Queen St W, Toronto, ON, Canada",
+                500, selectedCuisine, "None", "None", "None");
 
-        // This creates a presenter that tests whether the test case is as we expect.
-        LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
+        FilterOutputBoundary outputFour = new FilterOutputBoundary() {
             @Override
-            public void prepareSuccessView(LoginOutputData user) {
-                // this should never be reached since the test case should fail
-                fail("Use case success is unexpected.");
+            public void prepareSuccessView(FilterOutputData outputData) {
+                Assertions.assertEquals(104, outputData.getFilteredRestaurants().size());
+                assertTrue(outputData.getFilteredRestaurants().stream()
+                        .anyMatch(restaurant ->
+                                outputData.getFilteredRestaurants().get(0).getOpeningHours()
+                                        .equals("Mo-Su 11:00-23:00")));
             }
-
             @Override
-            public void prepareFailView(String error) {
-                assertEquals("Paul: Account does not exist.", error);
+            public void prepareFailView(String errorMessage) {
+                Assertions.fail("Failure to Filter Restaurants" + errorMessage);
             }
         };
+        FilterInputBoundary interactor = new FilterInteractor(dao, outputFour);
+        interactor.execute(inputFour);
+    }
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
-        interactor.execute(inputData);
+    @Test
+    void filterByAll() {
+        List<String> selectedCuisine = List.of("indian");
+
+        FilterInputData inputFour = new FilterInputData("100 Queen St W, Toronto, ON, Canada",
+                500, selectedCuisine, "yes", "None", "None");
+
+        FilterOutputBoundary outputFour = new FilterOutputBoundary() {
+            @Override
+            public void prepareSuccessView(FilterOutputData outputData) {
+                Assertions.assertEquals(2, outputData.getFilteredRestaurants().size());
+                assertTrue(outputData.getFilteredRestaurants().stream()
+                        .anyMatch(restaurant -> outputData.getFilteredRestaurants().get(0).getOpeningHours().
+                                equals("Mo-Fr 11:30-21:30; Sa 12:00-21:00")));
+            }
+            @Override
+            public void prepareFailView(String errorMessage) {
+                Assertions.fail("Failure to Filter Restaurants" + errorMessage);
+            }
+        };
+        FilterInputBoundary interactor = new FilterInteractor(dao, outputFour);
+        interactor.execute(inputFour);
+    }
+
+    @Test
+    void noMatchingRestaurants() {
+        List<String> selectedCuisines = List.of("thai");
+
+        FilterInputData input = new FilterInputData("100 Queen St W, Toronto, ON, Canada", 500,
+                selectedCuisines, "yes", "Closed Now", "None");
+
+        FilterOutputBoundary outputNone = new FilterOutputBoundary() {
+            @Override
+            public void prepareSuccessView(FilterOutputData outputData) {
+                assertEquals(0, outputData.getFilteredRestaurants().size());
+            }
+            @Override
+            public void prepareFailView(String errorMessage) {
+                Assertions.fail("Failure to Filter Restaurants: " + errorMessage);
+            }
+        };
+        FilterInputBoundary interactor = new FilterInteractor(dao, outputNone);
+        interactor.execute(input);
     }
 }

@@ -23,6 +23,18 @@ TasteMap was created to address a gap in existing restaurant discovery tools. Mo
 6. [Contributions](#contributions)
 
 ## Features
+1. Search Nearby Restaurants:
+   * Enter address and radius to locate nearby restaurants using Overpass data.
+2. Multi-Criteria Filtering:
+   * Filter search results by cuisine, rating, vegetarian status, and current opening status.
+3. Live Availability Indicator:
+   * Know which restaurants are currently open or closed.
+4. Review Restaurants:
+   * Leave reviews for restaurants.
+5. Favorite Restaurants:
+   * Save restaurants as favorites.
+6. Connect With Friends:
+   * See friends' profiles and restaurant preferences.
 How to sign up And log in.
 ![Description](images/SignUpInstructions.png)
 

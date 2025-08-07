@@ -1,6 +1,7 @@
 package data_access;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +50,7 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
         try {
             final Response response = client.newCall(request).execute();
 
-            final JSONObject responseBody = new JSONObject(response.body().string());
+            final JSONObject responseBody = new JSONObject(Objects.requireNonNull(response.body()).string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
                 final JSONObject userJSONObject = responseBody.getJSONObject("user");
@@ -69,7 +70,6 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
 
     @Override
     public void setCurrentUsername(String name) {
-        // this isn't implemented for the lab
     }
 
     @Override
