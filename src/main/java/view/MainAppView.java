@@ -40,8 +40,8 @@ public class MainAppView extends JPanel {
     private final FilterViewModel filterViewModel;
     private final SearchViewModel searchViewModel;
     private final FavoritesViewModel favoritesViewModel;
+    private FriendsPanel friendsPanel;
 
-    private final FriendsPanel friendsPanel;
     private final JTabbedPane tabbedPane;
     private final ProfilePanel profilePanel;
     private final FavoritesPanel favoritesPanel;
@@ -52,7 +52,6 @@ public class MainAppView extends JPanel {
     private SendFriendRequestViewModel sendFriendRequestViewModel;
     private SearchUserController searchUserController;
     private SearchUserViewModel searchUserViewModel;
-    private FilterController filterController;
     private InMemoryUserDataAccessObject userDataAccessObject;
 
     public MainAppView(MainAppViewModel viewModel,
@@ -200,12 +199,7 @@ public class MainAppView extends JPanel {
         }
     }
 
-    private JButton createSendRequestButton(String username) {
-        final JButton sendRequestBtn = new JButton("Send Friend Request");
-        sendRequestBtn.addActionListener(evt -> sendFriendRequest(username));
-        return sendRequestBtn;
-      
-     /**
+    /**
      * A method that sets the Review Controller.
      * @param controller the controller.
      */
@@ -213,5 +207,11 @@ public class MainAppView extends JPanel {
         this.reviewController = controller;
         this.reviewPanel.setAddReviewController(controller);
 
+    }
+
+    private JButton createSendRequestButton(String username) {
+        final JButton sendRequestBtn = new JButton("Send Friend Request");
+        sendRequestBtn.addActionListener(evt -> sendFriendRequest(username));
+        return sendRequestBtn;
     }
 }
