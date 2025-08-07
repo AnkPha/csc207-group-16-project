@@ -9,6 +9,12 @@ import javax.swing.WindowConstants;
 import data_access.*;
 import data_access.favorite_list.FavoritesDataAccessInterface;
 import data_access.favorite_list.FavoritesDataAccessObject;
+import data_access.FilterDataAccessObject;
+import data_access.InMemoryFriendDataAccessObject;
+import data_access.InMemoryReviewDataAccessObject;
+import data_access.InMemoryUserDataAccessObject;
+import data_access.SearchLocationNearbyDataAccessObject;
+
 import entity.CommonReviewFactory;
 import entity.CommonUserFactory;
 import entity.ReviewFactory;
@@ -43,19 +49,13 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-
-import use_case.friends.SearchUserInteractor;
-
 import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
-
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInteractor;
 import use_case.filter.FilterOutputBoundary;
-import use_case.favorite_list.AddToFavoritesInputBoundary;
-import use_case.favorite_list.AddToFavoritesInteractor;
-import use_case.favorite_list.RemoveFromFavoritesInteractor;
+import use_case.friends.SearchUserInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -101,7 +101,8 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
+    private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =
+            new SearchLocationNearbyDataAccessObject();
     private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
 
     private SignupView signupView;
@@ -335,6 +336,10 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the add review use case to application.
+     * @return this builder
+     */
     public AppBuilder addReviewsUseCase() {
         final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
         final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
@@ -349,7 +354,6 @@ public class AppBuilder {
         reviewController = new ReviewController(addReviewInteractor);
         return this;
     }
-
 
     /**
      * Adds the MainApp View to the application.
