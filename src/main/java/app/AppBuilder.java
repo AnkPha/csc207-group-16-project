@@ -6,17 +6,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.FilterDataAccessObject;
-import data_access.InMemoryFriendDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
-import data_access.SearchLocationNearbyDataAccessObject;
+import data_access.*;
+import data_access.favorite_list.FavoritesDataAccessInterface;
+import data_access.favorite_list.FavoritesDataAccessObject;
 import entity.CommonReviewFactory;
 import entity.CommonUserFactory;
+import entity.ReviewFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.favorites_list.FavoritesController;
+import interface_adapter.favorites_list.FavoritesPresenter;
 import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
@@ -28,6 +29,7 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.review.ReviewController;
+import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyPresenter;
@@ -60,6 +62,10 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.review.AddReviewAccessInterface;
+import use_case.review.AddReviewInputBoundary;
+import use_case.review.AddReviewInteractor;
+import use_case.review.AddReviewOutputBoundary;
 import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface;
 import use_case.search_nearby_locations.SearchLocationsNearbyInputBoundary;
 import use_case.search_nearby_locations.SearchLocationsNearbyInteractor;
@@ -305,15 +311,18 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFilterUseCase() {
-        final FilterOutputBoundary filterOutputBoundary =
-                new FilterPresenter(filterViewModel);
+        FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
 
-        final FilterInputBoundary filterInteractor =
-                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
+        FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
 
-        filterController = new FilterController(filterInteractor);
+        addToFavoritesInteractor = new AddToFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
+        removeFromFavoritesInteractor = new RemoveFromFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
 
-        mainAppView.setFilterController(filterController);
+        final FavoritesController favoritesController =
+                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
+
+        mainAppView.setFavoritesController(favoritesController);
+
         return this;
     }
 

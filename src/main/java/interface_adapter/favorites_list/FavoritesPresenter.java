@@ -9,7 +9,7 @@ import use_case.review.AddReviewOutputBoundary;
 import use_case.favorite_list.RemoveFromFavoritesOutputBoundary;
 import use_case.favorite_list.RemoveFromFavoritesOutputData;
 
-public class FavoritesPresenter implements AddToFavoritesOutputBoundary {
+public class FavoritesPresenter implements AddToFavoritesOutputBoundary, RemoveFromFavoritesOutputBoundary {
     private final FavoritesViewModel favoritesViewModel;
 
     public FavoritesPresenter(FavoritesViewModel favoritesViewModel) {
