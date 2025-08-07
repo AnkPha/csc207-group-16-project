@@ -1,8 +1,9 @@
 package interface_adapter.filter;
 
-import entity.Restaurant;
 import java.util.ArrayList;
 import java.util.List;
+
+import entity.Restaurant;
 
 public class FilterState {
     private final List<String> cuisine = new ArrayList<>();

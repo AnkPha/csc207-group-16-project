@@ -15,7 +15,13 @@ public class Restaurant {
     private double lon;
     private double lat;
 
-    public Restaurant(String name,String address,String cuisine, String vegStat, String openingHours, String website, double lat, double lon) {
+    public Restaurant(String name,
+                      String address,
+                      String cuisine,
+                      String vegStat,
+                      String openingHours,
+                      String website,
+                      double[] coords) {
         this.name = name;
         this.address = address;
         this.cuisine = cuisine;
@@ -23,31 +29,62 @@ public class Restaurant {
         this.openingHours = openingHours;
         this.website = website;
         this.rating = "No Ratings";
-        this.lon = lon;
-        this.lat = lat;
+        this.lon = coords[1];
+        this.lat = coords[0];
     }
-    public void addRating(double score){
+
+    /**
+     * A method that is used to add a rating.
+     * @param score the score the user gave.
+     */
+    public void addRating(double score) {
         allReviewScores.add(score);
         double numerator = 0;
-        for(int i = 0; i < allReviewScores.size(); i++){
-            numerator+= allReviewScores.get(i);
+        for (int i = 0; i < allReviewScores.size(); i++) {
+            numerator += allReviewScores.get(i);
         }
-        this.rating = Double.toString(numerator/allReviewScores.size());
+        this.rating = Double.toString(numerator / allReviewScores.size());
     }
-    public String getName() { return name; }
-    public String getAddress() { return address; }
-    public String getRating() { return rating; }
-    public String getCuisine() { return cuisine; }
-    public String getVegStat() { return vegStat; }
-    public String getOpeningHours() { return openingHours; }
-    public String getWebsite() { return website; }
-    public double getLon() { return lon; }
-    public double getLat() { return lat; }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public String getCuisine() {
+        return cuisine;
+    }
+
+    public String getVegStat() {
+        return vegStat;
+    }
+
+    public String getOpeningHours() {
+        return openingHours;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
 
     @Override
     public String toString() {
-        return String.format("%s (%s): %s ⭐️ %.1f\nLocation: (%f, %f)\nLink: %s",
+        return String.format("%s (%s): %s * %.1f\nLocation: (%f, %f)\nLink: %s",
                 name, address, rating);
     }
-
 }

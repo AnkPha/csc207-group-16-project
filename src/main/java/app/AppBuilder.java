@@ -10,7 +10,6 @@ import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryReviewDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
-import entity.CommonReviewFactory;
 import entity.CommonUserFactory;
 import entity.ReviewFactory;
 import entity.UserFactory;
@@ -303,7 +302,7 @@ public class AppBuilder {
     public AppBuilder addReviewsUseCase() {
         final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
         final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
-        final ReviewFactory reviewFactory = new CommonReviewFactory();
+        final ReviewFactory reviewFactory = new ReviewFactory(); // Assuming you have this implemented
 
         final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(
                 reviewDataAccessInterface,

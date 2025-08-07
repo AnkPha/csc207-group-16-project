@@ -82,6 +82,7 @@ class SearchUserInteractorTest {
         // Arrange: Prepare the user and review data
         CommonUser alice = (CommonUser) userDao.get("Alice");
 
+        double[] coords = {43.65107, -79.347015};
         Restaurant testaurant = new Restaurant(
                 "Testaurant",
                 "123 Main St",
@@ -89,8 +90,7 @@ class SearchUserInteractorTest {
                 "Vegan Options",
                 "10AM - 10PM",
                 "https://testaurant.com",
-                43.65107,
-                -79.347015
+                coords
         );
 
         alice.addReview(testaurant, 5, "Delicious food and cozy atmosphere!");
