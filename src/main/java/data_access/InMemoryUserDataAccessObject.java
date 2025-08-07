@@ -66,6 +66,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     public void addReview(String username, String restaurantName, int rating, String reviewText) {
         final User user = users.get(username);
         if (user instanceof CommonUser) {
+            final double[] coords = {43.6532, -79.3832};
             final entity.Restaurant restaurant = new entity.Restaurant(
                     restaurantName,
                     "123 Sample St",
@@ -73,7 +74,8 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
                     "Vegetarian Options",
                     "10AM - 10PM",
                     "http://example.com",
-                    43.6532, -79.3832
+                    coords
+
             );
             ((CommonUser) user).addReview(restaurant, rating, reviewText);
         }

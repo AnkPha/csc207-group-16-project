@@ -29,7 +29,6 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.review.ReviewController;
-import interface_adapter.review.ReviewViewModel;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
@@ -44,14 +43,14 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-import use_case.friends.SearchUserInteractor;
+import use_case.favorite_list.AddToFavoritesInputBoundary;
+import use_case.favorite_list.AddToFavoritesInteractor;
+import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInteractor;
 import use_case.filter.FilterOutputBoundary;
-import use_case.favorite_list.AddToFavoritesInputBoundary;
-import use_case.favorite_list.AddToFavoritesInteractor;
-import use_case.favorite_list.RemoveFromFavoritesInteractor;
+import use_case.friends.SearchUserInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -97,7 +96,8 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
+    private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =
+            new SearchLocationNearbyDataAccessObject();
     private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
 
     private SignupView signupView;
@@ -223,6 +223,10 @@ public class AppBuilder {
         return application;
     }
 
+    /**
+     * A method that adds the search use case.
+     * @return the AppBuilder with search use case set up
+     */
     public AppBuilder addSearchUseCase() {
         final SearchLocationsNearbyOutputBoundary searchOutputBoundary =
                 new SearchLocationsNearbyPresenter(searchViewModel);
@@ -237,11 +241,19 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * A method that sets up the search view modlel.
+     * @return An app builder with the search view model set
+     */
     public AppBuilder addSearchViewModel() {
         this.searchViewModel = new SearchViewModel();
         return this;
     }
 
+    /**
+     * A method that adds friends use case.
+     * @return An app builder with the friends use case added
+     */
     public AppBuilder addFriendsUseCase() {
         userDataAccessObject.populateSampleUsers();
 
@@ -250,21 +262,36 @@ public class AppBuilder {
         this.searchUserViewModel = new SearchUserViewModel();
 
         final SearchUserPresenter searchUserPresenter = new SearchUserPresenter(searchUserViewModel);
-        final SearchUserInteractor searchUserInteractor = new SearchUserInteractor(friendDataAccessObject, searchUserPresenter);
+        final SearchUserInteractor searchUserInteractor = new SearchUserInteractor(
+                friendDataAccessObject,
+                searchUserPresenter);
         this.searchUserController = new SearchUserController(searchUserInteractor);
 
         return this;
     }
 
+    /**
+     * Adds filter view model to the application.
+     * @return this builder
+     */
     public AppBuilder addFilterViewModel() {
         this.filterViewModel = new FilterViewModel();
+        return this;
     }
 
+    /**
+     * Adds the favorite view model to this application.
+     * @return this builder
+     */
     public AppBuilder addFavoritesViewModel() {
         this.favoritesViewModel = new FavoritesViewModel();
         return this;
     }
 
+    /**
+     * Adds the favorite use case to this application.
+     * @return this builder
+     */
     public AppBuilder addFavoritesUseCase() {
 
         final FavoritesController favoritesController =
@@ -276,6 +303,10 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the filter use case to this application.
+     * @return this builder
+     */
     public AppBuilder addFilterUseCase() {
         final FilterOutputBoundary filterOutputBoundary =
                 new FilterPresenter(filterViewModel);
@@ -283,32 +314,35 @@ public class AppBuilder {
         final FilterInputBoundary filterInteractor =
                 new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
 
-        final FilterController filterController =
-                new FilterController(filterInteractor);
+        filterController = new FilterController(filterInteractor);
 
         mainAppView.setFilterController(filterController);
         return this;
     }
 
+    /**
+     * Adds the review view model to this application.
+     * @return this builder
+     */
     public AppBuilder addReviewViewModel() {
         reviewViewModel = new ReviewViewModel();
         return this;
     }
 
-    public AppBuilder addReviewUseCase() {
-        final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
-        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
-        final ReviewFactory reviewFactory = new ReviewFactory(); // Assuming you have this implemented
-
-        final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(
-                reviewDataAccessInterface,
-                addReviewOutputBoundary,
-                reviewFactory
-        );
-
-        reviewController = new ReviewController(addReviewInteractor);
-        return this;
-    }
+//    public AppBuilder addReviewUseCase() {
+//        final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
+//        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
+//        final ReviewFactory reviewFactory = new ReviewFactory(); // Assuming you have this implemented
+//
+//        final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(
+//                reviewDataAccessInterface,
+//                addReviewOutputBoundary,
+//                reviewFactory
+//        );
+//
+//        reviewController = new ReviewController(addReviewInteractor);
+//        return this;
+//    }
 
     /**
      * Adds the MainApp View to the application.
@@ -318,7 +352,13 @@ public class AppBuilder {
         mainAppViewModel = new MainAppViewModel();
         favoritesViewModel = new FavoritesViewModel();
 
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, filterViewModel, searchUserController, searchUserViewModel, filterController);
+        mainAppView = new MainAppView(mainAppViewModel,
+                searchViewModel,
+                favoritesViewModel,
+                filterViewModel,
+                searchUserController,
+                searchUserViewModel,
+                filterController);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
