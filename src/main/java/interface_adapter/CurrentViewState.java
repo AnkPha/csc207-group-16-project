@@ -28,7 +28,7 @@ public class CurrentViewState {
             result = filterState.getRestaurants();
         }
         else {
-            result = searchState.getResturants();
+            result = searchState.getRestaurants();
         }
         return result;
     }

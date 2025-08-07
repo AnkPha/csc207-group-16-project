@@ -18,7 +18,7 @@ public class FilterPresenter implements FilterOutputBoundary {
     public void prepareSuccessView(FilterOutputData outputData) {
         final FilterState newState = new FilterState();
         System.out.println("PRESENTER SIZE " + outputData.getFilteredRestaurants().size());
-        newState.setResturants(outputData.getFilteredRestaurants());
+        newState.setRestaurants(outputData.getFilteredRestaurants());
         viewModel.setState(newState);
     }
 
