@@ -17,10 +17,14 @@ public class FilterInteractor implements FilterInputBoundary {
         this.filterPresenter = filterOutputBoundary;
     }
 
+    /**
+     * Executes the filter options chosen by User through calls to the filterDAO method "getFilteredRestaurants".
+     * @param filterInputData A FilterInputData initialization that includes filter options, address, and radius.
+     */
     public void execute(FilterInputData filterInputData) {
         final ArrayList<Restaurant> filteredRestaurants =
                 filterDataAccessObject.getFilteredRestaurants(filterInputData);
-        System.out.println("INTERACOR SIZE " + filteredRestaurants.size());
+        System.out.println("INTERACT SIZE " + filteredRestaurants.size());
         final FilterOutputData outputData = new FilterOutputData(filteredRestaurants);
         System.out.println("ATTEMPTING TO RUN FILTER INTERACTOR");
         filterPresenter.prepareSuccessView(outputData);

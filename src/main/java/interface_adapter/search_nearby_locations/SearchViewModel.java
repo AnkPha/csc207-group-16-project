@@ -1,16 +1,11 @@
 package interface_adapter.search_nearby_locations;
 
-import java.util.ArrayList;
-
-import entity.Restaurant;
 import interface_adapter.ViewModel;
 
 /**
  * The View Model for the Logged In View.
  */
 public class SearchViewModel extends ViewModel<SearchState> {
-
-    private ArrayList<Restaurant> restaurants;
 
     public SearchViewModel() {
         super("search");

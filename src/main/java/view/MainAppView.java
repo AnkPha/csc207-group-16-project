@@ -14,6 +14,8 @@ import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.main_menu.MainAppViewModel;
+import interface_adapter.review.ReviewController;
+import interface_adapter.review.ReviewViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchViewModel;
 import interface_adapter.search_user.SearchUserController;
@@ -28,23 +30,28 @@ public class MainAppView extends JPanel {
 
     private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
-
+    private ReviewController reviewController;
     private FavoritesController favoritesController;
-    private final MainAppViewModel viewModel;
     private SearchLocationsNearbyController searchController;
+    private FilterController filterController;
+
+    private final MainAppViewModel viewModel;
+    private final ReviewViewModel reviewViewModel;
+    private final FilterViewModel filterViewModel;
+    private final SearchViewModel searchViewModel;
+    private final FavoritesViewModel favoritesViewModel;
+
+    private final FriendsPanel friendsPanel;
     private final JTabbedPane tabbedPane;
     private final ProfilePanel profilePanel;
     private final FavoritesPanel favoritesPanel;
     private final SearchPanel searchPanel;
-    private FriendsPanel friendsPanel;
-    private final SearchViewModel searchViewModel;
-    private final FavoritesViewModel favoritesViewModel;
+    private final ReviewPanel reviewPanel;
+  
     private SendFriendRequestController sendFriendRequestController;
     private SendFriendRequestViewModel sendFriendRequestViewModel;
     private SearchUserController searchUserController;
     private SearchUserViewModel searchUserViewModel;
-
-    private final FilterViewModel filterViewModel;
     private FilterController filterController;
     private InMemoryUserDataAccessObject userDataAccessObject;
 
@@ -54,13 +61,17 @@ public class MainAppView extends JPanel {
                        FilterViewModel filterViewModel,
                        SearchUserController searchUserController,
                        SearchUserViewModel searchUserViewModel,
-                       FilterController filterController1) {
+                       FilterController filterController1,
+                       ReviewController reviewController,
+                       ReviewViewModel reviewViewModel) {
         this.viewModel = viewModel;
         this.searchViewModel = searchViewModel;
         this.filterController = filterController1;
         this.filterViewModel = filterViewModel;
         this.setLayout(new BorderLayout());
         this.favoritesViewModel = favoritesViewModel;
+        this.reviewViewModel = reviewViewModel;
+        this.reviewController = reviewController;
 
         tabbedPane = new JTabbedPane();
 
@@ -76,6 +87,8 @@ public class MainAppView extends JPanel {
         friendsPanel.setSearchUserController(searchUserController);
         friendsPanel.setSearchUserViewModel(searchUserViewModel);
         tabbedPane.addTab("Friends", friendsPanel);
+        reviewPanel = new ReviewPanel(reviewViewModel);
+        tabbedPane.addTab("Reviews", reviewPanel);
 
         this.add(tabbedPane, BorderLayout.CENTER);
     }
@@ -191,5 +204,14 @@ public class MainAppView extends JPanel {
         final JButton sendRequestBtn = new JButton("Send Friend Request");
         sendRequestBtn.addActionListener(evt -> sendFriendRequest(username));
         return sendRequestBtn;
+      
+     /**
+     * A method that sets the Review Controller.
+     * @param controller the controller.
+     */
+    public void setReviewController(ReviewController controller) {
+        this.reviewController = controller;
+        this.reviewPanel.setAddReviewController(controller);
+
     }
 }
