@@ -36,12 +36,25 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
         return userDao.get(username);
     }
 
+    /**
+     * Adds a new user to the system along with empty friend requests and friend lists.
+     * This method updates the internal maps to store the user, their incoming friend requests,
+     * and their accepted friends.
+     *
+     * @param user the {@code User} object to be added to the system
+     */
     public void addUser(User user) {
         users.put(user.getName(), user);
         friendRequests.put(user.getName(), new HashSet<>());
         friends.put(user.getName(), new HashSet<>());
     }
 
+    /**
+     * Creates a new user with the specified username if the user does not already exist.
+     * The user is initialized with a default password and then added to the system using {@code addUser}.
+     *
+     * @param username the desired username for the new user
+     */
     public void createUser(String username) {
         if (!userExists(username)) {
             final User user = userFactory.create(username, "default_password");
@@ -51,6 +64,17 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
 
     @Override
     public boolean sendFriendRequest(String fromUsername, String toUsername) {
+        // Initialize friend data structures for users if they don't exist
+        if (!friendRequests.containsKey(toUsername)) {
+            friendRequests.put(toUsername, new HashSet<>());
+        }
+        if (!friends.containsKey(fromUsername)) {
+            friends.put(fromUsername, new HashSet<>());
+        }
+        if (!friends.containsKey(toUsername)) {
+            friends.put(toUsername, new HashSet<>());
+        }
+
         boolean canSend = true;
 
         if (!userExists(fromUsername)) {
@@ -107,7 +131,6 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
     public List<String> searchUsers(String query) {
         final List<String> results = new ArrayList<>();
 
-        // Use the new getAllUsernames method instead of hardcoded users
         final List<String> allUsers = userDao.getAllUsernames();
 
         for (String username : allUsers) {
