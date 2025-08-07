@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.FilterDataAccessObject;
 import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryReviewDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
@@ -97,6 +98,7 @@ public class AppBuilder {
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject = new SearchLocationNearbyDataAccessObject();
+    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -109,6 +111,8 @@ public class AppBuilder {
     private SearchViewModel searchViewModel;
     private FavoritesViewModel favoritesViewModel;
     private InMemoryFriendDataAccessObject friendDataAccessObject;
+    private FilterViewModel filterViewModel;
+    private FilterController filterController;
     private SearchUserController searchUserController;
     private SearchUserViewModel searchUserViewModel;
     private ReviewViewModel reviewViewModel;
@@ -137,26 +141,6 @@ public class AppBuilder {
         loginViewModel = new LoginViewModel();
         loginView = new LoginView(loginViewModel);
         cardPanel.add(loginView, loginView.getViewName());
-        return this;
-    }
-
-    /**
-
-     * Adds the MainApp View to the application.
-     * @return this builder
-     */
-    public AppBuilder addMainAppView() {
-        if (searchViewModel == null) {
-            throw new IllegalStateException("searchViewModel must be initialized before creating MainAppView");
-        }
-        if (filterViewModel == null) {
-            throw new IllegalStateException("filterViewModel must be initialized before creating MainAppView");
-        }
-        mainAppViewModel = new MainAppViewModel();
-
-        FavoritesViewModel favoritesViewModel = new FavoritesViewModel();
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, filterViewModel);
-        cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
 
@@ -239,6 +223,10 @@ public class AppBuilder {
         return application;
     }
 
+    /**
+     * A method that adds the search use case.
+     * @return the AppBuilder with search use case set up
+     */
     public AppBuilder addSearchUseCase() {
         final SearchLocationsNearbyOutputBoundary searchOutputBoundary =
                 new SearchLocationsNearbyPresenter(searchViewModel);
@@ -253,15 +241,19 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * A method that sets up the search view modlel.
+     * @return An app builder with the search view model set
+     */
     public AppBuilder addSearchViewModel() {
         this.searchViewModel = new SearchViewModel();
         return this;
     }
 
-    public AppBuilder addFilterUseCase() {
-        final FilterOutputBoundary filterOutputBoundary =
-                new FilterPresenter(filterViewModel);
-  
+    /**
+     * A method that adds friends use case.
+     * @return An app builder with the friends use case added
+     */
     public AppBuilder addFriendsUseCase() {
         userDataAccessObject.populateSampleUsers();
 
@@ -270,31 +262,67 @@ public class AppBuilder {
         this.searchUserViewModel = new SearchUserViewModel();
 
         final SearchUserPresenter searchUserPresenter = new SearchUserPresenter(searchUserViewModel);
-        final SearchUserInteractor searchUserInteractor = new SearchUserInteractor(friendDataAccessObject, searchUserPresenter);
+        final SearchUserInteractor searchUserInteractor = new SearchUserInteractor(
+                friendDataAccessObject,
+                searchUserPresenter);
         this.searchUserController = new SearchUserController(searchUserInteractor);
 
         return this;
     }
 
+    /**
+     * Adds filter view model to the application.
+     * @return this builder
+     */
     public AppBuilder addFilterViewModel() {
         this.filterViewModel = new FilterViewModel();
+        return this;
+    }
+
+    /**
+     * Adds the favorite view model to this application.
+     * @return this builder
+     */
 
     public AppBuilder addFavoritesViewModel() {
         this.favoritesViewModel = new FavoritesViewModel();
         return this;
     }
 
+    /**
+     * Adds the favorite use case to this application.
+     * @return this builder
+     */
     public AppBuilder addFavoritesUseCase() {
 
         final FavoritesController favoritesController =
                 new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
-
-        // This line is crucial - make sure it's there:
         mainAppView.setFavoritesController(favoritesController);
 
         return this;
     }
 
+    /**
+     * Adds the filter use case to this application.
+     * @return this builder
+     */
+    public AppBuilder addFilterUseCase() {
+        final FilterOutputBoundary filterOutputBoundary =
+                new FilterPresenter(filterViewModel);
+
+        final FilterInputBoundary filterInteractor =
+                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
+
+        filterController = new FilterController(filterInteractor);
+
+        mainAppView.setFilterController(filterController);
+        return this;
+    }
+
+    /**
+     * Adds the review view model to this application.
+     * @return this builder
+     */
     public AppBuilder addReviewsViewModel() {
         reviewViewModel = new ReviewViewModel();
         return this;
@@ -324,7 +352,15 @@ public class AppBuilder {
         mainAppViewModel = new MainAppViewModel();
         favoritesViewModel = new FavoritesViewModel();
 
-        mainAppView = new MainAppView(mainAppViewModel, searchViewModel, favoritesViewModel, searchUserController, searchUserViewModel);
+        mainAppView = new MainAppView(mainAppViewModel,
+                searchViewModel,
+                favoritesViewModel,
+                filterViewModel,
+                searchUserController,
+                searchUserViewModel,
+                filterController,
+                reviewController,
+                reviewViewModel);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }
