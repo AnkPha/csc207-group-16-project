@@ -8,7 +8,7 @@ import entity.User;
 public class ReviewController {
     private AddReviewInputBoundary addReviewUseCaseInteractor;
 
-    public void addReviewController(AddReviewInputBoundary addReviewUseCaseInteractor) {
+    public ReviewController(AddReviewInputBoundary addReviewInteractor) {
         this.addReviewUseCaseInteractor = addReviewUseCaseInteractor;
     }
 
