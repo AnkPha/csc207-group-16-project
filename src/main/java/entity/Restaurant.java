@@ -87,4 +87,13 @@ public class Restaurant {
         return String.format("%s (%s): %s * %.1f\nLocation: (%f, %f)\nLink: %s",
                 name, address, rating);
     }
+
+    public void setLon(double v) {
+        lon = v;
+    }
+    
+    public void setLat(double v) {
+        lat = v;
+    }
+
 }
