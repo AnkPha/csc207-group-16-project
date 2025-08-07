@@ -2,9 +2,11 @@ package view;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import data_access.InMemoryUserDataAccessObject;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
@@ -18,6 +20,8 @@ import interface_adapter.search_nearby_locations.SearchLocationsNearbyController
 import interface_adapter.search_nearby_locations.SearchViewModel;
 import interface_adapter.search_user.SearchUserController;
 import interface_adapter.search_user.SearchUserViewModel;
+import interface_adapter.send_friend_request.SendFriendRequestController;
+import interface_adapter.send_friend_request.SendFriendRequestViewModel;
 
 /**
  * The View for when the user is logged into the program.
@@ -36,13 +40,19 @@ public class MainAppView extends JPanel {
     private final FilterViewModel filterViewModel;
     private final SearchViewModel searchViewModel;
     private final FavoritesViewModel favoritesViewModel;
+    private FriendsPanel friendsPanel;
 
-    private final FriendsPanel friendsPanel;
     private final JTabbedPane tabbedPane;
     private final ProfilePanel profilePanel;
     private final FavoritesPanel favoritesPanel;
     private final SearchPanel searchPanel;
     private final ReviewPanel reviewPanel;
+  
+    private SendFriendRequestController sendFriendRequestController;
+    private SendFriendRequestViewModel sendFriendRequestViewModel;
+    private SearchUserController searchUserController;
+    private SearchUserViewModel searchUserViewModel;
+    private InMemoryUserDataAccessObject userDataAccessObject;
 
     public MainAppView(MainAppViewModel viewModel,
                        SearchViewModel searchViewModel,
@@ -132,11 +142,76 @@ public class MainAppView extends JPanel {
     }
 
     /**
+     * Sets the controller for sending friend requests and passes it to the friends panel.
+     *
+     * @param controller the SendFriendRequestController
+     */
+    public void setSendFriendRequestController(SendFriendRequestController controller) {
+        this.sendFriendRequestController = controller;
+        if (friendsPanel != null) {
+            friendsPanel.setSendFriendRequestController(controller);
+        }
+    }
+
+    private void sendFriendRequest(String recipientUsername) {
+        if (sendFriendRequestController != null) {
+            final String currentUser = getCurrentUsername();
+            sendFriendRequestController.execute(currentUser, recipientUsername);
+        }
+    }
+
+    /**
+     * This method delegates the provided view model to the internal friends panel.
+     *
+     * @param newViewModel the {@code SendFriendRequestViewModel} to be passed to the friends panel
+     */
+    public void setSendFriendRequestViewModel(SendFriendRequestViewModel newViewModel) {
+        friendsPanel.setSendFriendRequestViewModel(newViewModel);
+    }
+
+    /**
+     * Sets the current username in the friends panel so it knows who is sending requests.
+     *
+     * @param username the current logged-in user's username
+     */
+    public void setCurrentUsername(String username) {
+        if (friendsPanel != null) {
+            friendsPanel.setCurrentUsername(username);
+        }
+    }
+
+    private String getCurrentUsername() {
+        return userDataAccessObject.getCurrentUsername();
+    }
+
+    private void initializeFriendsPanel() {
+        if (friendsPanel == null) {
+            friendsPanel = new FriendsPanel();
+            // Set controllers
+            friendsPanel.setSearchUserController(searchUserController);
+            friendsPanel.setSearchUserViewModel(searchUserViewModel);
+
+            // Set current username if available
+            final String currentUser = getCurrentUsername();
+            if (currentUser != null) {
+                friendsPanel.setCurrentUsername(currentUser);
+            }
+        }
+    }
+
+    /**
      * A method that sets the Review Controller.
      * @param controller the controller.
      */
     public void setReviewController(ReviewController controller) {
         this.reviewController = controller;
         this.reviewPanel.setAddReviewController(controller);
+
+    }
+
+    private JButton createSendRequestButton(String username) {
+        final JButton sendRequestBtn = new JButton("Send Friend Request");
+        sendRequestBtn.addActionListener(evt -> sendFriendRequest(username));
+        return sendRequestBtn;
     }
 }

@@ -31,6 +31,7 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.main_menu.MainAppState;
 import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
@@ -41,6 +42,9 @@ import interface_adapter.search_nearby_locations.SearchViewModel;
 import interface_adapter.search_user.SearchUserController;
 import interface_adapter.search_user.SearchUserPresenter;
 import interface_adapter.search_user.SearchUserViewModel;
+import interface_adapter.send_friend_request.SendFriendRequestController;
+import interface_adapter.send_friend_request.SendFriendRequestPresenter;
+import interface_adapter.send_friend_request.SendFriendRequestViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -54,6 +58,7 @@ import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterOutputBoundary;
 import use_case.filter.FilterInteractor;
 import use_case.friends.SearchUserInteractor;
+import use_case.friends.SendFriendRequestInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -118,6 +123,8 @@ public class AppBuilder {
     private FilterController filterController;
     private SearchUserController searchUserController;
     private SearchUserViewModel searchUserViewModel;
+    private SendFriendRequestController sendFriendRequestController;
+    private SendFriendRequestViewModel sendFriendRequestViewModel;
     private ReviewViewModel reviewViewModel;
     private ReviewController reviewController;
 
@@ -340,6 +347,30 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the send friend request view model to this application.
+     * @return this builder
+     */
+    public AppBuilder addSendFriendRequestViewModel() {
+        this.sendFriendRequestViewModel = new SendFriendRequestViewModel();
+        return this;
+    }
+
+    /**
+     * Adds the send friend request use case to this application.
+     * @return this builder
+     */
+    public AppBuilder addSendFriendRequestUseCase() {
+        final SendFriendRequestPresenter sendFriendRequestPresenter =
+                new SendFriendRequestPresenter(sendFriendRequestViewModel);
+
+        final SendFriendRequestInteractor sendFriendRequestInteractor =
+                new SendFriendRequestInteractor(friendDataAccessObject, sendFriendRequestPresenter);
+
+        this.sendFriendRequestController = new SendFriendRequestController(sendFriendRequestInteractor);
+        return this;
+    }
+
+    /**
      * Adds the add review use case to application.
      * @return this builder
      */
@@ -375,7 +406,31 @@ public class AppBuilder {
                 filterController,
                 reviewController,
                 reviewViewModel);
+        mainAppViewModel.addPropertyChangeListener(evt -> {
+            if ("state".equals(evt.getPropertyName())) {
+                final MainAppState state = mainAppViewModel.getState();
+                if (state.getUsername() != null) {
+                    mainAppView.setCurrentUsername(state.getUsername());
+                }
+            }
+        });
+
         cardPanel.add(mainAppView, mainAppView.getViewName());
+        if (sendFriendRequestViewModel != null) {
+            mainAppView.setSendFriendRequestController(sendFriendRequestController);
+        }
+        return this;
+    }
+
+     /**
+     * Add this method to set the current username after login
+     * @param username the username of the currently logged-in user
+     * @return the current instance of {@code AppBuilder}, allowing for method chaining
+     */
+    public AppBuilder setCurrentUsername(String username) {
+        if (mainAppView != null) {
+            mainAppView.setCurrentUsername(username);
+        }
         return this;
     }
 }
