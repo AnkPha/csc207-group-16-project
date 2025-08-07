@@ -7,7 +7,7 @@ import entity.Restaurant;
 public class SearchLocationsNearbyOutputData {
     private final ArrayList<Restaurant> nearbyRestaurants;
     private final double[] addressCoords;
-    private int status;
+    private final int status;
 
     public SearchLocationsNearbyOutputData(ArrayList<Restaurant> nearbyRestaurants,
                                            double[] addressCoords,

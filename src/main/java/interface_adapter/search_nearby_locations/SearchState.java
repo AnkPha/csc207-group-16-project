@@ -57,7 +57,7 @@ public class SearchState {
         this.restaurants = restaurants;
     }
 
-    public ArrayList<Restaurant> getResturants() {
+    public ArrayList<Restaurant> getRestaurants() {
         return restaurants;
     }
 

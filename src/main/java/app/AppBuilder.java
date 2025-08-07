@@ -8,11 +8,9 @@ import javax.swing.WindowConstants;
 
 import data_access.FilterDataAccessObject;
 import data_access.InMemoryFriendDataAccessObject;
-import data_access.InMemoryReviewDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
 import entity.CommonUserFactory;
-import entity.ReviewFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
@@ -29,7 +27,6 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.review.ReviewController;
-import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyPresenter;
@@ -43,7 +40,6 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-import use_case.favorite_list.AddToFavoritesInputBoundary;
 import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.filter.FilterDataAccessInterface;
@@ -57,10 +53,6 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
-import use_case.review.AddReviewAccessInterface;
-import use_case.review.AddReviewInputBoundary;
-import use_case.review.AddReviewInteractor;
-import use_case.review.AddReviewOutputBoundary;
 import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface;
 import use_case.search_nearby_locations.SearchLocationsNearbyInputBoundary;
 import use_case.search_nearby_locations.SearchLocationsNearbyInteractor;
@@ -242,7 +234,7 @@ public class AppBuilder {
     }
 
     /**
-     * A method that sets up the search view modlel.
+     * A method that sets up the search view model.
      * @return An app builder with the search view model set
      */
     public AppBuilder addSearchViewModel() {

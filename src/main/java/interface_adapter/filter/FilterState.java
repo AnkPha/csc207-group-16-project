@@ -53,7 +53,7 @@ public class FilterState {
         return restaurants;
     }
 
-    public void setResturants(ArrayList<Restaurant> restos) {
+    public void setRestaurants(ArrayList<Restaurant> restos) {
         this.restaurants = restos;
     }
 }
