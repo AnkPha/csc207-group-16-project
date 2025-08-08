@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import data_access.InMemoryUserDataAccessObject;
+import entity.CommonUser;
+import entity.User;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
@@ -82,11 +84,16 @@ public class MainAppView extends JPanel {
 
         profilePanel = new ProfilePanel(viewModel);
         tabbedPane.addTab("Profile", profilePanel);
+
         friendsPanel = new FriendsPanel();
         friendsPanel.setSearchUserController(searchUserController);
         friendsPanel.setSearchUserViewModel(searchUserViewModel);
         tabbedPane.addTab("Friends", friendsPanel);
+
         reviewPanel = new ReviewPanel(reviewViewModel);
+        if (reviewController != null) {
+            reviewPanel.setAddReviewController(reviewController);
+        }
         tabbedPane.addTab("Reviews", reviewPanel);
 
         this.add(tabbedPane, BorderLayout.CENTER);
@@ -205,8 +212,15 @@ public class MainAppView extends JPanel {
      */
     public void setReviewController(ReviewController controller) {
         this.reviewController = controller;
-        this.reviewPanel.setAddReviewController(controller);
+        if (this.reviewPanel != null) {
+            this.reviewPanel.setAddReviewController(controller);
+        }
 
+    }
+
+    public void setCurrentUser(String username, String password) {
+        User currentUser = new CommonUser(username, password);
+        this.reviewPanel.setCurrentUser(currentUser);
     }
 
     private JButton createSendRequestButton(String username) {

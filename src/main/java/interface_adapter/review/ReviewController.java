@@ -9,7 +9,7 @@ public class ReviewController {
     private AddReviewInputBoundary addReviewUseCaseInteractor;
 
     public ReviewController(AddReviewInputBoundary addReviewInteractor) {
-        this.addReviewUseCaseInteractor = addReviewUseCaseInteractor;
+        this.addReviewUseCaseInteractor = addReviewInteractor;
     }
 
     public void execute(int rating, String reviewText, Restaurant restaurant, User user) {

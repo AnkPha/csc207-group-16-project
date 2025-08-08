@@ -383,6 +383,10 @@ public class AppBuilder {
         );
 
         reviewController = new ReviewController(addReviewInteractor);
+
+        if (mainAppView != null) {
+            mainAppView.setReviewController(reviewController);
+        }
         return this;
     }
 
@@ -403,11 +407,14 @@ public class AppBuilder {
                 filterController,
                 reviewController,
                 reviewViewModel);
+
         mainAppViewModel.addPropertyChangeListener(evt -> {
             if ("state".equals(evt.getPropertyName())) {
                 final MainAppState state = mainAppViewModel.getState();
                 if (state.getUsername() != null) {
                     mainAppView.setCurrentUsername(state.getUsername());
+
+                    mainAppView.setCurrentUser(state.getUsername(), state.getPassword());
                 }
             }
         });
