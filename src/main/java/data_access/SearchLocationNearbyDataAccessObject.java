@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import entity.Restaurant;
 import entity.RestaurantListResult;
+import use_case.review.AddReviewAccessInterface;
 import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface;
 
 public class SearchLocationNearbyDataAccessObject implements SearchLocationsNearbyDataAccessInterface {
@@ -13,11 +14,19 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
     private static final int NO_RESULTS = 1;
     private NominatimApi nominatimApi;
     private OverPassApi overpassApi;
+    private AddReviewAccessInterface reviewDataAccessObject;
     private double[] addressCoords = {0.0, 0.0};
 
     public SearchLocationNearbyDataAccessObject() {
         this.nominatimApi = new NominatimApi();
         this.overpassApi = new OverPassApi();
+        this.reviewDataAccessObject = new InMemoryReviewDataAccessObject();
+    }
+
+    public SearchLocationNearbyDataAccessObject(AddReviewAccessInterface reviewDataAccessObject) {
+        this.nominatimApi = new NominatimApi();
+        this.overpassApi = new OverPassApi();
+        this.reviewDataAccessObject = reviewDataAccessObject;
     }
 
     @Override
@@ -52,6 +61,15 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
             System.out.println("Before Call " + result.getStatus());
             this.addressCoords = coords;
             restaurantList = overpassApi.getNearbyRestaurants(coords[0], coords[1], radius);
+            
+            // For each restaurant, get its rating from the review DAO and update the restaurant object
+            for (Restaurant restaurant : restaurantList) {
+                double averageRating = reviewDataAccessObject.getAverageRatingForRestaurant(restaurant);
+                if (averageRating > 0.0) {
+                    restaurant.addRating(averageRating);
+                }
+            }
+            
             System.out.println("SIZE IS "
                     + restaurantList.size()
                     + " AND RADIUS IS " + radius + " ADDRESS IS " + address);

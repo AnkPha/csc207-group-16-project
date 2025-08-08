@@ -29,8 +29,10 @@ public class Restaurant {
         this.openingHours = openingHours;
         this.website = website;
         this.rating = "No Ratings";
+        this.allReviewScores = new ArrayList<>();
         this.lon = coords[1];
         this.lat = coords[0];
+        this.allReviewScores = new ArrayList<>();
     }
 
     /**
@@ -38,6 +40,9 @@ public class Restaurant {
      * @param score the score the user gave.
      */
     public void addRating(double score) {
+        if (allReviewScores == null) {
+            allReviewScores = new ArrayList<>();
+        }
         allReviewScores.add(score);
         double numerator = 0;
         for (int i = 0; i < allReviewScores.size(); i++) {
@@ -87,4 +92,5 @@ public class Restaurant {
         return String.format("%s (%s): %s * %.1f\nLocation: (%f, %f)\nLink: %s",
                 name, address, rating);
     }
+
 }

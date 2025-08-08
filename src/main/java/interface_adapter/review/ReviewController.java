@@ -12,7 +12,7 @@ public class ReviewController {
         this.addReviewUseCaseInteractor = addReviewUseCaseInteractor;
     }
 
-    public void execute(int rating, Restaurant restaurant, User user) {
+    public void execute(int rating, String reviewText, Restaurant restaurant, User user) {
         final AddReviewInputData inputData = new AddReviewInputData(rating, restaurant, user);
         addReviewUseCaseInteractor.execute(inputData);
     }
