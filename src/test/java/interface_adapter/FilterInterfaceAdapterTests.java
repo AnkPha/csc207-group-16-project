@@ -1,6 +1,10 @@
-package interface_adapter.filter;
+package interface_adapter;
 
 import entity.Restaurant;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterPresenter;
+import interface_adapter.filter.FilterState;
+import interface_adapter.filter.FilterViewModel;
 import org.junit.jupiter.api.Test;
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterOutputData;
