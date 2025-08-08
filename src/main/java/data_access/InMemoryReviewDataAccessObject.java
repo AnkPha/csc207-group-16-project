@@ -22,6 +22,7 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
     public void addReview(Review review) {
 
         reviews.put(review.getReviewId(), review);
+        review.getRestaurant().addRating(review.getRating());
     }
 
     /**
@@ -42,7 +43,13 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
 
     @Override
     public List<Review> getRatingsForRestaurant(Restaurant restaurant) {
-        return new ArrayList<>(Integer.parseInt(restaurant.getRating()));
+        final List<Review> restaurantReviews = new ArrayList<>();
+        for (Review review : reviews.values()) {
+            if (review.getRestaurant().equals(restaurant)) {
+                restaurantReviews.add(review);
+            }
+        }
+        return restaurantReviews;
     }
 
     @Override

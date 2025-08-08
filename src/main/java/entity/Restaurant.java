@@ -31,6 +31,7 @@ public class Restaurant {
         this.rating = "No Ratings";
         this.lon = coords[1];
         this.lat = coords[0];
+        this.allReviewScores = new ArrayList<>();
     }
 
     /**
@@ -86,14 +87,6 @@ public class Restaurant {
     public String toString() {
         return String.format("%s (%s): %s * %.1f\nLocation: (%f, %f)\nLink: %s",
                 name, address, rating);
-    }
-
-    public void setLon(double v) {
-        lon = v;
-    }
-    
-    public void setLat(double v) {
-        lat = v;
     }
 
 }

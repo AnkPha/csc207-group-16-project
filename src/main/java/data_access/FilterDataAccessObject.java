@@ -12,9 +12,11 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     private static final String NOT_GIVEN = "not given";
     private static final String NONE = "None";
     private final SearchLocationNearbyDataAccessObject searchInterface;
+    private final InMemoryReviewDataAccessObject reviewDAO;
 
-    public FilterDataAccessObject() {
+    public FilterDataAccessObject(InMemoryReviewDataAccessObject reviewDAO) {
         this.searchInterface = new SearchLocationNearbyDataAccessObject();
+        this.reviewDAO = reviewDAO;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     private boolean matchesAllFilters(Restaurant restaurant, List<String> cuisines, String rating,
                                       String vegStat, String availability) {
         boolean match = matchesCuisineFilter(cuisines, restaurant.getCuisine());
-        match &= matchesRatingFilter(rating, restaurant.getRating());
+        match &= matchesRatingFilter(rating, restaurant);
         match &= matchesVegStatFilter(vegStat, restaurant.getVegStat());
         match &= matchesAvailabilityFilter(availability, restaurant.getOpeningHours());
         return match;
@@ -87,19 +89,27 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
         return part != null && !part.trim().isEmpty() && !part.trim().equalsIgnoreCase(NOT_GIVEN);
     }
 
-    private boolean matchesRatingFilter(String userRating, String restRating) {
+    private boolean matchesRatingFilter(String userRating, Restaurant restaurant) {
         boolean result = false;
         if (userRating == null || userRating.isEmpty() || NONE.equalsIgnoreCase(userRating)) {
             result = true;
         }
-        else if (restRating != null && !restRating.isBlank() && !NOT_GIVEN.equalsIgnoreCase(restRating)) {
+        else {
             try {
-                final int userRate = Integer.parseInt(userRating);
-                final int restRate = Integer.parseInt(restRating);
-                result = restRate >= userRate;
+                final double userMinRating = Double.parseDouble(userRating);
+                final double actualAverageRating = reviewDAO.getAverageRatingForRestaurant(restaurant);
+                if (actualAverageRating >= userMinRating) {
+                    result = true;
+                }
+                else if (actualAverageRating == 0.0 && userMinRating <= 0.0) {
+                    result = true;
+                }
             }
             catch (NumberFormatException error) {
-                result = userRating.equalsIgnoreCase(restRating);
+                String restRating = restaurant.getRating();
+                if (restRating != null && !restRating.isBlank() && !NOT_GIVEN.equalsIgnoreCase(restRating)) {
+                    result = userRating.equalsIgnoreCase(restRating);
+                }
             }
         }
         return result;
