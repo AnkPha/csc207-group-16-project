@@ -55,8 +55,8 @@ import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputBoundary;
-import use_case.filter.FilterOutputBoundary;
 import use_case.filter.FilterInteractor;
+import use_case.filter.FilterOutputBoundary;
 import use_case.friends.SearchUserInteractor;
 import use_case.friends.SendFriendRequestInteractor;
 import use_case.login.LoginInputBoundary;
@@ -422,8 +422,8 @@ public class AppBuilder {
         return this;
     }
 
-     /**
-     * Add this method to set the current username after login
+    /**
+     * Add this method to set the current username after login.
      * @param username the username of the currently logged-in user
      * @return the current instance of {@code AppBuilder}, allowing for method chaining
      */
