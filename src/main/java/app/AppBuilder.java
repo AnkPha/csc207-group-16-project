@@ -106,10 +106,9 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final InMemoryReviewDataAccessObject reviewDataAccessObject = new InMemoryReviewDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =
             new SearchLocationNearbyDataAccessObject();
-    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject(reviewDataAccessObject);
+    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
