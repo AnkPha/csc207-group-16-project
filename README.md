@@ -35,6 +35,11 @@ TasteMap was created to address a gap in existing restaurant discovery tools. Mo
    * Save restaurants as favorites.
 6. Connect With Friends:
    * See friends' profiles and restaurant preferences.
+How to sign up And log in.
+![Description](images/SignUpInstructions.png)
+
+How to search and filter.
+![Description](images/SearchAndFilterInstructions.png)
 
 ## Installation
 
