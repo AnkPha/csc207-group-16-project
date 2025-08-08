@@ -171,7 +171,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                mainAppViewModel, loginViewModel);
+                mainAppViewModel, loginViewModel, mainAppView);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
@@ -373,6 +373,7 @@ public class AppBuilder {
                 filterController,
                 reviewController,
                 reviewViewModel);
+        mainAppView.setReviewController(reviewController);
         cardPanel.add(mainAppView, mainAppView.getViewName());
         return this;
     }

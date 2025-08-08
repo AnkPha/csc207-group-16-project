@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import entity.User;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
@@ -138,5 +139,13 @@ public class MainAppView extends JPanel {
     public void setReviewController(ReviewController controller) {
         this.reviewController = controller;
         this.reviewPanel.setAddReviewController(controller);
+    }
+
+    /**
+     * A method that sets the current user.
+     * @param user the current logged in user.
+     */
+    public void setCurrentUser(User user) {
+        this.reviewPanel.setCurrentUser(user);
     }
 }
