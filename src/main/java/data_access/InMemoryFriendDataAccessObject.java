@@ -58,6 +58,7 @@ public class InMemoryFriendDataAccessObject implements FriendDataAccessInterface
     public void createUser(String username) {
         if (!userExists(username)) {
             final User user = userFactory.create(username, "default_password");
+            userDao.save(user);
             addUser(user);
         }
     }
