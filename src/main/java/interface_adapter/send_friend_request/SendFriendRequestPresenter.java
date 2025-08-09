@@ -12,19 +12,12 @@ public class SendFriendRequestPresenter implements SendFriendRequestOutputBounda
 
     @Override
     public void present(SendFriendRequestOutputData outputData) {
-        // Existing presenter logic
-        if (viewModel == null) {
-            System.err.println("SendFriendRequestViewModel is null!");
-            return;
+        if (viewModel != null && viewModel.getState() != null) {
+            final SendFriendRequestState state = viewModel.getState();
+            state.setSuccess(outputData.getSuccess());
+            state.setMessage(outputData.getMessage());
+            viewModel.setState(state);
+            viewModel.firePropertyChanged();
         }
-        final SendFriendRequestState state = viewModel.getState();
-        if (state == null) {
-            System.err.println("SendFriendRequestState is null!");
-            return;
-        }
-        state.setSuccess(outputData.getSuccess());
-        state.setMessage(outputData.getMessage());
-        viewModel.setState(state);
-        viewModel.firePropertyChanged();
     }
 }

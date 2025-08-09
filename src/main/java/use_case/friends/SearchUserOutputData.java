@@ -1,9 +1,9 @@
 package use_case.friends;
 
-import entity.Review;
-
 import java.util.List;
 import java.util.Map;
+
+import entity.Review;
 
 public class SearchUserOutputData {
     private final List<String> usernames;
@@ -14,6 +14,11 @@ public class SearchUserOutputData {
         this.userReviews = userReviews;
     }
 
+    /**
+     * Retrieves the list of usernames currently stored in this object.
+     *
+     * @return a list of usernames representing the current results
+     */
     public List<String> results() {
         return usernames;
     }
