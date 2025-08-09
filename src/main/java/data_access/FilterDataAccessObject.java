@@ -17,6 +17,10 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
         this.searchInterface = new SearchLocationNearbyDataAccessObject();
     }
 
+    public FilterDataAccessObject(InMemoryReviewDataAccessObject reviewDao) {
+        this.searchInterface = new SearchLocationNearbyDataAccessObject();
+    }
+
     @Override
     public ArrayList<Restaurant> getFilteredRestaurants(FilterInputData filterInputData) {
         final ArrayList<Restaurant> result = new ArrayList<>();

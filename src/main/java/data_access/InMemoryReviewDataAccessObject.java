@@ -42,12 +42,23 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
 
     @Override
     public List<Review> getRatingsForRestaurant(Restaurant restaurant) {
-        return new ArrayList<>(Integer.parseInt(restaurant.getRating()));
+        String rating = restaurant.getRating();
+        if (rating == null || rating.equals("No Ratings") || rating.isEmpty()) {
+            return new ArrayList<>();
+        }
+        try {
+            return new ArrayList<>(Integer.parseInt(rating));
+        } catch (NumberFormatException e) {
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public double getAverageRatingForRestaurant(Restaurant restaurant) {
         final List<Review> allReviewsrestaurant = getRatingsForRestaurant(restaurant);
+        if (allReviewsrestaurant.isEmpty()) {
+            return 0.0;
+        }
         double sumRating = 0.0;
         for (Review review : allReviewsrestaurant) {
             sumRating += review.getRating();

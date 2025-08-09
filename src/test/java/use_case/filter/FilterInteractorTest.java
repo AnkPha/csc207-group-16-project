@@ -1,6 +1,7 @@
 package use_case.filter;
 
 import data_access.FilterDataAccessObject;
+import data_access.InMemoryReviewDataAccessObject;
 import entity.Restaurant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FilterInteractorTest {
     private FilterDataAccessObject dao;
+    private InMemoryReviewDataAccessObject inMemoryReviewDao = new InMemoryReviewDataAccessObject();
+
 
     @BeforeEach
     void setUp() {
-        dao = new FilterDataAccessObject();
+        dao = new FilterDataAccessObject(inMemoryReviewDao);
 
-        dao = new FilterDataAccessObject() {
+        dao = new FilterDataAccessObject(inMemoryReviewDao) {
             @Override
             public ArrayList<Restaurant> getFilteredRestaurants (FilterInputData filterInputData) {
                 return super.getFilteredRestaurants(filterInputData);

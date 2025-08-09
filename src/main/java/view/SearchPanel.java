@@ -159,8 +159,10 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
                              String selectedVegStat,
                              String selectedHour) {
         currentState = searchViewModel.getState();
-        if (currentState.getAddress() == null && currentState.getRadius() == null) {
+        if (currentState.getAddress() == null || currentState.getAddress().trim().isEmpty()
+                || currentState.getRadius() == null || currentState.getRadius().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill out address and radius first");
+            return;
         }
 
         currentState.setFiltered(true);
