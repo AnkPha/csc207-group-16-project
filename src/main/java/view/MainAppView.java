@@ -218,8 +218,17 @@ public class MainAppView extends JPanel {
 
     }
 
+    /**
+     * Sets the current user for the application by creating a new {@code CommonUser}
+     * instance with the provided username and password. The current user is then
+     * assigned to the {@code reviewPanel}, allowing it to load and display
+     * user-specific reviews and related data.
+     *
+     * @param username the username of the current user
+     * @param password the password of the current user
+     */
     public void setCurrentUser(String username, String password) {
-        User currentUser = new CommonUser(username, password);
+        final User currentUser = new CommonUser(username, password);
         this.reviewPanel.setCurrentUser(currentUser);
     }
 
