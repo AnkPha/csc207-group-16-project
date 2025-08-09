@@ -1,11 +1,11 @@
 package interface_adapter.search_user;
 
-import entity.Review;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import entity.Review;
 
 public class SearchUserState {
     private List<String> usernames = new ArrayList<>();

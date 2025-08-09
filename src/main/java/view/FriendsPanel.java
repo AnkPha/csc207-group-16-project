@@ -31,6 +31,14 @@ import interface_adapter.send_friend_request.SendFriendRequestState;
 import interface_adapter.send_friend_request.SendFriendRequestViewModel;
 
 public class FriendsPanel extends JPanel implements PropertyChangeListener {
+    private static final String ERROR_TEXT = "Error";
+    private static final int FIVE = 5;
+    private static final int TEN = 10;
+    private static final int SEVENTY = 70;
+    private static final int HUNDRED_THIRTY = 130;
+    private static final int HUNDRED_EIGHTY = 180;
+    private static final float FONT = 14f;
+
     private final JTextField searchField = new JTextField(15);
     private final JButton searchButton = new JButton("Search");
 
@@ -99,12 +107,20 @@ public class FriendsPanel extends JPanel implements PropertyChangeListener {
             else {
                 JOptionPane.showMessageDialog(this,
                         "Failed to send friend request: " + state.getMessage(),
-                        "Error",
+                        ERROR_TEXT,
                         JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
+    /**
+     * Sets the SearchUserViewModel for this component and manages its property change listener.
+     * If an existing view model is already set, this method removes this object as a listener from it
+     * before assigning the new view model. It then registers this object as a listener to the newly
+     * assigned view model, if it is not then null.
+     *
+     * @param searchUserViewModel the new {@code SearchUserViewModel} to associate with this component
+     */
     public void setSearchUserViewModel(SearchUserViewModel searchUserViewModel) {
         if (this.searchUserViewModel != null) {
             this.searchUserViewModel.removePropertyChangeListener(this);
@@ -148,25 +164,58 @@ public class FriendsPanel extends JPanel implements PropertyChangeListener {
      *                    will either have an empty list or a null value
      */
     public void displaySearchResults(List<String> usernames, Map<String, List<Review>> userReviews) {
-        SwingUtilities.invokeLater(() -> {
-            searchResultPanel.removeAll();
+        SwingUtilities.invokeLater(() -> updateSearchResultsUi(usernames, userReviews));
+    }
 
-            if (usernames.isEmpty()) {
-                final JLabel noResultsLabel = new JLabel("No users found");
-                noResultsLabel.setForeground(Color.GRAY);
-                searchResultPanel.add(noResultsLabel);
-            }
-            else {
-                for (String username : usernames) {
-                    final JPanel userPanel = createUserPanel(username, userReviews.get(username));
-                    searchResultPanel.add(userPanel);
-                }
-            }
-            searchResultPanel.revalidate();
-            searchResultPanel.repaint();
-            this.revalidate();
-            this.repaint();
-        });
+    /**
+     * Updates the search results UI with the provided user data.
+     *
+     * @param usernames a list of usernames that matched the search query
+     * @param userReviews a map from usernames to a list of their reviews
+     */
+    private void updateSearchResultsUi(List<String> usernames, Map<String, List<Review>> userReviews) {
+        searchResultPanel.removeAll();
+
+        if (usernames.isEmpty()) {
+            addNoResultsLabel();
+        }
+        else {
+            addUserPanels(usernames, userReviews);
+        }
+
+        refreshPanels();
+    }
+
+    /**
+     * Adds a "No users found" label to the search results panel.
+     */
+    private void addNoResultsLabel() {
+        final JLabel noResultsLabel = new JLabel("No users found");
+        noResultsLabel.setForeground(Color.GRAY);
+        searchResultPanel.add(noResultsLabel);
+    }
+
+    /**
+     * Adds user panels to the search results for each username.
+     *
+     * @param usernames the list of usernames to display
+     * @param userReviews the map of user reviews
+     */
+    private void addUserPanels(List<String> usernames, Map<String, List<Review>> userReviews) {
+        for (String username : usernames) {
+            final JPanel userPanel = createUserPanel(username, userReviews.get(username));
+            searchResultPanel.add(userPanel);
+        }
+    }
+
+    /**
+     * Refreshes the search results panel and parent container.
+     */
+    private void refreshPanels() {
+        searchResultPanel.revalidate();
+        searchResultPanel.repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     /**
@@ -177,70 +226,216 @@ public class FriendsPanel extends JPanel implements PropertyChangeListener {
      * @return a JPanel containing the user information and buttons
      */
     private JPanel createUserPanel(String username, List<Review> reviews) {
-        final JPanel userPanel = new JPanel();
-        userPanel.setLayout(new BorderLayout(5, 5));
-        userPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEtchedBorder(),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
-        userPanel.setBackground(Color.WHITE);
+        final JPanel userPanel = createBaseUserPanel();
 
-        final JLabel usernameLabel = new JLabel("User: " + username);
-        usernameLabel.setFont(usernameLabel.getFont().deriveFont(Font.BOLD, 14f));
+        final JLabel usernameLabel = createUsernameLabel(username);
         userPanel.add(usernameLabel, BorderLayout.NORTH);
 
+        final JPanel reviewsPanel = createReviewsPanel(reviews);
+        userPanel.add(reviewsPanel, BorderLayout.CENTER);
+
+        final JPanel buttonPanel = createButtonPanel(username);
+        userPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        return userPanel;
+    }
+
+    /**
+     * Creates the base user panel with styling and layout.
+     *
+     * @return a styled JPanel with BorderLayout
+     */
+    private JPanel createBaseUserPanel() {
+        final JPanel userPanel = new JPanel();
+        userPanel.setLayout(new BorderLayout(FIVE, FIVE));
+        userPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEtchedBorder(),
+                BorderFactory.createEmptyBorder(TEN, TEN, TEN, TEN)
+        ));
+        userPanel.setBackground(Color.WHITE);
+        return userPanel;
+    }
+
+    /**
+     * Creates a styled username label.
+     *
+     * @param username the username to display
+     * @return a styled JLabel
+     */
+    private JLabel createUsernameLabel(String username) {
+        final JLabel usernameLabel = new JLabel("User: " + username);
+        usernameLabel.setFont(usernameLabel.getFont().deriveFont(Font.BOLD, FONT));
+        return usernameLabel;
+    }
+
+    /**
+     * Creates a panel containing the user's reviews.
+     *
+     * @param reviews the user's reviews, or null if none
+     * @return a JPanel containing review information
+     */
+    private JPanel createReviewsPanel(List<Review> reviews) {
         final JPanel reviewsPanel = new JPanel();
         reviewsPanel.setLayout(new BoxLayout(reviewsPanel, BoxLayout.Y_AXIS));
         reviewsPanel.setBackground(Color.WHITE);
 
         if (reviews != null && !reviews.isEmpty()) {
-            for (Review review : reviews) {
-                final JPanel reviewPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
-                reviewPanel.setBackground(Color.WHITE);
-
-                final JLabel restaurantLabel = new JLabel("  - " + review.getRestaurant().getName()
-                        + " | " + review.getRating() + "/5");
-                restaurantLabel.setFont(restaurantLabel.getFont().deriveFont(Font.BOLD));
-
-                reviewPanel.add(restaurantLabel);
-                reviewsPanel.add(reviewPanel);
-
-                final String reviewText = review.getReviewText();
-                if (reviewText != null && !reviewText.isEmpty()) {
-                    final JPanel textPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-                    textPanel.setBackground(Color.WHITE);
-                    final JLabel reviewTextLabel = new JLabel(" - " + reviewText);
-                    reviewTextLabel.setForeground(Color.DARK_GRAY);
-                    textPanel.add(reviewTextLabel);
-                    reviewsPanel.add(textPanel);
-                }
-            }
+            addReviewsToPanel(reviewsPanel, reviews);
         }
         else {
-            final JLabel noReviewsLabel = new JLabel("  (No reviews)");
-            noReviewsLabel.setForeground(Color.GRAY);
-            reviewsPanel.add(noReviewsLabel);
+            addNoReviewsLabel(reviewsPanel);
         }
 
-        userPanel.add(reviewsPanel, BorderLayout.CENTER);
+        return reviewsPanel;
+    }
 
+    /**
+     * Adds individual review panels to the reviews container.
+     *
+     * @param reviewsPanel the container panel
+     * @param reviews the list of reviews to add
+     */
+    private void addReviewsToPanel(JPanel reviewsPanel, List<Review> reviews) {
+        for (Review review : reviews) {
+            addSingleReview(reviewsPanel, review);
+        }
+    }
+
+    /**
+     * Adds a single review to the reviews panel.
+     *
+     * @param reviewsPanel the container panel
+     * @param review the review to add
+     */
+    private void addSingleReview(JPanel reviewsPanel, Review review) {
+        final JPanel reviewPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
+        reviewPanel.setBackground(Color.WHITE);
+
+        final JLabel restaurantLabel = new JLabel("  - " + review.getRestaurant().getName()
+                + " | " + review.getRating() + "/5");
+        restaurantLabel.setFont(restaurantLabel.getFont().deriveFont(Font.BOLD));
+
+        reviewPanel.add(restaurantLabel);
+        reviewsPanel.add(reviewPanel);
+
+        final String reviewText = review.getReviewText();
+        if (reviewText != null && !reviewText.isEmpty()) {
+            addReviewText(reviewsPanel, reviewText);
+        }
+    }
+
+    /**
+     * Adds review text to the reviews panel.
+     *
+     * @param reviewsPanel the container panel
+     * @param reviewText the review text to add
+     */
+    private void addReviewText(JPanel reviewsPanel, String reviewText) {
+        final JPanel textPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        textPanel.setBackground(Color.WHITE);
+        final JLabel reviewTextLabel = new JLabel(" - " + reviewText);
+        reviewTextLabel.setForeground(Color.DARK_GRAY);
+        textPanel.add(reviewTextLabel);
+        reviewsPanel.add(textPanel);
+    }
+
+    /**
+     * Adds a "No reviews" label to the reviews panel.
+     *
+     * @param reviewsPanel the container panel
+     */
+    private void addNoReviewsLabel(JPanel reviewsPanel) {
+        final JLabel noReviewsLabel = new JLabel("  (No reviews)");
+        noReviewsLabel.setForeground(Color.GRAY);
+        reviewsPanel.add(noReviewsLabel);
+    }
+
+    /**
+     * Creates a panel with action buttons for the user.
+     *
+     * @param username the username for the buttons
+     * @return a JPanel containing action buttons
+     */
+    private JPanel createButtonPanel(String username) {
         final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(Color.WHITE);
 
+        final JButton sendRequestButton = createSendRequestButton(username);
+        buttonPanel.add(sendRequestButton);
+
+        final JButton viewProfileButton = createViewProfileButton(username);
+        buttonPanel.add(viewProfileButton);
+
+        return buttonPanel;
+    }
+
+    /**
+     * Creates a styled "Send Friend Request" button.
+     *
+     * @param username the username for the button action
+     * @return a styled JButton
+     */
+    private JButton createSendRequestButton(String username) {
         final JButton sendRequestButton = new JButton("Send Friend Request");
-        sendRequestButton.setBackground(new Color(70, 130, 180));
+        sendRequestButton.setBackground(new Color(SEVENTY, HUNDRED_THIRTY, HUNDRED_EIGHTY));
         sendRequestButton.setForeground(Color.WHITE);
         sendRequestButton.setFont(sendRequestButton.getFont().deriveFont(Font.BOLD));
         sendRequestButton.addActionListener(evt -> sendFriendRequest(username));
-        buttonPanel.add(sendRequestButton);
+        return sendRequestButton;
+    }
 
+    /**
+     * Creates a "View Profile" button.
+     *
+     * @param username the username for the button action
+     * @return a JButton
+     */
+    private JButton createViewProfileButton(String username) {
         final JButton viewProfileButton = new JButton("View Profile");
-        viewProfileButton.addActionListener(evt -> viewUserProfile(username, reviews));
-        buttonPanel.add(viewProfileButton);
+        viewProfileButton.addActionListener(evt -> handleViewProfile(username));
+        return viewProfileButton;
+    }
 
-        userPanel.add(buttonPanel, BorderLayout.SOUTH);
+    /**
+     * Handles the view profile action for a specific user.
+     *
+     * @param username the username whose profile to view
+     */
+    private void handleViewProfile(String username) {
+        SearchUserState state = null;
+        if (searchUserViewModel != null) {
+            state = searchUserViewModel.getState();
+        }
 
-        return userPanel;
+        List<Review> reviews = null;
+        if (state != null) {
+            reviews = state.getUserReviews().get(username);
+        }
+
+        viewUserProfile(username, reviews);
+    }
+
+    /**
+     * Shows an error message dialog.
+     *
+     * @param message the error message to display
+     */
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, ERROR_TEXT, JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Validates preconditions for sending a friend request.
+     *
+     * @param recipientUsername the username to send the request to
+     * @return an error message if validation fails, null if validation passes
+     */
+    private String validateFriendRequestInput(String recipientUsername) {
+        String errorMessage = null;
+        if (currentUsername.equals(recipientUsername)) {
+            errorMessage = "You cannot send a friend request to yourself!";
+        }
+        return errorMessage;
     }
 
     /**
@@ -249,46 +444,39 @@ public class FriendsPanel extends JPanel implements PropertyChangeListener {
      * @param recipientUsername the username to send the friend request to
      */
     private void sendFriendRequest(String recipientUsername) {
-        if (sendFriendRequestController == null) {
-            JOptionPane.showMessageDialog(this,
-                    "Friend request functionality is not available.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
+        final String validationError = validateFriendRequestInput(recipientUsername);
+        if (validationError != null) {
+            if (currentUsername != null && currentUsername.equals(recipientUsername)) {
+                JOptionPane.showMessageDialog(this,
+                        validationError,
+                        ERROR_TEXT,
+                        JOptionPane.WARNING_MESSAGE);
+            }
+            else {
+                showError(validationError);
+            }
         }
-
-        if (currentUsername == null) {
-            JOptionPane.showMessageDialog(this,
-                    "Unable to determine current user. Please log in again.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
+        else {
+            executeFriendRequest(recipientUsername);
         }
+    }
 
-        if (currentUsername.equals(recipientUsername)) {
-            JOptionPane.showMessageDialog(this,
-                    "You cannot send a friend request to yourself!",
-                    "Error",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
+    /**
+     * Executes the friend request after validation passes.
+     *
+     * @param recipientUsername the username to send the friend request to
+     */
+    private void executeFriendRequest(String recipientUsername) {
         try {
             sendFriendRequestController.execute(currentUsername, recipientUsername);
-
             JOptionPane.showMessageDialog(this,
                     "Friend request sent to " + recipientUsername + "!",
                     "Request Sent",
                     JOptionPane.INFORMATION_MESSAGE);
-
         }
-        catch (Exception ex) {
+        catch (IllegalArgumentException | IllegalStateException ex) {
             ex.printStackTrace();
-
-            JOptionPane.showMessageDialog(this,
-                    "Failed to send friend request: " + ex.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            showError("Failed to send friend request: " + ex.getMessage());
         }
     }
 
@@ -303,17 +491,7 @@ public class FriendsPanel extends JPanel implements PropertyChangeListener {
         profileInfo.append("Username: ").append(username).append("\n\n");
 
         if (reviews != null && !reviews.isEmpty()) {
-            profileInfo.append("Reviews (").append(reviews.size()).append("):\n\n");
-            for (Review review : reviews) {
-                profileInfo.append("• ").append(review.getRestaurant().getName()).append(" (")
-                        .append(review.getRating()).append("/5)\n");
-
-                final String reviewText = review.getReviewText();
-                if (reviewText != null && !reviewText.isEmpty()) {
-                    profileInfo.append("  \"").append(reviewText).append("\"\n");
-                }
-                profileInfo.append("\n");
-            }
+            addReviewsToProfile(profileInfo, reviews);
         }
         else {
             profileInfo.append("No reviews yet.");
@@ -323,6 +501,26 @@ public class FriendsPanel extends JPanel implements PropertyChangeListener {
                 profileInfo.toString(),
                 "Profile: " + username,
                 JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Adds review information to the profile string builder.
+     *
+     * @param profileInfo the StringBuilder to append to
+     * @param reviews the list of reviews to add
+     */
+    private void addReviewsToProfile(StringBuilder profileInfo, List<Review> reviews) {
+        profileInfo.append("Reviews (").append(reviews.size()).append("):\n\n");
+        for (Review review : reviews) {
+            profileInfo.append("- ").append(review.getRestaurant().getName()).append(" (")
+                    .append(review.getRating()).append("/5)\n");
+
+            final String reviewText = review.getReviewText();
+            if (reviewText != null && !reviewText.isEmpty()) {
+                profileInfo.append("  \"").append(reviewText).append("\"\n");
+            }
+            profileInfo.append("\n");
+        }
     }
 
     public void setSearchUserController(SearchUserController controller) {

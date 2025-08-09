@@ -15,7 +15,7 @@ public class ViewRequestsInteractor implements ViewRequestsInputBoundary {
 
     @Override
     public void execute(ViewRequestsInputData inputData) {
-        final List<String> pendingRequests = dataAccess.getPendingRequests(inputData.username);
+        final List<String> pendingRequests = dataAccess.getPendingRequests(inputData.getUsername());
         presenter.present(new ViewRequestsOutputData(pendingRequests));
     }
 }

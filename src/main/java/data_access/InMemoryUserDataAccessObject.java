@@ -20,6 +20,14 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         ChangePasswordUserDataAccessInterface,
         LogoutUserDataAccessInterface {
 
+    private static final String ALICE_USERNAME = "alice";
+    private static final String BOB_USERNAME = "bob";
+    private static final String CAROL_USERNAME = "carol";
+    private static final String DEFAULT_PASSWORD = "pw";
+    private static final int RATING_FIVE = 5;
+    private static final int RATING_FOUR = 4;
+    private static final int RATING_THREE = 3;
+
     private final Map<String, User> users = new HashMap<>();
 
     private String currentUsername;
@@ -90,10 +98,16 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
      */
     public Map<String, Review> getUserReviews(String username) {
         final User user = users.get(username);
+        final Map<String, Review> result;
+
         if (user instanceof CommonUser) {
-            return ((CommonUser) user).getReviews();
+            result = ((CommonUser) user).getReviews();
         }
-        return new HashMap<>();
+        else {
+            result = new HashMap<>();
+        }
+
+        return result;
     }
 
     /**
@@ -122,17 +136,16 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
      * This is used for testing or demo purposes only.
      */
     public void populateSampleUsers() {
-        save(new CommonUser("alice", "pw"));
-        addReview("alice", "Pho House", 5, "Amazing pho and spring rolls!");
-        addReview("alice", "Noodle Bar", 4, "Solid, quick, and cheap");
+        save(new CommonUser(ALICE_USERNAME, DEFAULT_PASSWORD));
+        addReview(ALICE_USERNAME, "Pho House", RATING_FIVE, "Amazing pho and spring rolls!");
+        addReview(ALICE_USERNAME, "Noodle Bar", RATING_FOUR, "Solid, quick, and cheap");
 
-        save(new CommonUser("bob", "pw"));
-        addReview("bob", "Green Thai", 5, "Best pad see ew I've ever had");
-        addReview("bob", "Pho House", 3, "Good but a little salty");
+        save(new CommonUser(BOB_USERNAME, DEFAULT_PASSWORD));
+        addReview(BOB_USERNAME, "Green Thai", RATING_FIVE, "Best pad see ew I've ever had");
+        addReview(BOB_USERNAME, "Pho House", RATING_THREE, "Good but a little salty");
 
-        save(new CommonUser("carol", "pw"));
-        addReview("carol", "Burger Spot", 4, "Tasty, affordable, great late-night place");
+        save(new CommonUser(CAROL_USERNAME, DEFAULT_PASSWORD));
+        addReview(CAROL_USERNAME, "Burger Spot", RATING_FOUR, "Tasty, affordable, great late-night place");
 
-        System.out.println("Sample users populated: " + getAllUsernames());
     }
 }
