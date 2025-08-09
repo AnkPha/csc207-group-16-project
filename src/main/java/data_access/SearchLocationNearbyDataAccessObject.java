@@ -64,7 +64,7 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
             
             // For each restaurant, get its rating from the review DAO and update the restaurant object
             for (Restaurant restaurant : restaurantList) {
-                double averageRating = reviewDataAccessObject.getAverageRatingForRestaurant(restaurant);
+                final double averageRating = reviewDataAccessObject.getAverageRatingForRestaurant(restaurant);
                 if (averageRating > 0.0) {
                     restaurant.addRating(averageRating);
                 }

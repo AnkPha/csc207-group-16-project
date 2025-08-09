@@ -6,15 +6,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.*;
-import data_access.favorite_list.FavoritesDataAccessInterface;
-import data_access.favorite_list.FavoritesDataAccessObject;
 import data_access.FilterDataAccessObject;
 import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryReviewDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
-
+import data_access.favorite_list.FavoritesDataAccessInterface;
+import data_access.favorite_list.FavoritesDataAccessObject;
 import entity.CommonReviewFactory;
 import entity.CommonUserFactory;
 import entity.ReviewFactory;
@@ -26,7 +24,6 @@ import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesPresenter;
 import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.filter.FilterController;
-import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -56,9 +53,6 @@ import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.filter.FilterDataAccessInterface;
-import use_case.filter.FilterInputBoundary;
-import use_case.filter.FilterInteractor;
-import use_case.filter.FilterOutputBoundary;
 import use_case.friends.SearchUserInteractor;
 import use_case.friends.SendFriendRequestInteractor;
 import use_case.login.LoginInputBoundary;
@@ -319,9 +313,9 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFilterUseCase() {
-        FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
+        final FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
 
-        FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
+        final FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
 
         addToFavoritesInteractor = new AddToFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
         removeFromFavoritesInteractor = new RemoveFromFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
@@ -426,8 +420,8 @@ public class AppBuilder {
         return this;
     }
 
-     /**
-     * Add this method to set the current username after login
+    /**
+     * Add this method to set the current username after login.
      * @param username the username of the currently logged-in user
      * @return the current instance of {@code AppBuilder}, allowing for method chaining
      */
