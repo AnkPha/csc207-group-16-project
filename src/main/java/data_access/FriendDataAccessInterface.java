@@ -20,6 +20,13 @@ public interface FriendDataAccessInterface {
      */
     boolean userExists(String username);
 
+    /**
+     * Retrieves the {@code User} object associated with the specified username.
+     *
+     * @param username the username of the user to retrieve
+     * @return the {@code User} object matching the given username,
+     *         or {@code null} if no such user exists
+     */
     User getUser(String username);
 
     /**
