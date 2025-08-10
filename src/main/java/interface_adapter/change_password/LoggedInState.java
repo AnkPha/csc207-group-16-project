@@ -7,7 +7,7 @@ public class LoggedInState {
     private String username = "";
 
     private String password = "";
-    private String passwordError;
+    public String passwordError;
 
     public LoggedInState(LoggedInState copy) {
         username = copy.username;
