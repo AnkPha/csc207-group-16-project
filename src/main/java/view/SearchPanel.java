@@ -112,7 +112,7 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * A method that sets the zoom acoording to the radius.
+     * A method that sets the zoom according to the radius.
      *
      * @param radius the radius in meters
      */
@@ -166,12 +166,8 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
         }
 
         currentState.setFiltered(true);
-        filteringController.execute(currentState.getAddress(), Integer.parseInt(
-                        currentState.getRadius()),
-                selectedCuisines,
-                selectedVegStat,
-                selectedHour,
-                selectedRating);
+        filteringController.execute(currentState.getAddress(), Integer.parseInt(currentState.getRadius()),
+                selectedCuisines, selectedVegStat, selectedHour, selectedRating);
         currentViewState.setFilterState(filterViewModel.getState());
     }
 
@@ -193,7 +189,7 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(this, "Could Not Find Address");
             }
             else if (currentViewState.getActiveRestaurants().isEmpty()) {
-                System.out.println("NO WAYPOINYS CUZ NO RESTAURANTS " + "FILTERED? " + currentViewState.isFiltered());
+                System.out.println("NO WAYPOINTS CUZ NO RESTAURANTS " + "FILTERED? " + currentViewState.isFiltered());
                 JOptionPane.showMessageDialog(this, "No Restaurants found");
             }
             else {
@@ -221,7 +217,7 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
      * A method that updates the infoPanel visual.
      */
     public void updateInfoPanelAndWaypoints() {
-        System.out.println("SIZE OF RESTURANTS "
+        System.out.println("SIZE OF RESTAURANTS "
                 + currentViewState.getActiveRestaurants().size()
                 + "FILTERED? " + currentViewState.isFiltered());
         for (Restaurant r : currentViewState.getActiveRestaurants()) {

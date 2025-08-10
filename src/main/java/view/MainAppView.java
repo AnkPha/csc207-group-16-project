@@ -30,21 +30,11 @@ import interface_adapter.send_friend_request.SendFriendRequestViewModel;
  */
 public class MainAppView extends JPanel {
 
-    private ChangePasswordController changePasswordController;
-    private LogoutController logoutController;
     private ReviewController reviewController;
-    private FavoritesController favoritesController;
-    private SearchLocationsNearbyController searchController;
     private FilterController filterController;
 
-    private final MainAppViewModel viewModel;
-    private final ReviewViewModel reviewViewModel;
-    private final FilterViewModel filterViewModel;
-    private final SearchViewModel searchViewModel;
-    private final FavoritesViewModel favoritesViewModel;
     private FriendsPanel friendsPanel;
 
-    private final JTabbedPane tabbedPane;
     private final ProfilePanel profilePanel;
     private final FavoritesPanel favoritesPanel;
     private final SearchPanel searchPanel;
@@ -65,16 +55,11 @@ public class MainAppView extends JPanel {
                        FilterController filterController1,
                        ReviewController reviewController,
                        ReviewViewModel reviewViewModel) {
-        this.viewModel = viewModel;
-        this.searchViewModel = searchViewModel;
         this.filterController = filterController1;
-        this.filterViewModel = filterViewModel;
         this.setLayout(new BorderLayout());
-        this.favoritesViewModel = favoritesViewModel;
-        this.reviewViewModel = reviewViewModel;
         this.reviewController = reviewController;
 
-        tabbedPane = new JTabbedPane();
+        final JTabbedPane tabbedPane = new JTabbedPane();
 
         searchPanel = new SearchPanel(searchViewModel, filterViewModel);
         tabbedPane.addTab("Search", searchPanel);
@@ -108,7 +93,6 @@ public class MainAppView extends JPanel {
      * @param controller the controller
      */
     public void setChangePasswordController(ChangePasswordController controller) {
-        this.changePasswordController = controller;
         this.profilePanel.setChangePasswordController(controller);
     }
 
@@ -117,7 +101,6 @@ public class MainAppView extends JPanel {
      * @param controller the controller
      */
     public void setLogoutController(LogoutController controller) {
-        this.logoutController = controller;
         this.profilePanel.setLogoutController(controller);
     }
 
@@ -126,7 +109,6 @@ public class MainAppView extends JPanel {
      * @param controller the controller
      */
     public void setSearchController(SearchLocationsNearbyController controller) {
-        this.searchController = controller;
         this.searchPanel.setSearchLocationsController(controller);
     }
 
@@ -135,7 +117,6 @@ public class MainAppView extends JPanel {
      * @param controller the controller
      */
     public void setFavoritesController(FavoritesController controller) {
-        this.favoritesController = controller;
         this.favoritesPanel.setFavoritesController(controller);
     }
 
