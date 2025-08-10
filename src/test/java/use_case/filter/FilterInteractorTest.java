@@ -1,6 +1,7 @@
 package use_case.filter;
 
 import data_access.FilterDataAccessObject;
+import data_access.InMemoryReviewDataAccessObject;
 import entity.Restaurant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FilterInteractorTest {
     private FilterDataAccessObject dao;
+    private InMemoryReviewDataAccessObject inMemoryReviewDao = new InMemoryReviewDataAccessObject();
+
 
     @BeforeEach
     void setUp() {
-        dao = new FilterDataAccessObject();
+        dao = new FilterDataAccessObject(inMemoryReviewDao);
 
-        dao = new FilterDataAccessObject() {
+        dao = new FilterDataAccessObject(inMemoryReviewDao) {
             @Override
             public ArrayList<Restaurant> getFilteredRestaurants (FilterInputData filterInputData) {
                 return super.getFilteredRestaurants(filterInputData);
@@ -148,12 +151,21 @@ class FilterInteractorTest {
         interactor.execute(inputFour);
     }
 
+    /**
+     * NOTE:
+     * This test involves availability filtering, which uses the current system time (LocalTime.now()).
+     * As a result, this test inputs availability as "Open Now" and passes successfully on Thursday, 23:00 PM. For any
+     * other time, this might not pass due to the specificity of the current system time and hours of operation of the
+     * restaurant.
+     * For comprehensive testing, it would be recommended to override the current time, but this has been
+     * intentionally omitted to keep the implementation simple and aligned with programing logic.
+     */
     @Test
     void noMatchingRestaurants() {
         List<String> selectedCuisines = List.of("thai");
 
         FilterInputData input = new FilterInputData("100 Queen St W, Toronto, ON, Canada", 500,
-                selectedCuisines, "yes", "Closed Now", "None");
+                selectedCuisines, "yes", "Open Now", "None");
 
         FilterOutputBoundary outputNone = new FilterOutputBoundary() {
             @Override

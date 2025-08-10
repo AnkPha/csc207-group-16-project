@@ -18,6 +18,7 @@ import interface_adapter.main_menu.MainAppState;
 import interface_adapter.main_menu.MainAppViewModel;
 
 class ProfilePanel extends JPanel {
+    private static final int TEN = 10;
     private final MainAppViewModel viewModel;
     private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
@@ -37,7 +38,7 @@ class ProfilePanel extends JPanel {
         this.add(new JLabel("New Password: "));
         this.add(passwordField);
         this.add(changePasswordButton);
-        this.add(Box.createRigidArea(new Dimension(0, 10)));
+        this.add(Box.createRigidArea(new Dimension(0, TEN)));
         this.add(logoutButton);
 
         passwordField.getDocument().addDocumentListener(new DocumentListener() {

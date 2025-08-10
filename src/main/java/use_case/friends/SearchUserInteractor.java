@@ -17,7 +17,7 @@ public class SearchUserInteractor implements SearchUserInputBoundary {
 
     @Override
     public void execute(SearchUserInputData inputData) {
-        final List<String> results = dataAccess.searchUsers(inputData.query);
+        final List<String> results = dataAccess.searchUsers(inputData.getQuery());
         final Map<String, List<Review>> reviews = dataAccess.getReviewsForUsers(results);
         presenter.present(new SearchUserOutputData(results, reviews));
     }

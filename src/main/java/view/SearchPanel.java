@@ -112,7 +112,7 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * A method that sets the zoom acoording to the radius.
+     * A method that sets the zoom according to the radius.
      *
      * @param radius the radius in meters
      */
@@ -159,7 +159,8 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
                              String selectedVegStat,
                              String selectedHour) {
         currentState = searchViewModel.getState();
-        if (currentState.getAddress() == null && currentState.getRadius() == null) {
+        if (currentState.getAddress() == null || currentState.getAddress().trim().isEmpty()
+                || currentState.getRadius() == null || currentState.getRadius().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill out address and radius first");
         }
 

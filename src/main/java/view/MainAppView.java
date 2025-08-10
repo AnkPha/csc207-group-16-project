@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import data_access.InMemoryUserDataAccessObject;
+import entity.CommonUser;
+import entity.User;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesViewModel;
@@ -28,21 +30,11 @@ import interface_adapter.send_friend_request.SendFriendRequestViewModel;
  */
 public class MainAppView extends JPanel {
 
-    private ChangePasswordController changePasswordController;
-    private LogoutController logoutController;
     private ReviewController reviewController;
-    private FavoritesController favoritesController;
-    private SearchLocationsNearbyController searchController;
     private FilterController filterController;
 
-    private final MainAppViewModel viewModel;
-    private final ReviewViewModel reviewViewModel;
-    private final FilterViewModel filterViewModel;
-    private final SearchViewModel searchViewModel;
-    private final FavoritesViewModel favoritesViewModel;
     private FriendsPanel friendsPanel;
 
-    private final JTabbedPane tabbedPane;
     private final ProfilePanel profilePanel;
     private final FavoritesPanel favoritesPanel;
     private final SearchPanel searchPanel;
@@ -63,16 +55,11 @@ public class MainAppView extends JPanel {
                        FilterController filterController1,
                        ReviewController reviewController,
                        ReviewViewModel reviewViewModel) {
-        this.viewModel = viewModel;
-        this.searchViewModel = searchViewModel;
         this.filterController = filterController1;
-        this.filterViewModel = filterViewModel;
         this.setLayout(new BorderLayout());
-        this.favoritesViewModel = favoritesViewModel;
-        this.reviewViewModel = reviewViewModel;
         this.reviewController = reviewController;
 
-        tabbedPane = new JTabbedPane();
+        final JTabbedPane tabbedPane = new JTabbedPane();
 
         searchPanel = new SearchPanel(searchViewModel, filterViewModel);
         tabbedPane.addTab("Search", searchPanel);
@@ -82,11 +69,16 @@ public class MainAppView extends JPanel {
 
         profilePanel = new ProfilePanel(viewModel);
         tabbedPane.addTab("Profile", profilePanel);
+
         friendsPanel = new FriendsPanel();
         friendsPanel.setSearchUserController(searchUserController);
         friendsPanel.setSearchUserViewModel(searchUserViewModel);
         tabbedPane.addTab("Friends", friendsPanel);
+
         reviewPanel = new ReviewPanel(reviewViewModel);
+        if (reviewController != null) {
+            reviewPanel.setAddReviewController(reviewController);
+        }
         tabbedPane.addTab("Reviews", reviewPanel);
 
         this.add(tabbedPane, BorderLayout.CENTER);
@@ -101,7 +93,6 @@ public class MainAppView extends JPanel {
      * @param controller the controller
      */
     public void setChangePasswordController(ChangePasswordController controller) {
-        this.changePasswordController = controller;
         this.profilePanel.setChangePasswordController(controller);
     }
 
@@ -110,7 +101,6 @@ public class MainAppView extends JPanel {
      * @param controller the controller
      */
     public void setLogoutController(LogoutController controller) {
-        this.logoutController = controller;
         this.profilePanel.setLogoutController(controller);
     }
 
@@ -119,7 +109,6 @@ public class MainAppView extends JPanel {
      * @param controller the controller
      */
     public void setSearchController(SearchLocationsNearbyController controller) {
-        this.searchController = controller;
         this.searchPanel.setSearchLocationsController(controller);
     }
 
@@ -128,7 +117,6 @@ public class MainAppView extends JPanel {
      * @param controller the controller
      */
     public void setFavoritesController(FavoritesController controller) {
-        this.favoritesController = controller;
         this.favoritesPanel.setFavoritesController(controller);
     }
 
@@ -205,8 +193,24 @@ public class MainAppView extends JPanel {
      */
     public void setReviewController(ReviewController controller) {
         this.reviewController = controller;
-        this.reviewPanel.setAddReviewController(controller);
+        if (this.reviewPanel != null) {
+            this.reviewPanel.setAddReviewController(controller);
+        }
 
+    }
+
+    /**
+     * Sets the current user for the application by creating a new {@code CommonUser}
+     * instance with the provided username and password. The current user is then
+     * assigned to the {@code reviewPanel}, allowing it to load and display
+     * user-specific reviews and related data.
+     *
+     * @param username the username of the current user
+     * @param password the password of the current user
+     */
+    public void setCurrentUser(String username, String password) {
+        final User currentUser = new CommonUser(username, password);
+        this.reviewPanel.setCurrentUser(currentUser);
     }
 
     private JButton createSendRequestButton(String username) {
