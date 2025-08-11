@@ -102,7 +102,6 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
-    // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =

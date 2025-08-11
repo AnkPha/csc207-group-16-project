@@ -24,20 +24,27 @@ TasteMap was created to address a gap in existing restaurant discovery tools. Mo
 
 ## Features
 1. Log In or Sign Up 
-   * Create a new TasteMap account or log in with existing credentials to access personalized features. 
+   * Create a new TasteMap account or log in with existing credentials to access personalized features.
+     ![Description](images/FeatureSignUp.png)
 2. Search Nearby Restaurants
-   * Find restaurants within a specified radius using Overpass data by entering an address and search distance. 
+   * Find restaurants within a specified radius using Overpass data by entering an address and search distance.
+     ![Description](images/FeatureSearch.png)
 3. Multi-Criteria Filtering
-   * Narrow search results by cuisine, rating, vegetarian status, and whether the restaurant is currently open. 
+   * Narrow search results by cuisine, rating, vegetarian status, and whether the restaurant is currently open.
+     ![Description](images/FeatureFilter.png)
 4. Live Availability Indicator
-   * Instantly see which restaurants are open or closed in real time. 
+   * Instantly see which restaurants are open or closed in real time.
+     ![Description](images/FeatureOpenStatus.png)
 5. Review Restaurants
-   * Read reviews from friends and other users, and share your own ratings and feedback based on your dining experience. 
+   * Read reviews from friends and other users, and share your own ratings and feedback based on your dining experience.
+     ![Description](images/FeatureReview.png)  ![Description](images/FeatureFriendsReview.png)
+
 6. Favorite Restaurants
-   * Save restaurants to your personal favorites list for quick access or sharing with friends. 
+   * Save restaurants to your personal favorites list for quick access or sharing with friends.
+     ![Description](images/FeatureFavorite.png)
 7. Connect with Friends
    * Search for friends, send friend requests, and view their favorite restaurants and reviews to discover trustworthy recommendations.
-
+     ![Description](images/FeatureFriends.png)
 ## Installation
 ### Prerequisites
 * Java Development Kit (JDK): Version 11 (Corretto-11.0.27 recommended)

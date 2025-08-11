@@ -14,10 +14,6 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     private static final String NONE = "None";
     private final SearchLocationNearbyDataAccessObject searchInterface;
 
-//    public FilterDataAccessObject() {
-//        this.searchInterface = new SearchLocationNearbyDataAccessObject();
-//    }
-
     public FilterDataAccessObject(AddReviewAccessInterface reviewDao) {
         this.searchInterface = new SearchLocationNearbyDataAccessObject(reviewDao);
     }

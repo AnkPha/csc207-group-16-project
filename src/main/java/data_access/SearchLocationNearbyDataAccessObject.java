@@ -64,7 +64,6 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
             }
             else {
                 result.setStatus(TIME_OUT);
-                System.out.println("SET STATUS TO TIME OUT");
                 restaurantList = new ArrayList<>();
             }
         }

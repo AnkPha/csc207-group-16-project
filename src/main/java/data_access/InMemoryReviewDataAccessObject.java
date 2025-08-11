@@ -49,20 +49,7 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
                 listOfReviews.add(review);
             }
         }
-        if (restaurant.getName().equals("Red Lobster")) {
-            System.out.println("FOUND");
-            System.out.println("SIZE " + listOfReviews.size());
-        }
         return listOfReviews;
-//        if (rating == null || rating.equals("No Ratings") || rating.isEmpty()) {
-//            return new ArrayList<>();
-//        }
-//        try {
-//            return new ArrayList<>(Integer.parseInt(rating));
-//        }
-//        catch (NumberFormatException e) {
-//            return new ArrayList<>();
-//        }
     }
 
     @Override
@@ -74,7 +61,6 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
         double sumRating = 0.0;
         for (Review review : allReviewsrestaurant) {
             sumRating += review.getRating();
-            System.out.println("RATING");
         }
         return sumRating / allReviewsrestaurant.size();
     }
