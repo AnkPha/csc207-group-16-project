@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Restaurant {
+    private static final String NO_RATING = "No Ratings";
     private final String name;
     private final String address;
     private final String cuisine;
@@ -29,7 +30,7 @@ public class Restaurant {
         this.vegStat = vegStat;
         this.openingHours = openingHours;
         this.website = website;
-        this.rating = "No Ratings";
+        this.rating = NO_RATING;
         this.allReviewScores = new ArrayList<>();
         this.lon = coords[1];
         this.lat = coords[0];
@@ -53,13 +54,14 @@ public class Restaurant {
      */
     private void updateRating() {
         if (allReviewScores.isEmpty()) {
-            this.rating = "No Ratings";
-        } else {
+            this.rating = NO_RATING;
+        }
+        else {
             double sum = 0;
             for (double score : allReviewScores) {
                 sum += score;
             }
-            double average = sum / allReviewScores.size();
+            final double average = sum / allReviewScores.size();
             this.rating = String.format("%.1f", average);
         }
     }
@@ -69,14 +71,17 @@ public class Restaurant {
      * @return the numeric rating, or 0.0 if no ratings exist
      */
     public double getNumericRating() {
-        if ("No Ratings".equals(rating)) {
-            return 0.0;
+        double result = 0.0;
+        if (NO_RATING.equals(rating)) {
+            result = 0.0;
         }
         try {
-            return Double.parseDouble(rating);
-        } catch (NumberFormatException e) {
-            return 0.0;
+            result = Double.parseDouble(rating);
         }
+        catch (NumberFormatException exception) {
+            result = 0.0;
+        }
+        return result;
     }
 
     /**
@@ -86,7 +91,6 @@ public class Restaurant {
     public boolean hasRatings() {
         return !allReviewScores.isEmpty();
     }
-
 
     public String getName() {
         return name;
@@ -138,9 +142,9 @@ public class Restaurant {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Restaurant restaurant = (Restaurant) obj;
-        return Objects.equals(name, restaurant.name) &&
-                Objects.equals(address, restaurant.address);
+        final Restaurant restaurant = (Restaurant) obj;
+        return Objects.equals(name, restaurant.name)
+                && Objects.equals(address, restaurant.address);
     }
 
     @Override

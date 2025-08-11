@@ -378,7 +378,6 @@ public class AppBuilder {
      */
     public AppBuilder addReviewsUseCase() {
         final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
-        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
         final ReviewFactory reviewFactory = new CommonReviewFactory();
 
         final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(
