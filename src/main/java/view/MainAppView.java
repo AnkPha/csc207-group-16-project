@@ -218,8 +218,13 @@ public class MainAppView extends JPanel {
 
     }
 
+    /**
+     * A method that sets the Current User.
+     * @param username the username of user
+     * @param password the password of user
+     */
     public void setCurrentUser(String username, String password) {
-        User currentUser = new CommonUser(username, password);
+        final User currentUser = new CommonUser(username, password);
         this.reviewPanel.setCurrentUser(currentUser);
     }
 
