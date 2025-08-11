@@ -108,7 +108,7 @@ public class AppBuilder {
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =
             new SearchLocationNearbyDataAccessObject();
-    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
+    private AddReviewAccessInterface reviewDataAccess;
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -283,6 +283,31 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the Review Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addReviewUseCase() {
+        reviewViewModel = new ReviewViewModel();
+
+        final AddReviewOutputBoundary addReviewOutputBoundary =
+                new ReviewPresenter(reviewViewModel);
+
+        final ReviewFactory reviewFactory = new CommonReviewFactory();
+
+        final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(DataAccessObjectManager.getReviewDAO(),
+                        addReviewOutputBoundary,
+                        reviewFactory);
+
+        reviewController = new ReviewController(addReviewInteractor);
+
+        if (mainAppView != null) {
+            mainAppView.setReviewController(reviewController);
+        }
+
+        return this;
+    }
+
+    /**
      * Adds filter view model to the application.
      * @return this builder
      */
@@ -306,19 +331,6 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFavoritesUseCase() {
-
-        final FavoritesController favoritesController =
-                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
-        mainAppView.setFavoritesController(favoritesController);
-
-        return this;
-    }
-
-    /**
-     * Adds the filter use case to this application.
-     * @return this builder
-     */
-    public AppBuilder addFilterUseCase() {
         FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
 
         FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
@@ -331,6 +343,28 @@ public class AppBuilder {
 
         mainAppView.setFavoritesController(favoritesController);
 
+        return this;
+    }
+
+    /**
+     * Adds the filter use case to this application.
+     * @return this builder
+     */
+    public AppBuilder addFilterUseCase() {
+        filterViewModel = new FilterViewModel();
+
+        final FilterOutputBoundary filterOutputBoundary =
+                new FilterPresenter(filterViewModel);
+
+        final FilterInputBoundary filterInteractor =
+                new FilterInteractor(DataAccessObjectManager.getFilterDAO(), filterOutputBoundary);
+
+        final FilterController filterController =
+                new FilterController(filterInteractor);
+
+       if (mainAppView != null) {
+           mainAppView.setFilterController(filterController);
+       }
         return this;
     }
 
@@ -367,28 +401,14 @@ public class AppBuilder {
         return this;
     }
 
-    /**
-     * Adds the add review use case to application.
-     * @return this builder
-     */
-    public AppBuilder addReviewsUseCase() {
-        final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
-        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
-        final ReviewFactory reviewFactory = new CommonReviewFactory();
-
-        final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(
-                reviewDataAccessInterface,
-                addReviewOutputBoundary,
-                reviewFactory
-        );
-
-        reviewController = new ReviewController(addReviewInteractor);
-
-        if (mainAppView != null) {
-            mainAppView.setReviewController(reviewController);
-        }
-        return this;
+    public ReviewController getReviewController() {
+        return reviewController;
     }
+
+    public FilterController getFilterController() {
+        return filterController;
+    }
+
 
     /**
      * Adds the MainApp View to the application.
