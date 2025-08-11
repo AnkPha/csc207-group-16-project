@@ -13,11 +13,9 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     private static final String NOT_GIVEN = "not given";
     private static final String NONE = "None";
     private final SearchLocationNearbyDataAccessObject searchInterface;
-    private final AddReviewAccessInterface reviewDataAccess;
 
-    public FilterDataAccessObject(AddReviewAccessInterface reviewDataAccess) {
-        this.reviewDataAccess = reviewDataAccess;
-        this.searchInterface = new SearchLocationNearbyDataAccessObject();
+    public FilterDataAccessObject(AddReviewAccessInterface reviewDao) {
+        this.searchInterface = new SearchLocationNearbyDataAccessObject(reviewDao);
     }
 
     @Override
@@ -43,7 +41,7 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
     private boolean matchesAllFilters(Restaurant restaurant, List<String> cuisines, String rating,
                                       String vegStat, String availability) {
         boolean match = matchesCuisineFilter(cuisines, restaurant.getCuisine());
-        match &= matchesRatingFilter(rating, restaurant);
+        match &= matchesRatingFilter(rating, restaurant.getRating());
         match &= matchesVegStatFilter(vegStat, restaurant.getVegStat());
         match &= matchesAvailabilityFilter(availability, restaurant.getOpeningHours());
         return match;
@@ -90,59 +88,22 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
         return part != null && !part.trim().isEmpty() && !part.trim().equalsIgnoreCase(NOT_GIVEN);
     }
 
-    private boolean matchesRatingFilter(String userRating, Restaurant restaurant) {
-        System.out.println("DEBUG FILTER: Checking rating filter for restaurant: " + restaurant.getName());
-        System.out.println("DEBUG FILTER: User wants minimum rating: " + userRating);
-        System.out.println("DEBUG FILTER: Restaurant rating string: '" + restaurant.getRating() + "'");
-
-        // If no rating filter specified, match everything
+    private boolean matchesRatingFilter(String userRating, String restRating) {
+        boolean result = false;
         if (userRating == null || userRating.isEmpty() || NONE.equalsIgnoreCase(userRating)) {
-            System.out.println("DEBUG FILTER: No rating filter, returning true");
-            return true;
+            result = true;
         }
-
-        try {
-            double minRating = Double.parseDouble(userRating);
-            System.out.println("DEBUG FILTER: Parsed minimum rating: " + minRating);
-
-            // Check if restaurant has ratings
-            String restaurantRatingStr = restaurant.getRating();
-            if ("No Ratings".equals(restaurantRatingStr)) {
-                System.out.println("DEBUG FILTER: Restaurant has no ratings, returning false");
-                return false;
-            }
-
-            // Parse restaurant's rating
-            try {
-                double restaurantRating = Double.parseDouble(restaurantRatingStr);
-                System.out.println("DEBUG FILTER: Restaurant numeric rating: " + restaurantRating);
-                boolean matches = restaurantRating >= minRating;
-                System.out.println("DEBUG FILTER: Rating filter result: " + matches);
-                return matches;
-            } catch (NumberFormatException e) {
-                System.out.println("DEBUG FILTER: Could not parse restaurant rating: " + restaurantRatingStr);
-                return false;
-            }
-
-        } catch (NumberFormatException e) {
-            System.out.println("DEBUG FILTER: Could not parse user rating: " + userRating);
-            return false;
-        }
-    }
-
-    private boolean matchesStaticRating(String userRating, String restRating) {
-        // Fixed the condition - it was using OR instead of AND
-        if (restRating != null && !restRating.isBlank() && !NONE.equalsIgnoreCase(restRating)) {
+        else if (restRating != null && !restRating.isBlank() && !NOT_GIVEN.equalsIgnoreCase(restRating)) {
             try {
                 final int userRate = Integer.parseInt(userRating);
                 final int restRate = Integer.parseInt(restRating);
-                return restRate >= userRate;
+                result = restRate >= userRate;
             }
-            catch (NumberFormatException e) {
-                return userRating.equalsIgnoreCase(restRating);
+            catch (NumberFormatException error) {
+                result = userRating.equalsIgnoreCase(restRating);
             }
         }
-        return false;
+        return result;
     }
 
     private boolean matchesVegStatFilter(String userVeg, String restVeg) {

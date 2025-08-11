@@ -2,7 +2,7 @@ package interface_adapter.send_friend_request;
 
 public class SendFriendRequestState {
     private String message = "";
-    private boolean success = false;
+    private boolean success = true;
 
     public String getMessage() {
         return message;

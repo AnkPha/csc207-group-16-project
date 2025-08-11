@@ -54,7 +54,6 @@ public class CurrentViewState {
      */
     public void setSearchState(SearchState searchState) {
         this.searchState = searchState;
-        System.out.println("[DEBUG] SearchState set: " + (searchState != null));
     }
 
     /**
@@ -63,7 +62,6 @@ public class CurrentViewState {
      */
     public void setFilterState(FilterState filterState) {
         this.filterState = filterState;
-        System.out.println("[DEBUG] FilterState set: " + (filterState != null));
     }
 
     public boolean isFiltered() {

@@ -24,9 +24,7 @@ public class FilterInteractor implements FilterInputBoundary {
     public void execute(FilterInputData filterInputData) {
         final ArrayList<Restaurant> filteredRestaurants =
                 filterDataAccessObject.getFilteredRestaurants(filterInputData);
-        System.out.println("INTERACT SIZE " + filteredRestaurants.size());
         final FilterOutputData outputData = new FilterOutputData(filteredRestaurants);
-        System.out.println("ATTEMPTING TO RUN FILTER INTERACTOR");
         filterPresenter.prepareSuccessView(outputData);
     }
 }

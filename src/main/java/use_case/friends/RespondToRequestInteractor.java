@@ -15,12 +15,12 @@ public class RespondToRequestInteractor implements RespondToRequestInputBoundary
     public void execute(RespondToRequestInputData inputData) {
         final String message;
 
-        if (inputData.accepted) {
-            dataAccess.acceptRequest(inputData.username, inputData.fromUser);
+        if (inputData.getAccepted()) {
+            dataAccess.acceptRequest(inputData.getUsername(), inputData.getFromUser());
             message = "Friend request accepted.";
         }
         else {
-            dataAccess.rejectRequest(inputData.username, inputData.fromUser);
+            dataAccess.rejectRequest(inputData.getUsername(), inputData.getFromUser());
             message = "Friend request rejected.";
         }
 

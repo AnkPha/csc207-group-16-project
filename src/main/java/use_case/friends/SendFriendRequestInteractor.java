@@ -14,8 +14,14 @@ public class SendFriendRequestInteractor implements SendFriendRequestInputBounda
 
     @Override
     public void execute(SendFriendRequestInputData inputData) {
-        final boolean success = dataAccess.sendFriendRequest(inputData.sender, inputData.recipient);
-        final String message = success ? "Request sent." : "Request failed (maybe already friends or pending).";
+        final boolean success = dataAccess.sendFriendRequest(inputData.getSender(), inputData.getRecipient());
+        final String message;
+        if (success) {
+            message = "Request sent.";
+        }
+        else {
+            message = "Request failed (maybe already friends or pending).";
+        }
         presenter.present(new SendFriendRequestOutputData(success, message));
     }
 }

@@ -6,15 +6,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.*;
-import data_access.favorite_list.FavoritesDataAccessInterface;
-import data_access.favorite_list.FavoritesDataAccessObject;
 import data_access.FilterDataAccessObject;
 import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryReviewDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchLocationNearbyDataAccessObject;
-
+import data_access.favorite_list.FavoritesDataAccessInterface;
+import data_access.favorite_list.FavoritesDataAccessObject;
 import entity.CommonReviewFactory;
 import entity.CommonUserFactory;
 import entity.ReviewFactory;
@@ -106,9 +104,11 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =
-            new SearchLocationNearbyDataAccessObject();
-    private AddReviewAccessInterface reviewDataAccess;
+            new SearchLocationNearbyDataAccessObject(reviewDataAccessInterface);
+    private final FilterDataAccessInterface filterDataAccessObject =
+            new FilterDataAccessObject(reviewDataAccessInterface);
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -283,31 +283,6 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the Review Use Case to the application.
-     * @return this builder
-     */
-    public AppBuilder addReviewUseCase() {
-        reviewViewModel = new ReviewViewModel();
-
-        final AddReviewOutputBoundary addReviewOutputBoundary =
-                new ReviewPresenter(reviewViewModel);
-
-        final ReviewFactory reviewFactory = new CommonReviewFactory();
-
-        final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(DataAccessObjectManager.getReviewDAO(),
-                        addReviewOutputBoundary,
-                        reviewFactory);
-
-        reviewController = new ReviewController(addReviewInteractor);
-
-        if (mainAppView != null) {
-            mainAppView.setReviewController(reviewController);
-        }
-
-        return this;
-    }
-
-    /**
      * Adds filter view model to the application.
      * @return this builder
      */
@@ -331,9 +306,10 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFavoritesUseCase() {
-        FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
 
-        FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
+        final FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
+
+        final FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
 
         addToFavoritesInteractor = new AddToFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
         removeFromFavoritesInteractor = new RemoveFromFavoritesInteractor(favoritesDataAccess, favoritesPresenter);
@@ -351,20 +327,15 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFilterUseCase() {
-        filterViewModel = new FilterViewModel();
-
         final FilterOutputBoundary filterOutputBoundary =
                 new FilterPresenter(filterViewModel);
 
         final FilterInputBoundary filterInteractor =
-                new FilterInteractor(DataAccessObjectManager.getFilterDAO(), filterOutputBoundary);
+                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
 
-        final FilterController filterController =
-                new FilterController(filterInteractor);
+        filterController = new FilterController(filterInteractor);
 
-       if (mainAppView != null) {
-           mainAppView.setFilterController(filterController);
-       }
+        mainAppView.setFilterController(filterController);
         return this;
     }
 
@@ -401,14 +372,28 @@ public class AppBuilder {
         return this;
     }
 
-    public ReviewController getReviewController() {
-        return reviewController;
-    }
+    /**
+     * Adds the add review use case to application.
+     * @return this builder
+     */
+    public AppBuilder addReviewsUseCase() {
+        final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
+        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
+        final ReviewFactory reviewFactory = new CommonReviewFactory();
 
-    public FilterController getFilterController() {
-        return filterController;
-    }
+        final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(
+                reviewDataAccessInterface,
+                addReviewOutputBoundary,
+                reviewFactory
+        );
 
+        reviewController = new ReviewController(addReviewInteractor);
+
+        if (mainAppView != null) {
+            mainAppView.setReviewController(reviewController);
+        }
+        return this;
+    }
 
     /**
      * Adds the MainApp View to the application.
@@ -446,8 +431,8 @@ public class AppBuilder {
         return this;
     }
 
-     /**
-     * Add this method to set the current username after login
+    /**
+     * Add this method to set the current username after login.
      * @param username the username of the currently logged-in user
      * @return the current instance of {@code AppBuilder}, allowing for method chaining
      */

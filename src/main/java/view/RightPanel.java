@@ -66,6 +66,7 @@ public class RightPanel extends JSplitPane {
             final String selectedRating = ratingComboBox.getSelectedItem().toString();
             final String selectedVegStat = vegStatComboBox.getSelectedItem().toString();
             final String selectedHour = hourComboBox.getSelectedItem().toString();
+
             searchPanel.handleFilter(selectedCuisines, selectedRating, selectedVegStat, selectedHour);
         });
     }
@@ -148,15 +149,18 @@ public class RightPanel extends JSplitPane {
      * @param cuisineLabel the type of cuisine
      * @param websiteLabel the website url
      * @param hoursLabel the hours of operation
+     * @param ratingLabel the rating of the operation
      */
     public void addToInfoPanel(JLabel nameLabel,
                                 JLabel cuisineLabel,
                                 JLabel websiteLabel,
-                                JLabel hoursLabel) {
+                                JLabel hoursLabel,
+                                JLabel ratingLabel) {
         getInfoPanel().add(nameLabel);
         getInfoPanel().add(cuisineLabel);
         getInfoPanel().add(websiteLabel);
         getInfoPanel().add(hoursLabel);
+        getInfoPanel().add(ratingLabel);
         getInfoPanel().add(new JLabel("------"));
         getInfoPanel().revalidate();
         getInfoPanel().repaint();

@@ -22,7 +22,7 @@ public class Main {
                                             .addFriendsUseCase()
                                             .addSendFriendRequestUseCase()
                                             .addReviewsViewModel()
-                                            .addReviewUseCase()
+                                            .addReviewsUseCase()
                                             .addMainAppView()
                                             .addSearchUseCase()
                                             .addFilterUseCase()
