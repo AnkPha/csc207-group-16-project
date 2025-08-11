@@ -42,7 +42,6 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
 
     @Override
     public List<Review> getRatingsForRestaurant(Restaurant restaurant) {
-
         final ArrayList<Review> listOfReviews = new ArrayList<>();
         for (Review review : reviews.values()) {
             if (review.getRestaurant().getName().equals(restaurant.getName())) {

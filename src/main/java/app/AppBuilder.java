@@ -102,6 +102,7 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
+    // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =
@@ -305,6 +306,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFavoritesUseCase() {
+
         final FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
 
         final FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
@@ -335,7 +337,6 @@ public class AppBuilder {
 
         mainAppView.setFilterController(filterController);
         return this;
-
     }
 
     /**
@@ -377,6 +378,7 @@ public class AppBuilder {
      */
     public AppBuilder addReviewsUseCase() {
         final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
+        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
         final ReviewFactory reviewFactory = new CommonReviewFactory();
 
         final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(

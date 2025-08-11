@@ -15,12 +15,20 @@ public class FavoritesState {
         this.favoriteList = new ArrayList<>(favoriteList);
     }
 
+    /**
+     * Adds restaurant to favorite list.
+     * @param restaurantId ID of restaurant
+     */
     public void addFavorite(String restaurantId) {
         if (!favoriteList.contains(restaurantId)) {
             favoriteList.add(restaurantId);
         }
     }
 
+    /**
+     * Remove restaurant from favorite list.
+     * @param restaurantId ID of restaurant
+     */
     public void removeFavorite(String restaurantId) {
         favoriteList.remove(restaurantId);
     }

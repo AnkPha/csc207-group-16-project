@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Restaurant {
     private final String name;
@@ -44,12 +45,48 @@ public class Restaurant {
             allReviewScores = new ArrayList<>();
         }
         allReviewScores.add(score);
-        double numerator = 0;
-        for (int i = 0; i < allReviewScores.size(); i++) {
-            numerator += allReviewScores.get(i);
-        }
-        this.rating = Double.toString(numerator / allReviewScores.size());
+        updateRating();
     }
+
+    /**
+     * Recalculates the average rating from all review scores.
+     */
+    private void updateRating() {
+        if (allReviewScores.isEmpty()) {
+            this.rating = "No Ratings";
+        } else {
+            double sum = 0;
+            for (double score : allReviewScores) {
+                sum += score;
+            }
+            double average = sum / allReviewScores.size();
+            this.rating = String.format("%.1f", average);
+        }
+    }
+
+    /**
+     * Gets the rating as a numeric value for filtering purposes.
+     * @return the numeric rating, or 0.0 if no ratings exist
+     */
+    public double getNumericRating() {
+        if ("No Ratings".equals(rating)) {
+            return 0.0;
+        }
+        try {
+            return Double.parseDouble(rating);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    /**
+     * Checks if this restaurant has any ratings.
+     * @return true if ratings exist, false otherwise
+     */
+    public boolean hasRatings() {
+        return !allReviewScores.isEmpty();
+    }
+
 
     public String getName() {
         return name;
@@ -91,6 +128,24 @@ public class Restaurant {
     public String toString() {
         return String.format("%s (%s): %s * %.1f\nLocation: (%f, %f)\nLink: %s",
                 name, address, rating);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Restaurant restaurant = (Restaurant) obj;
+        return Objects.equals(name, restaurant.name) &&
+                Objects.equals(address, restaurant.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, address);
     }
 
 }

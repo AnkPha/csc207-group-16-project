@@ -15,15 +15,23 @@ public class FavoritesController {
         this.removeFromFavoritesInteractor = removeFromFavoritesInteractor;
     }
 
+    /**
+     * Adds restaurant to favorites input data.
+     * @param username username of user
+     * @param restaurantId ID of restaurant
+     */
     public void addToFavorites(String username, String restaurantId) {
-        AddToFavoritesInputData inputData = new AddToFavoritesInputData(username, restaurantId);
+        final AddToFavoritesInputData inputData = new AddToFavoritesInputData(username, restaurantId);
         addToFavoritesInteractor.execute(inputData);
     }
 
+    /**
+     * Removes restaurant from input data.
+     * @param username username of user
+     * @param restaurantId ID of restaurant
+     */
     public void removeFromFavorites(String username, String restaurantId) {
-        RemoveFromFavoritesInputData inputData = new RemoveFromFavoritesInputData(username, restaurantId);
+        final RemoveFromFavoritesInputData inputData = new RemoveFromFavoritesInputData(username, restaurantId);
         removeFromFavoritesInteractor.execute(inputData);
     }
 }
-
-

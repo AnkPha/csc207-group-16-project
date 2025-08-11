@@ -5,7 +5,6 @@ import java.util.List;
 
 import use_case.favorite_list.AddToFavoritesOutputBoundary;
 import use_case.favorite_list.AddToFavoritesOutputData;
-import use_case.review.AddReviewOutputBoundary;
 import use_case.favorite_list.RemoveFromFavoritesOutputBoundary;
 import use_case.favorite_list.RemoveFromFavoritesOutputData;
 
