@@ -14,31 +14,17 @@ public class AddToFavoritesInteractor implements AddToFavoritesInputBoundary {
 
     @Override
     public void execute(AddToFavoritesInputData inputData) {
-        try {
-            if (dataAccess.isFavorite(inputData.getUsername(), inputData.getRestaurantId())) {
-                final AddToFavoritesOutputData outputData = new AddToFavoritesOutputData(
-                        inputData.getUsername(),
-                        inputData.getRestaurantId()
-                );
-                presenter.prepareErrorView(outputData);
-                return;
-            }
+        final AddToFavoritesOutputData outputData = new AddToFavoritesOutputData(
+                inputData.getUsername(),
+                inputData.getRestaurantId()
+        );
 
-            dataAccess.addToFavorites(inputData.getUsername(), inputData.getRestaurantId());
-
-            final AddToFavoritesOutputData outputData = new AddToFavoritesOutputData(
-                    inputData.getUsername(),
-                    inputData.getRestaurantId()
-            );
-            presenter.prepareSuccessView(outputData);
-
-        }
-        catch (Exception e) {
-            final AddToFavoritesOutputData outputData = new AddToFavoritesOutputData(
-                    inputData.getUsername(),
-                    inputData.getRestaurantId()
-            );
+        if (dataAccess.isFavorite(inputData.getUsername(), inputData.getRestaurantId())) {
             presenter.prepareErrorView(outputData);
+        }
+        else {
+            dataAccess.addToFavorites(inputData.getUsername(), inputData.getRestaurantId());
+            presenter.prepareSuccessView(outputData);
         }
     }
 }

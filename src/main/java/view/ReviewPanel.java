@@ -85,18 +85,14 @@ class ReviewPanel extends JPanel implements PropertyChangeListener {
 
         addCompactFormField("Restaurant Name:", restaurantNameField);
 
-        // Rating selector
         addRatingSelector();
 
-        // Review text area
         addFormField("Your Review:", reviewTextArea, true);
 
-        // Submit button
         configureSubmitButton();
     }
 
     private void configureTextArea() {
-        // Restaurant name field
         restaurantNameField.setForeground(Color.BLACK);
         restaurantNameField.setBackground(Color.WHITE);
         restaurantNameField.setFont(new Font(FONT, Font.PLAIN, textFontSize));

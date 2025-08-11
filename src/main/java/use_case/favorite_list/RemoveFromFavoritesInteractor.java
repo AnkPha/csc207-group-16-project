@@ -13,34 +13,29 @@ public class RemoveFromFavoritesInteractor implements RemoveFromFavoritesInputBo
     }
 
     @Override
-    public void execute(RemoveFromFavoritesInputData removeFromFavoritesInputData) {
+    public void execute(RemoveFromFavoritesInputData inputData) {
+        boolean isFavorite = false;
+        boolean errorOccured = false;
         try {
-            if (!dataAccessInterface.isFavorite(removeFromFavoritesInputData.getUserName(),
-                    removeFromFavoritesInputData.getRestaurantName())) {
-                RemoveFromFavoritesOutputData outputData = new RemoveFromFavoritesOutputData(
-                        removeFromFavoritesInputData.getUserName(),
-                        removeFromFavoritesInputData.getRestaurantName()
-                );
-                presenter.prepareErrorView(outputData);
-                return;
-            }
-
-            dataAccessInterface.removeFromFavorites(removeFromFavoritesInputData.getUserName(),
-                    removeFromFavoritesInputData.getRestaurantName());
-
-            RemoveFromFavoritesOutputData outputData = new RemoveFromFavoritesOutputData(
-                    removeFromFavoritesInputData.getUserName(),
-                    removeFromFavoritesInputData.getRestaurantName()
-            );
-            presenter.prepareSuccessView(outputData);
-
+            isFavorite = dataAccessInterface.isFavorite(inputData.getUserName(), inputData.getRestaurantName());
         }
-        catch (Exception e) {
-            RemoveFromFavoritesOutputData outputData = new RemoveFromFavoritesOutputData(
-                    removeFromFavoritesInputData.getUserName(),
-                    removeFromFavoritesInputData.getRestaurantName()
-            );
-            presenter.prepareErrorView(outputData);
+        catch (Exception exception) {
+            errorOccured = true;
+        }
+        if (errorOccured || !isFavorite) {
+            presenter.prepareErrorView(new RemoveFromFavoritesOutputData(inputData.getUserName(),
+                    inputData.getRestaurantName()));
+        }
+        else {
+            try {
+                dataAccessInterface.removeFromFavorites(inputData.getUserName(), inputData.getRestaurantName());
+                presenter.prepareSuccessView(new RemoveFromFavoritesOutputData(inputData.getUserName(),
+                        inputData.getRestaurantName()));
+            }
+            catch (Exception exception) {
+                presenter.prepareErrorView(new RemoveFromFavoritesOutputData(inputData.getUserName(),
+                        inputData.getRestaurantName()));
+            }
         }
     }
 }

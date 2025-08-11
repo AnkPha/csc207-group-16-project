@@ -1,6 +1,11 @@
 package data_access.favorite_list;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FavoritesDataAccessObject implements FavoritesDataAccessInterface {
     private Map<String, Set<String>> userFavorites = new HashMap<>();
@@ -20,13 +25,20 @@ public class FavoritesDataAccessObject implements FavoritesDataAccessInterface {
 
     @Override
     public List<String> getFavorites(String username) {
-        Set<String> favorites = userFavorites.get(username);
-        return favorites != null ? new ArrayList<>(favorites) : new ArrayList<>();
+        final List<String> result = new ArrayList<>();
+        final Set<String> favorites = userFavorites.get(username);
+        if (favorites != null) {
+            result.add(favorites.iterator().next());
+        }
+        else {
+            result.add("");
+        }
+        return result;
     }
 
     @Override
     public boolean isFavorite(String username, String restaurantId) {
-        Set<String> favorites = userFavorites.get(username);
+        final Set<String> favorites = userFavorites.get(username);
         return favorites != null && favorites.contains(restaurantId);
     }
 }
