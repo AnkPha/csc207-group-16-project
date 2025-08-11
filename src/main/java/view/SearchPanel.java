@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import org.jetbrains.annotations.NotNull;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.Waypoint;
@@ -232,18 +233,23 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
                 final JLabel cuisineLabel = new JLabel("Cuisine: " + r.getCuisine());
                 final JLabel websiteLabel = new JLabel("Website: " + r.getWebsite());
                 final JLabel hoursLabel = new JLabel("Opening Hours: " + r.getOpeningHours());
-                String ratingString = r.getRating();
-                if (!r.getRating().equals("No Ratings")) {
-                    if (ratingString.length() == NOT_WHOLE_LENGTH &&
-                            ratingString.charAt(DECIMAL_VALE_INDEX) == VALUE_OF_DECIMAL_WHOLE) {
-                        ratingString = r.getRating().substring(DECIMAL_START_SLICE, DECIMAL_END_SLICE);
-                    }
-                    ratingString += "/5";
-                }
-                final JLabel ratingLabel = new JLabel("Rating: " + ratingString);
+                final JLabel ratingLabel = getRatingLabel(r);
                 rightPanel.addToInfoPanel(nameLabel, cuisineLabel, websiteLabel, hoursLabel, ratingLabel);
             }
         }
+    }
+
+    @NotNull
+    private static JLabel getRatingLabel(Restaurant resto) {
+        String ratingString = resto.getRating();
+        if (!resto.getRating().equals("No Ratings")) {
+            if (ratingString.length() == NOT_WHOLE_LENGTH && ratingString.charAt(DECIMAL_VALE_INDEX)
+                    == VALUE_OF_DECIMAL_WHOLE) {
+                ratingString = resto.getRating().substring(DECIMAL_START_SLICE, DECIMAL_END_SLICE);
+            }
+            ratingString += "/5";
+        }
+        return new JLabel("Rating: " + ratingString);
     }
 
     /**
