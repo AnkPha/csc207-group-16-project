@@ -57,10 +57,18 @@ public class Review {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Review review = (Review) o;
-        return reviewId == review.reviewId;
+        boolean isEqual = false;
+        if (this == o) {
+            isEqual = true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            isEqual = false;
+        }
+        final Review review = (Review) o;
+        if (reviewId != review.reviewId) {
+            isEqual = false;
+        }
+        return isEqual;
     }
 
     @Override
