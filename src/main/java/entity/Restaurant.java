@@ -9,7 +9,7 @@ public class Restaurant {
     private final String vegStat;
     private final String openingHours;
     private final String website;
-    private String rating;
+    private String rating = "No Ratings";
     private ArrayList<Double> allReviewScores;
 
     private double lon;

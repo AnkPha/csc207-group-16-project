@@ -54,6 +54,12 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
 
     public static final int NO_RESULTS = 1;
     public static final int FAILED_AT_CALL = 0;
+    public static final int TIME_OUT = 4;
+    private static final int NOT_WHOLE_LENGTH = 3;
+    private static final int DECIMAL_VALE_INDEX = 2;
+    private static final char VALUE_OF_DECIMAL_WHOLE = '0';
+    private static final int DECIMAL_START_SLICE = 0;
+    private static final int DECIMAL_END_SLICE = 1;
 
     private final SearchViewModel searchViewModel;
     private final FilterViewModel filterViewModel;
@@ -189,6 +195,9 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
             else if (currentViewState.getStatus() == NO_RESULTS) {
                 JOptionPane.showMessageDialog(this, "Could Not Find Address");
             }
+            else if (currentViewState.getStatus() == TIME_OUT) {
+                JOptionPane.showMessageDialog(this, "API Timed Out due to traffic, try again");
+            }
             else if (currentViewState.getActiveRestaurants().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No Restaurants found");
             }
@@ -223,8 +232,16 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
                 final JLabel cuisineLabel = new JLabel("Cuisine: " + r.getCuisine());
                 final JLabel websiteLabel = new JLabel("Website: " + r.getWebsite());
                 final JLabel hoursLabel = new JLabel("Opening Hours: " + r.getOpeningHours());
-
-                rightPanel.addToInfoPanel(nameLabel, cuisineLabel, websiteLabel, hoursLabel);
+                String ratingString = r.getRating();
+                if (!r.getRating().equals("No Ratings")) {
+                    if (ratingString.length() == NOT_WHOLE_LENGTH &&
+                            ratingString.charAt(DECIMAL_VALE_INDEX) == VALUE_OF_DECIMAL_WHOLE) {
+                        ratingString = r.getRating().substring(DECIMAL_START_SLICE, DECIMAL_END_SLICE);
+                    }
+                    ratingString += "/5";
+                }
+                final JLabel ratingLabel = new JLabel("Rating: " + ratingString);
+                rightPanel.addToInfoPanel(nameLabel, cuisineLabel, websiteLabel, hoursLabel, ratingLabel);
             }
         }
     }

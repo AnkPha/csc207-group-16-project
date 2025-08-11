@@ -32,7 +32,7 @@ public class OverPassApi {
      * @return an arraylist of restaurats
      */
     public ArrayList<Restaurant> getNearbyRestaurants(double latitude, double longitude, int radiusMeters) {
-        final ArrayList<Restaurant> restaurantList = new ArrayList<>();
+        ArrayList<Restaurant> restaurantList = new ArrayList<>();
         final String query = buildQuery(latitude, longitude, radiusMeters);
         final RequestBody body = new FormBody.Builder().add("data", query).build();
 
@@ -57,7 +57,8 @@ public class OverPassApi {
         }
         catch (IOException exception) {
             System.out.println("Threw error");
-            exception.printStackTrace();
+            // exception.printStackTrace();
+            restaurantList = null;
         }
         return restaurantList;
     }

@@ -11,22 +11,17 @@ import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface
 public class SearchLocationNearbyDataAccessObject implements SearchLocationsNearbyDataAccessInterface {
     private static final int FAILED_AT_CALL = 0;
     private static final int FOUND = 2;
+    private static final int TIME_OUT = 4;
     private static final int NO_RESULTS = 1;
     private NominatimApi nominatimApi;
     private OverPassApi overpassApi;
     private AddReviewAccessInterface reviewDataAccessObject;
     private double[] addressCoords = {0.0, 0.0};
 
-    public SearchLocationNearbyDataAccessObject() {
+    public SearchLocationNearbyDataAccessObject(AddReviewAccessInterface reviewDao) {
         this.nominatimApi = new NominatimApi();
         this.overpassApi = new OverPassApi();
-        this.reviewDataAccessObject = new InMemoryReviewDataAccessObject();
-    }
-
-    public SearchLocationNearbyDataAccessObject(AddReviewAccessInterface reviewDataAccessObject) {
-        this.nominatimApi = new NominatimApi();
-        this.overpassApi = new OverPassApi();
-        this.reviewDataAccessObject = reviewDataAccessObject;
+        this.reviewDataAccessObject = reviewDao;
     }
 
     @Override
@@ -58,18 +53,20 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
             result.setStatus(FOUND);
             this.addressCoords = coords;
             restaurantList = overpassApi.getNearbyRestaurants(coords[0], coords[1], radius);
-
-            // For each restaurant, get its rating from the review DAO and update the restaurant object
-            for (Restaurant restaurant : restaurantList) {
-                final double averageRating = reviewDataAccessObject.getAverageRatingForRestaurant(restaurant);
-                if (averageRating > 0.0) {
-                    restaurant.addRating(averageRating);
+            if (restaurantList != null) {
+                // For each restaurant, get its rating from the review DAO and update the restaurant object
+                for (Restaurant restaurant : restaurantList) {
+                    final double averageRating = reviewDataAccessObject.getAverageRatingForRestaurant(restaurant);
+                    if (averageRating > 0.0) {
+                        restaurant.addRating(averageRating);
+                    }
                 }
             }
-
-            System.out.println("SIZE IS "
-                    + restaurantList.size()
-                    + " AND RADIUS IS " + radius + " ADDRESS IS " + address);
+            else {
+                result.setStatus(TIME_OUT);
+                System.out.println("SET STATUS TO TIME OUT");
+                restaurantList = new ArrayList<>();
+            }
         }
         result.setRestaurants(restaurantList);
         return result;

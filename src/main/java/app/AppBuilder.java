@@ -104,9 +104,11 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =
-            new SearchLocationNearbyDataAccessObject();
-    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
+            new SearchLocationNearbyDataAccessObject(reviewDataAccessInterface);
+    private final FilterDataAccessInterface filterDataAccessObject =
+            new FilterDataAccessObject(reviewDataAccessInterface);
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -376,7 +378,6 @@ public class AppBuilder {
      */
     public AppBuilder addReviewsUseCase() {
         final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
-        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
         final ReviewFactory reviewFactory = new CommonReviewFactory();
 
         final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(
