@@ -19,9 +19,7 @@ public class SearchLocationsNearbyPresenter implements SearchLocationsNearbyOutp
         final SearchState newState = new SearchState();
         newState.setRestaurants(outputData.getNearbyRestaurants());
         newState.setAddressCoords(outputData.getAddressCoords());
-        System.out.println("PRESENTER " + outputData.getStatus());
         newState.setStatus(outputData.getStatus());
-        System.out.println("ABOUT TO CALL SET STATE");
         resultsViewModel.setState(newState);
     }
 

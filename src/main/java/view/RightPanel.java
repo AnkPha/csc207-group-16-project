@@ -3,7 +3,6 @@ package view;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.List;
-import java.util.Objects;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -21,13 +20,15 @@ import interface_adapter.CurrentViewState;
 public class RightPanel extends JSplitPane {
     public static final int HALF_2 = 2;
     public static final int QUARTER_4 = 4;
+    private SearchPanel searchPanel;
 
-    private final JPanel infoPanel = new JPanel();
+    private JPanel infoPanel = new JPanel();
+    private JScrollPane scrollPane;
 
-    private final JButton filterButton;
-    private final JPanel filterPanelTop;
-    private final JPanel filterPanelBottom;
-    private final JPanel filterPanel;
+    private JButton filterButton;
+    private JPanel filterPanelTop;
+    private JPanel filterPanelBottom;
+    private JPanel filterPanel;
 
     private JList<String> cuisineList;
     private JComboBox<String> ratingComboBox;
@@ -35,8 +36,9 @@ public class RightPanel extends JSplitPane {
     private JComboBox<String> hourComboBox;
 
     public RightPanel(SearchPanel searchPanel) {
+        this.searchPanel = searchPanel;
         setSize(new Dimension(this.getWidth() / HALF_2, this.getHeight() / HALF_2));
-        final JScrollPane scrollPane = new JScrollPane(infoPanel);
+        scrollPane = new JScrollPane(infoPanel);
         // Right side: place info panel
         // Filter things
         filterButton = new JButton("Filter");
@@ -61,9 +63,10 @@ public class RightPanel extends JSplitPane {
         setOneTouchExpandable(true);
         filterButton.addActionListener(evt -> {
             final List<String> selectedCuisines = cuisineList.getSelectedValuesList();
-            final String selectedRating = Objects.requireNonNull(ratingComboBox.getSelectedItem()).toString();
-            final String selectedVegStat = Objects.requireNonNull(vegStatComboBox.getSelectedItem()).toString();
-            final String selectedHour = Objects.requireNonNull(hourComboBox.getSelectedItem()).toString();
+            final String selectedRating = ratingComboBox.getSelectedItem().toString();
+            final String selectedVegStat = vegStatComboBox.getSelectedItem().toString();
+            final String selectedHour = hourComboBox.getSelectedItem().toString();
+
             searchPanel.handleFilter(selectedCuisines, selectedRating, selectedVegStat, selectedHour);
         });
     }
@@ -146,15 +149,18 @@ public class RightPanel extends JSplitPane {
      * @param cuisineLabel the type of cuisine
      * @param websiteLabel the website url
      * @param hoursLabel the hours of operation
+     * @param ratingLabel the rating of the operation
      */
     public void addToInfoPanel(JLabel nameLabel,
                                 JLabel cuisineLabel,
                                 JLabel websiteLabel,
-                                JLabel hoursLabel) {
+                                JLabel hoursLabel,
+                                JLabel ratingLabel) {
         getInfoPanel().add(nameLabel);
         getInfoPanel().add(cuisineLabel);
         getInfoPanel().add(websiteLabel);
         getInfoPanel().add(hoursLabel);
+        getInfoPanel().add(ratingLabel);
         getInfoPanel().add(new JLabel("------"));
         getInfoPanel().revalidate();
         getInfoPanel().repaint();

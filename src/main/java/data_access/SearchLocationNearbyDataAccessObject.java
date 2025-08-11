@@ -11,22 +11,17 @@ import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface
 public class SearchLocationNearbyDataAccessObject implements SearchLocationsNearbyDataAccessInterface {
     private static final int FAILED_AT_CALL = 0;
     private static final int FOUND = 2;
+    private static final int TIME_OUT = 4;
     private static final int NO_RESULTS = 1;
     private NominatimApi nominatimApi;
     private OverPassApi overpassApi;
     private AddReviewAccessInterface reviewDataAccessObject;
     private double[] addressCoords = {0.0, 0.0};
 
-    public SearchLocationNearbyDataAccessObject() {
+    public SearchLocationNearbyDataAccessObject(AddReviewAccessInterface reviewDao) {
         this.nominatimApi = new NominatimApi();
         this.overpassApi = new OverPassApi();
-        this.reviewDataAccessObject = new InMemoryReviewDataAccessObject();
-    }
-
-    public SearchLocationNearbyDataAccessObject(AddReviewAccessInterface reviewDataAccessObject) {
-        this.nominatimApi = new NominatimApi();
-        this.overpassApi = new OverPassApi();
-        this.reviewDataAccessObject = reviewDataAccessObject;
+        this.reviewDataAccessObject = reviewDao;
     }
 
     @Override
@@ -35,9 +30,7 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
         double[] coords;
         ArrayList<Restaurant> restaurantList = new ArrayList<>();
         try {
-            System.out.println("TRIED TO RUN");
             coords = nominatimApi.geocode(address);
-            System.out.println("TRIED TO RUN 2");
 
             if (coords == null || coords.length == FAILED_AT_CALL) {
                 System.out.println("Failed to make call to API");
@@ -58,24 +51,23 @@ public class SearchLocationNearbyDataAccessObject implements SearchLocationsNear
         if (coords.length == FOUND) {
             //  Assuming the coordinates in coords is in the right order of lat and long
             result.setStatus(FOUND);
-            System.out.println("Before Call " + result.getStatus());
             this.addressCoords = coords;
             restaurantList = overpassApi.getNearbyRestaurants(coords[0], coords[1], radius);
-            
-            // For each restaurant, get its rating from the review DAO and update the restaurant object
-            for (Restaurant restaurant : restaurantList) {
-                final double averageRating = reviewDataAccessObject.getAverageRatingForRestaurant(restaurant);
-                if (averageRating > 0.0) {
-                    restaurant.addRating(averageRating);
+            if (restaurantList != null) {
+                // For each restaurant, get its rating from the review DAO and update the restaurant object
+                for (Restaurant restaurant : restaurantList) {
+                    final double averageRating = reviewDataAccessObject.getAverageRatingForRestaurant(restaurant);
+                    if (averageRating > 0.0) {
+                        restaurant.addRating(averageRating);
+                    }
                 }
             }
-            
-            System.out.println("SIZE IS "
-                    + restaurantList.size()
-                    + " AND RADIUS IS " + radius + " ADDRESS IS " + address);
+            else {
+                result.setStatus(TIME_OUT);
+                restaurantList = new ArrayList<>();
+            }
         }
         result.setRestaurants(restaurantList);
-        System.out.println("END OF DAO " + result.getStatus());
         return result;
     }
 

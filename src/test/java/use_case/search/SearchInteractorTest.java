@@ -1,9 +1,11 @@
 package use_case.search;
 
+import data_access.InMemoryReviewDataAccessObject;
 import interface_adapter.search_nearby_locations.SearchLocationsNearbyPresenter;
 import interface_adapter.search_nearby_locations.SearchViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import use_case.review.AddReviewAccessInterface;
 import use_case.search_nearby_locations.*;
 import data_access.SearchLocationNearbyDataAccessObject;
 
@@ -13,6 +15,7 @@ class SearchInteractorTest {
     private SearchLocationNearbyDataAccessObject mockDao;
     private SearchLocationsNearbyInteractor mockInteractor;
     private SearchLocationsNearbyOutputBoundary mockPresenter;
+    private AddReviewAccessInterface reviewDao;
     private SearchViewModel mockViewModel;
     private SearchLocationsNearbyInputData mockInputOne;
     private SearchLocationsNearbyInputData mockInputTwo;
@@ -23,7 +26,8 @@ class SearchInteractorTest {
     @BeforeEach
     void setup() {
         mockViewModel = new SearchViewModel();
-        mockDao = new SearchLocationNearbyDataAccessObject();
+        reviewDao = new InMemoryReviewDataAccessObject();
+        mockDao = new SearchLocationNearbyDataAccessObject(reviewDao);
 
         mockInputOne = new SearchLocationsNearbyInputData("1 Dundas St E, Toronto, Canada", 500);
         mockInputTwo = new SearchLocationsNearbyInputData("ghsjfb j rhenb", 500);

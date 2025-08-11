@@ -7,18 +7,15 @@ import domain.OpeningHours;
 import entity.Restaurant;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputData;
+import use_case.review.AddReviewAccessInterface;
 
 public class FilterDataAccessObject implements FilterDataAccessInterface {
     private static final String NOT_GIVEN = "not given";
     private static final String NONE = "None";
     private final SearchLocationNearbyDataAccessObject searchInterface;
 
-    public FilterDataAccessObject() {
-        this.searchInterface = new SearchLocationNearbyDataAccessObject();
-    }
-
-    public FilterDataAccessObject(InMemoryReviewDataAccessObject reviewDao) {
-        this.searchInterface = new SearchLocationNearbyDataAccessObject();
+    public FilterDataAccessObject(AddReviewAccessInterface reviewDao) {
+        this.searchInterface = new SearchLocationNearbyDataAccessObject(reviewDao);
     }
 
     @Override

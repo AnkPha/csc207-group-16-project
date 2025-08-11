@@ -6,6 +6,7 @@ public class RestaurantListResult {
     private static final int FAILED_AT_CALL = 0;
     private static final int FOUND = 2;
     private static final int NO_RESULTS = 1;
+    private static final int TIME_OUT = 4;
     private int status;
     private ArrayList<Restaurant> restaurants;
 
@@ -19,6 +20,9 @@ public class RestaurantListResult {
         }
         else if (status == NO_RESULTS) {
             this.status = NO_RESULTS;
+        }
+        else if (status == TIME_OUT) {
+            this.status = TIME_OUT;
         }
         else {
             this.status = FOUND;

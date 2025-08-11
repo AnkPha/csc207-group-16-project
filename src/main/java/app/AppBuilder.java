@@ -24,6 +24,7 @@ import interface_adapter.favorites_list.FavoritesController;
 import interface_adapter.favorites_list.FavoritesPresenter;
 import interface_adapter.favorites_list.FavoritesViewModel;
 import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -53,6 +54,9 @@ import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.favorite_list.AddToFavoritesInteractor;
 import use_case.favorite_list.RemoveFromFavoritesInteractor;
 import use_case.filter.FilterDataAccessInterface;
+import use_case.filter.FilterInputBoundary;
+import use_case.filter.FilterInteractor;
+import use_case.filter.FilterOutputBoundary;
 import use_case.friends.SearchUserInteractor;
 import use_case.friends.SendFriendRequestInteractor;
 import use_case.login.LoginInputBoundary;
@@ -98,11 +102,12 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
-    // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
     private final SearchLocationsNearbyDataAccessInterface searchDataAccessObject =
-            new SearchLocationNearbyDataAccessObject();
-    private final FilterDataAccessInterface filterDataAccessObject = new FilterDataAccessObject();
+            new SearchLocationNearbyDataAccessObject(reviewDataAccessInterface);
+    private final FilterDataAccessInterface filterDataAccessObject =
+            new FilterDataAccessObject(reviewDataAccessInterface);
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -300,19 +305,6 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addFavoritesUseCase() {
-
-        final FavoritesController favoritesController =
-                new FavoritesController(addToFavoritesInteractor, removeFromFavoritesInteractor);
-        mainAppView.setFavoritesController(favoritesController);
-
-        return this;
-    }
-
-    /**
-     * Adds the filter use case to this application.
-     * @return this builder
-     */
-    public AppBuilder addFilterUseCase() {
         final FavoritesDataAccessInterface favoritesDataAccess = new FavoritesDataAccessObject();
 
         final FavoritesPresenter favoritesPresenter = new FavoritesPresenter(favoritesViewModel);
@@ -326,6 +318,24 @@ public class AppBuilder {
         mainAppView.setFavoritesController(favoritesController);
 
         return this;
+    }
+
+    /**
+     * Adds the filter use case to this application.
+     * @return this builder
+     */
+    public AppBuilder addFilterUseCase() {
+        final FilterOutputBoundary filterOutputBoundary =
+                new FilterPresenter(filterViewModel);
+
+        final FilterInputBoundary filterInteractor =
+                new FilterInteractor(filterDataAccessObject, filterOutputBoundary);
+
+        filterController = new FilterController(filterInteractor);
+
+        mainAppView.setFilterController(filterController);
+        return this;
+
     }
 
     /**
@@ -367,7 +377,6 @@ public class AppBuilder {
      */
     public AppBuilder addReviewsUseCase() {
         final AddReviewOutputBoundary addReviewOutputBoundary = new ReviewPresenter(reviewViewModel);
-        final AddReviewAccessInterface reviewDataAccessInterface = new InMemoryReviewDataAccessObject();
         final ReviewFactory reviewFactory = new CommonReviewFactory();
 
         final AddReviewInputBoundary addReviewInteractor = new AddReviewInteractor(

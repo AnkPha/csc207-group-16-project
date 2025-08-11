@@ -20,7 +20,6 @@ public class NominatimApi {
      * @throws IOException If the API request fails or cannot be completed.
      */
     public double[] geocode(String address) throws IOException {
-        System.out.println("RAN");
         // Format address string for URL
         final String encodedAddress = address.replace(" ", "+");
 
@@ -45,7 +44,6 @@ public class NominatimApi {
             final JsonArray resultArray = JsonParser.parseString(json).getAsJsonArray();
 
             if (resultArray.size() == 0) {
-                System.out.println("resultArray.size() in NominatimAPI == 0");
                 result = new double[1];
             }
             else {

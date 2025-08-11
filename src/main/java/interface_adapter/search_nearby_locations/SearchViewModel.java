@@ -18,7 +18,6 @@ public class SearchViewModel extends ViewModel<SearchState> {
      */
     public void setState(SearchState state) {
         super.setState(state);
-        System.out.println("SET STATE RIGHT NOW");
         this.firePropertyChanged("state");
     }
 
