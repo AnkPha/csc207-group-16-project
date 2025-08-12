@@ -1,6 +1,6 @@
 package interface_adapter.send_friend_request;
 
-import interface_adapter.ViewModel;
+import Search.ViewModel;
 
 public class SendFriendRequestViewModel extends ViewModel<SendFriendRequestState> {
     public SendFriendRequestViewModel() {

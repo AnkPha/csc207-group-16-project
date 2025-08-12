@@ -1,5 +1,7 @@
 package entity;
 
+import Search.Restaurant;
+
 import java.time.LocalDateTime;
 
 public class CommonReviewFactory implements ReviewFactory {

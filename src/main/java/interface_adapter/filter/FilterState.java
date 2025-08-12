@@ -3,7 +3,7 @@ package interface_adapter.filter;
 import java.util.ArrayList;
 import java.util.List;
 
-import entity.Restaurant;
+import Search.Restaurant;
 
 public class FilterState {
     private final List<String> cuisine = new ArrayList<>();

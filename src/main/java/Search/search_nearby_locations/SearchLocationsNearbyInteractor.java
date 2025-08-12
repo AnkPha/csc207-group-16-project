@@ -1,6 +1,6 @@
-package use_case.search_nearby_locations;
+package Search.search_nearby_locations;
 
-import entity.RestaurantListResult;
+import Search.RestaurantListResult;
 
 /**
  * A class that represents as the search use case Interactor.

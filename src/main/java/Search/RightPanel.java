@@ -1,4 +1,4 @@
-package view;
+package Search;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -14,8 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
-
-import interface_adapter.CurrentViewState;
 
 public class RightPanel extends JSplitPane {
     public static final int HALF_2 = 2;

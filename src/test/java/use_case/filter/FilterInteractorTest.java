@@ -1,8 +1,8 @@
 package use_case.filter;
 
 import data_access.FilterDataAccessObject;
-import data_access.InMemoryReviewDataAccessObject;
-import entity.Restaurant;
+import Search.InMemoryReviewDataAccessObject;
+import Search.Restaurant;
 import entity.Review;
 import entity.User;
 import org.jetbrains.annotations.NotNull;

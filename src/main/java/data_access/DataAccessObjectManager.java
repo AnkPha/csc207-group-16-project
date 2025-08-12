@@ -1,5 +1,7 @@
 package data_access;
 
+import Search.InMemoryReviewDataAccessObject;
+
 public class DataAccessObjectManager {
     private static InMemoryReviewDataAccessObject reviewDAOInstance;
     private static FilterDataAccessObject filterDAOInstance;

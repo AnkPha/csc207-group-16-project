@@ -1,6 +1,6 @@
 package interface_adapter.signup;
 
-import interface_adapter.ViewModel;
+import Search.ViewModel;
 
 /**
  * The ViewModel for the Signup View.

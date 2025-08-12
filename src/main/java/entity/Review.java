@@ -1,5 +1,7 @@
 package entity;
 
+import Search.Restaurant;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 

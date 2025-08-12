@@ -1,6 +1,6 @@
-package use_case.search_nearby_locations;
+package Search.search_nearby_locations;
 
-import entity.RestaurantListResult;
+import Search.RestaurantListResult;
 
 /**
  * An interface which represents the DAO for searching.

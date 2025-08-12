@@ -1,6 +1,6 @@
 package use_case.review;
 
-import entity.Restaurant;
+import Search.Restaurant;
 import entity.User;
 
 public class AddReviewInputData {

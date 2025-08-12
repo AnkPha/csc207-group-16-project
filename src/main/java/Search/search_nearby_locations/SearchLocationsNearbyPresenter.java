@@ -1,7 +1,4 @@
-package interface_adapter.search_nearby_locations;
-
-import use_case.search_nearby_locations.SearchLocationsNearbyOutputBoundary;
-import use_case.search_nearby_locations.SearchLocationsNearbyOutputData;
+package Search.search_nearby_locations;
 
 /**
  * The Presenter for the Search nearby locations Use Case.

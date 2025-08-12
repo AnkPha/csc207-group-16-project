@@ -1,4 +1,4 @@
-package view;
+package Search;
 
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
@@ -20,13 +20,11 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 
-import entity.Restaurant;
-import interface_adapter.CurrentViewState;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterViewModel;
-import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
-import interface_adapter.search_nearby_locations.SearchState;
-import interface_adapter.search_nearby_locations.SearchViewModel;
+import Search.search_nearby_locations.SearchLocationsNearbyController;
+import Search.search_nearby_locations.SearchState;
+import Search.search_nearby_locations.SearchViewModel;
 
 /**
  * The View for when the user is searching and filtering places.

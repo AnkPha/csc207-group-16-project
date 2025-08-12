@@ -1,5 +1,5 @@
 package entity;
-import entity.Restaurant;
+import Search.Restaurant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

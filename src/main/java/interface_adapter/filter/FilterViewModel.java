@@ -2,8 +2,8 @@ package interface_adapter.filter;
 
 import java.util.List;
 
-import entity.Restaurant;
-import interface_adapter.ViewModel;
+import Search.Restaurant;
+import Search.ViewModel;
 
 public class FilterViewModel extends ViewModel<FilterState> {
     private FilterState state;

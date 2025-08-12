@@ -1,4 +1,4 @@
-package view;
+package Search;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -14,6 +14,7 @@ import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
+import view.LabelTextPanel;
 
 public class LeftPanel extends JPanel {
     public static final int ZOOM_7 = 7;

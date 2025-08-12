@@ -2,7 +2,7 @@ package use_case.filter;
 
 import java.util.ArrayList;
 
-import entity.Restaurant;
+import Search.Restaurant;
 
 /**
  * The interface of the DAO for the Filter Use Case.

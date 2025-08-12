@@ -4,13 +4,12 @@ import data_access.InMemoryFriendDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUser;
 import entity.CommonUserFactory;
-import entity.Restaurant;
+import Search.Restaurant;
 import entity.Review;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 

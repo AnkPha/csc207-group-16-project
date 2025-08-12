@@ -1,6 +1,6 @@
 package interface_adapter.review;
 
-import interface_adapter.ViewModel;
+import Search.ViewModel;
 
 public class ReviewViewModel extends ViewModel<ReviewState> {
     public ReviewViewModel() {

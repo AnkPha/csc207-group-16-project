@@ -1,6 +1,6 @@
 package interface_adapter.review;
 
-import entity.Restaurant;
+import Search.Restaurant;
 import entity.User;
 import use_case.review.AddReviewInputBoundary;
 import use_case.review.AddReviewInputData;

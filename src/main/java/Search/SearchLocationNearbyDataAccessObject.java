@@ -1,12 +1,10 @@
-package data_access;
+package Search;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import entity.Restaurant;
-import entity.RestaurantListResult;
 import use_case.review.AddReviewAccessInterface;
-import use_case.search_nearby_locations.SearchLocationsNearbyDataAccessInterface;
+import Search.search_nearby_locations.SearchLocationsNearbyDataAccessInterface;
 
 public class SearchLocationNearbyDataAccessObject implements SearchLocationsNearbyDataAccessInterface {
     private static final int FAILED_AT_CALL = 0;

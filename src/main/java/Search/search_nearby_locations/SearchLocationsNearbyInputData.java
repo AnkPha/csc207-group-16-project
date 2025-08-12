@@ -1,4 +1,4 @@
-package use_case.search_nearby_locations;
+package Search.search_nearby_locations;
 
 /**
  * A class that represents the input data of the search request.

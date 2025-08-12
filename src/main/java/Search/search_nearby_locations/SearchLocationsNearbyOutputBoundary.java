@@ -1,4 +1,4 @@
-package use_case.search_nearby_locations;
+package Search.search_nearby_locations;
 
 /**
  * An interface that acts as the output boundary.

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import entity.Review;
-import interface_adapter.ViewModel;
+import Search.ViewModel;
 
 public class SearchUserViewModel extends ViewModel<SearchUserState> {
     public SearchUserViewModel() {

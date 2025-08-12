@@ -1,13 +1,11 @@
 package use_case.search;
 
-import data_access.InMemoryReviewDataAccessObject;
-import interface_adapter.search_nearby_locations.SearchLocationsNearbyPresenter;
-import interface_adapter.search_nearby_locations.SearchViewModel;
+import Search.InMemoryReviewDataAccessObject;
+import Search.search_nearby_locations.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.review.AddReviewAccessInterface;
-import use_case.search_nearby_locations.*;
-import data_access.SearchLocationNearbyDataAccessObject;
+import Search.SearchLocationNearbyDataAccessObject;
 
 import static org.junit.jupiter.api.Assertions.*;
 

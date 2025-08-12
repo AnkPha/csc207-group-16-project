@@ -1,6 +1,6 @@
 package interface_adapter.friends;
 
-import interface_adapter.ViewModel;
+import Search.ViewModel;
 
 public class FriendsViewModel extends ViewModel<FriendsState> {
     public FriendsViewModel() {

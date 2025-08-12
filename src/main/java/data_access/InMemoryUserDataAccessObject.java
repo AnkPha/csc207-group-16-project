@@ -3,6 +3,7 @@ package data_access;
 import java.util.HashMap;
 import java.util.Map;
 
+import Search.Restaurant;
 import entity.CommonUser;
 import entity.Review;
 import entity.User;
@@ -75,7 +76,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         final User user = users.get(username);
         if (user instanceof CommonUser) {
             final double[] coords = {43.6532, -79.3832};
-            final entity.Restaurant restaurant = new entity.Restaurant(
+            final Restaurant restaurant = new Restaurant(
                     restaurantName,
                     "123 Sample St",
                     "Mixed Cuisine",

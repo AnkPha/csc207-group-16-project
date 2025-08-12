@@ -1,11 +1,10 @@
-package data_access;
+package Search;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import entity.Restaurant;
 import entity.Review;
 import entity.User;
 import use_case.review.AddReviewAccessInterface;

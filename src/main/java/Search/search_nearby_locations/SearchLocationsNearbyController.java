@@ -1,7 +1,4 @@
-package interface_adapter.search_nearby_locations;
-
-import use_case.search_nearby_locations.SearchLocationsNearbyInputBoundary;
-import use_case.search_nearby_locations.SearchLocationsNearbyInputData;
+package Search.search_nearby_locations;
 
 public class SearchLocationsNearbyController {
     private final SearchLocationsNearbyInputBoundary interactor;

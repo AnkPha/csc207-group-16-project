@@ -2,7 +2,7 @@ package use_case.review;
 
 import java.util.List;
 
-import entity.Restaurant;
+import Search.Restaurant;
 import entity.Review;
 import entity.User;
 

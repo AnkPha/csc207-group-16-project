@@ -1,4 +1,4 @@
-package view;
+package Search;
 
 import java.awt.BorderLayout;
 
@@ -18,12 +18,16 @@ import interface_adapter.logout.LogoutController;
 import interface_adapter.main_menu.MainAppViewModel;
 import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewViewModel;
-import interface_adapter.search_nearby_locations.SearchLocationsNearbyController;
-import interface_adapter.search_nearby_locations.SearchViewModel;
+import Search.search_nearby_locations.SearchLocationsNearbyController;
+import Search.search_nearby_locations.SearchViewModel;
 import interface_adapter.search_user.SearchUserController;
 import interface_adapter.search_user.SearchUserViewModel;
 import interface_adapter.send_friend_request.SendFriendRequestController;
 import interface_adapter.send_friend_request.SendFriendRequestViewModel;
+import view.FavoritesPanel;
+import view.FriendsPanel;
+import view.ProfilePanel;
+import view.ReviewPanel;
 
 /**
  * The View for when the user is logged into the program.

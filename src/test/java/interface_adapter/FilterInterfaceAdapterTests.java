@@ -1,6 +1,6 @@
 package interface_adapter;
 
-import entity.Restaurant;
+import Search.Restaurant;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterState;

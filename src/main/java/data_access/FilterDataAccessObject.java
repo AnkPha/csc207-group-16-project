@@ -3,8 +3,9 @@ package data_access;
 import java.util.ArrayList;
 import java.util.List;
 
+import Search.SearchLocationNearbyDataAccessObject;
 import domain.OpeningHours;
-import entity.Restaurant;
+import Search.Restaurant;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInputData;
 import use_case.review.AddReviewAccessInterface;

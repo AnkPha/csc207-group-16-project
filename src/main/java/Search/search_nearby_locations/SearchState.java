@@ -1,8 +1,8 @@
-package interface_adapter.search_nearby_locations;
+package Search.search_nearby_locations;
 
 import java.util.ArrayList;
 
-import entity.Restaurant;
+import Search.Restaurant;
 
 /**
  * The State information representing the current address.
@@ -17,7 +17,7 @@ public class SearchState {
     private boolean filtered;
     private int status;
 
-    public SearchState(interface_adapter.search_nearby_locations.SearchState copy) {
+    public SearchState(SearchState copy) {
         address = copy.address;
         searchError = copy.searchError;
         radius = copy.radius;

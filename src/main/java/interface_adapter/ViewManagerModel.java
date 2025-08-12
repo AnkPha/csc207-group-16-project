@@ -1,5 +1,7 @@
 package interface_adapter;
 
+import Search.ViewModel;
+
 /**
  * Model for the View Manager. Its state is the name of the View which
  * is currently active. An initial state of "" is used.

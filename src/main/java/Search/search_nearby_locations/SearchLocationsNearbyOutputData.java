@@ -1,8 +1,8 @@
-package use_case.search_nearby_locations;
+package Search.search_nearby_locations;
 
 import java.util.ArrayList;
 
-import entity.Restaurant;
+import Search.Restaurant;
 
 public class SearchLocationsNearbyOutputData {
     private final ArrayList<Restaurant> nearbyRestaurants;

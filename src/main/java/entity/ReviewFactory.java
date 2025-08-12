@@ -1,5 +1,7 @@
 package entity;
 
+import Search.Restaurant;
+
 /**
  * Factory for creating viewers.
  */

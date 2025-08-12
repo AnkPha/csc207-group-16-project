@@ -1,6 +1,6 @@
 package interface_adapter.favorites_list;
 
-import interface_adapter.ViewModel;
+import Search.ViewModel;
 
 public class FavoritesViewModel extends ViewModel<FavoritesState> {
     public FavoritesViewModel() {

@@ -1,6 +1,6 @@
 package interface_adapter.main_menu;
 
-import interface_adapter.ViewModel;
+import Search.ViewModel;
 
 public class MainAppViewModel extends ViewModel<MainAppState> {
 

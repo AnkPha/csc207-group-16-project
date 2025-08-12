@@ -1,4 +1,4 @@
-package interface_adapter;
+package Search;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,8 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 
-import entity.Restaurant;
 import interface_adapter.filter.FilterState;
-import interface_adapter.search_nearby_locations.SearchState;
+import Search.search_nearby_locations.SearchState;
 
 public class CurrentViewState {
     private static final int FOUND = 2;

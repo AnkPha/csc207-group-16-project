@@ -1,5 +1,7 @@
 package entity;
 
+import Search.Restaurant;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -2,7 +2,7 @@ package use_case.filter;
 
 import java.util.ArrayList;
 
-import entity.Restaurant;
+import Search.Restaurant;
 
 /**
  * The Filter Interactor.
