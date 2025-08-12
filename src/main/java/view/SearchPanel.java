@@ -234,8 +234,8 @@ public class SearchPanel extends JPanel implements PropertyChangeListener {
                 final JLabel hoursLabel = new JLabel("Opening Hours: " + r.getOpeningHours());
                 String ratingString = r.getRating();
                 if (!r.getRating().equals("No Ratings")) {
-                    if (ratingString.length() == NOT_WHOLE_LENGTH &&
-                            ratingString.charAt(DECIMAL_VALE_INDEX) == VALUE_OF_DECIMAL_WHOLE) {
+                    if (ratingString.length() == NOT_WHOLE_LENGTH
+                            && ratingString.charAt(DECIMAL_VALE_INDEX) == VALUE_OF_DECIMAL_WHOLE) {
                         ratingString = r.getRating().substring(DECIMAL_START_SLICE, DECIMAL_END_SLICE);
                     }
                     ratingString += "/5";

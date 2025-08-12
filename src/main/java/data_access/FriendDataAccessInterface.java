@@ -20,6 +20,11 @@ public interface FriendDataAccessInterface {
      */
     boolean userExists(String username);
 
+    /**
+     * Gets the user who has sent a friend request.
+     * @param username the username who sent a friend request
+     * @return the user who sent a friedn request
+     */
     User getUser(String username);
 
     /**
