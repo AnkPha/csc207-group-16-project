@@ -62,7 +62,7 @@ public class Restaurant {
                 sum += score;
             }
             final double average = sum / allReviewScores.size();
-            this.rating = String.format("%.1f", average);
+            this.rating = String.valueOf(average);
         }
     }
 
