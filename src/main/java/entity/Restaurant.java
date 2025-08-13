@@ -62,7 +62,7 @@ public class Restaurant {
                 sum += score;
             }
             final double average = sum / allReviewScores.size();
-            this.rating = String.format("%.1f", average);
+            this.rating = String.valueOf(average);
         }
     }
 
@@ -136,15 +136,18 @@ public class Restaurant {
 
     @Override
     public boolean equals(Object obj) {
+        boolean isEqual = false;
+
         if (this == obj) {
-            return true;
+            isEqual = true;
         }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
+        else if (obj != null && getClass() == obj.getClass()) {
+            final Restaurant restaurant = (Restaurant) obj;
+            isEqual = Objects.equals(name, restaurant.name)
+                    && Objects.equals(address, restaurant.address);
         }
-        final Restaurant restaurant = (Restaurant) obj;
-        return Objects.equals(name, restaurant.name)
-                && Objects.equals(address, restaurant.address);
+
+        return isEqual;
     }
 
     @Override

@@ -14,28 +14,17 @@ public class RemoveFromFavoritesInteractor implements RemoveFromFavoritesInputBo
 
     @Override
     public void execute(RemoveFromFavoritesInputData inputData) {
-        boolean isFavorite = false;
-        boolean errorOccured = false;
-        try {
-            isFavorite = dataAccessInterface.isFavorite(inputData.getUserName(), inputData.getRestaurantName());
-        }
-        catch (Exception exception) {
-            errorOccured = true;
-        }
-        if (errorOccured || !isFavorite) {
+        final boolean isFavorite = dataAccessInterface.isFavorite(inputData.getUserName(),
+                inputData.getRestaurantName());
+
+        if (!isFavorite) {
             presenter.prepareErrorView(new RemoveFromFavoritesOutputData(inputData.getUserName(),
                     inputData.getRestaurantName()));
         }
         else {
-            try {
-                dataAccessInterface.removeFromFavorites(inputData.getUserName(), inputData.getRestaurantName());
-                presenter.prepareSuccessView(new RemoveFromFavoritesOutputData(inputData.getUserName(),
-                        inputData.getRestaurantName()));
-            }
-            catch (Exception exception) {
-                presenter.prepareErrorView(new RemoveFromFavoritesOutputData(inputData.getUserName(),
-                        inputData.getRestaurantName()));
-            }
+            dataAccessInterface.removeFromFavorites(inputData.getUserName(), inputData.getRestaurantName());
+            presenter.prepareSuccessView(new RemoveFromFavoritesOutputData(inputData.getUserName(),
+                    inputData.getRestaurantName()));
         }
     }
 }

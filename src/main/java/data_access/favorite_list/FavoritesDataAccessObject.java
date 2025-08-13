@@ -28,7 +28,7 @@ public class FavoritesDataAccessObject implements FavoritesDataAccessInterface {
         final List<String> result = new ArrayList<>();
         final Set<String> favorites = userFavorites.get(username);
         if (favorites != null) {
-            result.add(favorites.iterator().next());
+            result.addAll(favorites);
         }
         else {
             result.add("");

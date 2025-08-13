@@ -54,14 +54,16 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
 
     @Override
     public double getAverageRatingForRestaurant(Restaurant restaurant) {
+        double averageRating = 0.0;
         final List<Review> allReviewsrestaurant = getRatingsForRestaurant(restaurant);
         if (allReviewsrestaurant.isEmpty()) {
-            return 0.0;
+            averageRating = 0.0;
         }
         double sumRating = 0.0;
         for (Review review : allReviewsrestaurant) {
             sumRating += review.getRating();
         }
-        return sumRating / allReviewsrestaurant.size();
+        averageRating = sumRating / allReviewsrestaurant.size();
+        return averageRating;
     }
 }
