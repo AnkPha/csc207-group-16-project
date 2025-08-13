@@ -30,6 +30,7 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
             if (matchesAllFilters(r, cuisines, rating, vegStat, availability)) {
                 result.add(r);
             }
+
         }
         return result;
     }
@@ -95,8 +96,8 @@ public class FilterDataAccessObject implements FilterDataAccessInterface {
         }
         else if (restRating != null && !restRating.isBlank() && !NOT_GIVEN.equalsIgnoreCase(restRating)) {
             try {
-                final int userRate = Integer.parseInt(userRating);
-                final int restRate = Integer.parseInt(restRating);
+                final double userRate = Double.parseDouble(userRating);
+                final double restRate = Double.parseDouble(restRating);
                 result = restRate >= userRate;
             }
             catch (NumberFormatException error) {

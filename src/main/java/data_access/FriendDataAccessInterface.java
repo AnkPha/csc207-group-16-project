@@ -21,9 +21,10 @@ public interface FriendDataAccessInterface {
     boolean userExists(String username);
 
     /**
-     * Gets the user who has sent a friend request.
-     * @param username the username who sent a friend request
-     * @return the user who sent a friedn request
+     * Gets the user based on the username.
+     * @param username the username of the user to retrieve
+     * @return the object matching the given username,
+     *         or null if no such user exists
      */
     User getUser(String username);
 

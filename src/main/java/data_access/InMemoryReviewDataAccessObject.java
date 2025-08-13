@@ -32,13 +32,13 @@ public class InMemoryReviewDataAccessObject implements AddReviewAccessInterface 
      */
     @Override
     public boolean existsReviewByUserAndRestaurant(User user, Restaurant restaurant) {
-        boolean exists = false;
+        boolean result = false;
         for (Review review : reviews.values()) {
             if (review.getUser().equals(user) && review.getRestaurant().equals(restaurant)) {
-                exists = true;
+                result = true;
             }
         }
-        return exists;
+        return result;
     }
 
     @Override

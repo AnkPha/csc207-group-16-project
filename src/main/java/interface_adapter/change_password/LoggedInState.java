@@ -4,10 +4,10 @@ package interface_adapter.change_password;
  * The State information representing the logged-in user.
  */
 public class LoggedInState {
-    public String passwordError;
-
     private String username = "";
+
     private String password = "";
+    private String passwordError;
 
     public LoggedInState(LoggedInState copy) {
         username = copy.username;
@@ -38,5 +38,9 @@ public class LoggedInState {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getPasswordError() {
+        return passwordError;
     }
 }

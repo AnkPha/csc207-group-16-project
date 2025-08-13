@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Restaurant {
-    private final String noRatings = "No Ratings";
+    private static final String NO_RATING = "No Ratings";
     private final String name;
     private final String address;
     private final String cuisine;
@@ -30,7 +30,7 @@ public class Restaurant {
         this.vegStat = vegStat;
         this.openingHours = openingHours;
         this.website = website;
-        this.rating = noRatings;
+        this.rating = NO_RATING;
         this.allReviewScores = new ArrayList<>();
         this.lon = coords[1];
         this.lat = coords[0];
@@ -54,7 +54,7 @@ public class Restaurant {
      */
     private void updateRating() {
         if (allReviewScores.isEmpty()) {
-            this.rating = noRatings;
+            this.rating = NO_RATING;
         }
         else {
             double sum = 0;
@@ -72,16 +72,15 @@ public class Restaurant {
      */
     public double getNumericRating() {
         double result = 0.0;
-
-        if (!noRatings.equals(rating)) {
-            try {
-                result = Double.parseDouble(rating);
-            }
-            catch (NumberFormatException numberFormatException) {
-                result = 0.0;
-            }
+        if (NO_RATING.equals(rating)) {
+            result = 0.0;
         }
-
+        try {
+            result = Double.parseDouble(rating);
+        }
+        catch (NumberFormatException exception) {
+            result = 0.0;
+        }
         return result;
     }
 
